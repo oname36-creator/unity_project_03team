@@ -1,37 +1,75 @@
 using UnityEngine;
-// 1. 상단에 반드시 새 입력 시스템 네임스페이스를 추가해야 합니다.
 using UnityEngine.InputSystem;
 
-public class PlayerControll : MonoBehaviour
+// PlayerAction 자산에서 자동 생성된 IPlayerActions 인터페이스를 구현합니다.
+public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 {
-    public float moveSpeed = 5f;
+    public float JumpForce = 0.01f;
+    public float MoveSpeed = 5f;
+    private int JumpCount = 0;
+
+    public PlayerPos playerPosData;
+
+    private PlayerAction controls;
+    private Vector2 moveInput;
+
+    void OnEnable()
+    {
+        if (controls == null)
+        {
+            controls = new PlayerAction();
+            controls.Player.SetCallbacks(this);
+        }
+        controls.Player.Enable();
+    }
+
+    void OnDisable()
+    {
+        controls.Player.Disable();
+    }
 
     void Update()
     {
-        // 방향을 저장할 벡터
-        Vector3 direction = Vector3.zero;
+        // 2D 게임이므로 Vector2를 그대로 활용하거나, Vector3의 x축에만 매핑합니다.
+        // 플랫포머에서 좌우 이동은 x축만 사용하고, 상하(y)는 중력과 점프로 제어하는 경우가 많습니다.
+        Vector3 direction = new Vector3(moveInput.x, 0f, 0f);
 
-        // 2. 현재 연결된 키보드가 있는지 체크하고 입력을 받습니다.
-        if (Keyboard.current != null)
+        // 좌우 이동 처리
+        if (direction != Vector3.zero)
         {
-            // A키나 왼쪽 화살표가 눌리면 왼쪽(-1)으로
-            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-                direction.x = -1f;
-
-            // D키나 오른쪽 화살표가 눌리면 오른쪽(1)으로
-            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-                direction.x = 1f;
-
-            // W키나 위쪽 화살표가 눌리면 위로(1)
-            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed)
-                direction.z = 1f; // 3D 환경이라면 z축, 2D라면 y축으로 변경하세요.
-
-            // S키나 아래쪽 화살표가 눌리면 아래로(-1)
-            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)
-                direction.z = -1f;
+            transform.Translate(direction * MoveSpeed * Time.deltaTime);
         }
 
-        // 3. 계산된 방향과 속도로 캐릭터 이동
-        transform.Translate(direction.normalized * moveSpeed * Time.deltaTime);
+        // 데이터 저장 (2D 플랫포머이므로 x와 y 좌표를 매핑)
+        if (playerPosData != null)
+        {
+            playerPosData.x = Mathf.RoundToInt(transform.position.x);
+            playerPosData.y = Mathf.RoundToInt(transform.position.y); // 이제 y축이 하늘 방향입니다!
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // Input Action 콜백 메서드
+    // -----------------------------------------------------------------
+
+    // 키보드 A/D, 왼쪽/오른쪽 화살표를 누르면 이 메서드가 실행됩니다.
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        moveInput = context.ReadValue<Vector2>();
+    }
+
+    // 만약 Input Action 에디터에서 'Jump' 액션(Button 타입)을 추가했다면 
+    // 아래와 같이 점프 로직을 구현할 수 있습니다.
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        // 버튼을 '누른 순간'에만 점프가 발동하도록 설정
+        if (context.started)
+        {
+            // 예: Rigidbody2D가 있다면 위쪽으로 힘을 줍니다.
+             GetComponent<Rigidbody2D>().AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+            
+            Debug.Log("점프!");
+            
+        }
     }
 }
