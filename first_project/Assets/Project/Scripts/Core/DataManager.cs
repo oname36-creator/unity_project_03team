@@ -41,15 +41,20 @@ public class DataManager : Singleton<DataManager>
         }
 
         // 4. 아이템이 있다면 플레이어 스크립트를 찾아서 효과 적용 요청!
-        PlayerControll player = Object.FindAnyObjectByType<PlayerControll>();
-        if (player != null)
-        {
-            // 플레이어에게 아이템 번호를 넘겨주며 효과 실행 요청
-            player.ExecuteItemEffectByID(itemNumber);
+        ItemEffectApplicator applicator = Object.FindAnyObjectByType<ItemEffectApplicator>();
 
-            // 5. 사용 완료 후 해당 인벤토리 슬롯을 다시 빈칸(0)으로 만듭니다!
+        if (applicator != null)
+        {
+            // 최신 투명화 코드가 들어있는 applicator에게 명령을 내립니다.
+            applicator.ExecuteItemEffectByID(itemNumber);
+
+            // 사용 완료 후 인벤토리 비우기
             PlayerInventory[slotIndex] = 0;
             Debug.Log($"{slotIndex + 1}번 슬롯의 아이템(ID: {itemNumber}) 사용 및 소모 완료.");
+        }
+        else
+        {
+            Debug.LogError("Player 오브젝트에서 ItemEffectApplicator 컴포넌트를 찾을 수 없습니다!");
         }
     }
 
