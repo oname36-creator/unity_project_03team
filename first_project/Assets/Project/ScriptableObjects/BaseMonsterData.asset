@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterData
   hp: 100
   damage: 10
-  MaxSpeed: 100
+  MaxSpeed: 6
+  Force: 10
   searchRange: 5
   angle: 15

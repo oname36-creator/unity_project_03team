@@ -27,6 +27,7 @@ public class IMonster : MonoBehaviour
 
 
         _mAnimator = GetComponent<Animator>();
+        _monsterController = GetComponent<MonsterController>();
 
         // animator 할당 해주기
         _monsterAttack.GetComponent(_mAnimator, _monsterController);
@@ -50,7 +51,7 @@ public class IMonster : MonoBehaviour
     public void Hurt() 
     {
         // 피격 애니메이션 재생
-        _mAnimator.SetBool(_hurtHash, true);
+        _mAnimator.SetTrigger(_hurtHash);
     }
     public void Dead()
     {

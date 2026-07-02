@@ -7,6 +7,8 @@ public class BaseMonsterData : ScriptableObject
     public int hp;
     public int damage;
     public int MaxSpeed;
+    public int Force;
+
 
     [Header("Search Settings")] // 인스펙터에 제목 표시
     public int searchRange;

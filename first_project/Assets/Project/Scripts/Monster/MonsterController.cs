@@ -110,6 +110,8 @@ public class MonsterController : MonoBehaviour
         _searchRange = monsterData.searchRange;
         _angle = monsterData.angle;
         _maxSpeed = monsterData.MaxSpeed;
+        _force = monsterData.Force;
+
         isDead = false;
         isfounded = false;
         _Estatus = Status.Idle;
@@ -166,46 +168,69 @@ public class MonsterController : MonoBehaviour
     {
         Vector2 velocity = _rigidBody2D.linearVelocity;
 
-        if (Mathf.Abs(wantSpeed) > _maxSpeed) { return; }
+        if (Mathf.Abs(wantSpeed) > _maxSpeed) { wantSpeed = _maxSpeed; }
 
-        if (_frontVector.x < 0.1f && velocity.x > 0.1f)
-        {
-            this.Front = new Vector2Int(1, 0); // 방향이 오른쪽
-        }
-        else if (_frontVector.x > 0.1f && velocity.x < 0.1f)
-        {
-            this.Front = new Vector2Int(-1, 0); // 방향이 왼쪽
-        }
+        //if (_frontVector.x < 0.1f && velocity.x > 0.1f)
+        //{
+        //    this.Front = new Vector2Int(1, 0); // 방향이 오른쪽
+        //}
+        //else if (_frontVector.x > 0.1f && velocity.x < 0.1f)
+        //{
+        //    this.Front = new Vector2Int(-1, 0); // 방향이 왼쪽
+        //}
 
         // 방향이 x방향이고 원하는 속도에 도달했으면
         if (dir.y == 0)
         {
-            if (velocity.x < wantSpeed + 1 && velocity.x > wantSpeed - 1)
+            if (dir.x < 0)
             {
-                _rigidBody2D.linearVelocityX = wantSpeed * dir.x;
-                return;
+                if (velocity.x < -wantSpeed - 1.0f && velocity.x < -wantSpeed + 1.0f)
+                {
+                    Debug.Log("_1 " +velocity.x);
+                    _rigidBody2D.linearVelocityX = wantSpeed * dir.x;
+                    return;
+                }
+            }
+            else
+            {
+                if (velocity.x > wantSpeed - 1.0f && velocity.x > wantSpeed + 1.0f)
+                {
+                    Debug.Log("_2 " + velocity.x);
+                    _rigidBody2D.linearVelocityX = wantSpeed * dir.x;
+                    return;
+                }
             }
 
         }
-        else
+        else // y축 이동
         {
-            if (velocity.y < wantSpeed + 1 && velocity.y > wantSpeed - 1)
+            if (dir.y < 0)
             {
-                _rigidBody2D.linearVelocityY = wantSpeed * dir.y;
-                return;
+                if (velocity.y < -wantSpeed - 1.0f && velocity.y < -wantSpeed + 1.0f)
+                {
+                    _rigidBody2D.linearVelocityY = wantSpeed * dir.y;
+                    return;
+                }
+            }
+            else
+            {
+                if (velocity.y > wantSpeed - 1.0f && velocity.y > wantSpeed + 1.0f)
+                {
+                    _rigidBody2D.linearVelocityY = wantSpeed * dir.y;
+                    return;
+                }
             }
         }
 
+        //Debug.Log("force : " + dir*_force);
         _rigidBody2D.AddForce(dir * _force, ForceMode2D.Force);
     }
 
 
     public bool Stop()
     {
-        if (_rigidBody2D.linearVelocityX == 0 || _rigidBody2D.linearVelocityY == 0)
-            return true;
-        else return false;
-
+        if (_rigidBody2D.linearVelocity.magnitude < 0.05f) return true;
+        return false;
     }
 
 
