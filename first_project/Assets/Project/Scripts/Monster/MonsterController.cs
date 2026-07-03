@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum Status
@@ -10,14 +11,16 @@ public enum Status
 }
 
 
-
-
 public class MonsterController : MonoBehaviour
 {
 
     #region Serialized Fields
     [Header("Monster Data")] // 인스펙터에 제목 표시
-    public BaseMonsterData monsterData;
+    public BaseMonsterData MonsterData;
+
+    [Header("Player Object")] 
+    public Object Player;
+
 
     [Header("Player")]
     //public PlayerController player;
@@ -31,6 +34,7 @@ public class MonsterController : MonoBehaviour
     private int _hp;
     private int _damage;
     private int _searchRange; // 탐색 깊이
+    private int _attackRange; // 공격 가능 거리
     private int _force; // 힘
 
     private float _angle;   // 탐색 각도
@@ -39,7 +43,7 @@ public class MonsterController : MonoBehaviour
     private float _maxSpeed; // 최대 속도
 
     private bool isDead;
-    private bool isfounded;
+    private bool isFounded;
 
     // 뒤집기 bool
     private bool onFlip;
@@ -51,6 +55,8 @@ public class MonsterController : MonoBehaviour
 
     private Vector2Int _frontVector;  // 앞 방향 저장 // (1,0)이면 오른쪽 (-1,0)이면 왼쪽
     private Vector2 _mToPlayer;
+    private Vector2 _mToPlayerDistance; // 거리
+
 
     private Rigidbody2D _rigidBody2D;
     private SpriteRenderer _renderer;
@@ -63,11 +69,47 @@ public class MonsterController : MonoBehaviour
     {
         get { return _maxSpeed; }
     }
+    public float SearchRange
+    {
+        get { return _searchRange; }
+    }
+
+    public float CosValue
+    {
+        get { return _cosValue; }
+    }
+
 
     public bool IsDead
     {
         get { return isDead; }
     }
+
+    public bool InRange  // Range 안에 있을때
+    {
+        get 
+        {
+            if (_mToPlayerDistance.magnitude < _searchRange)
+            {
+                return true;
+            }
+            return false;
+        }
+
+    }
+    public bool InAttackRange  // AttackRange 안에 있을때
+    {
+        get
+        {
+            if (_mToPlayerDistance.magnitude < _attackRange)
+            {
+                return true;
+            }
+            return false;
+        }
+
+    }
+
 
     public Vector2Int Front
     {
@@ -80,15 +122,9 @@ public class MonsterController : MonoBehaviour
             _frontVector = value;
         }
     }
-
-    public float SearchRange
+    public Vector2 GetMToP // 몬스터에서 플레이어 방향의 유닛 벡터 Get
     {
-        get { return _searchRange; }
-    }
-
-    public float CosValue
-    {
-        get { return _cosValue; }
+        get { return _mToPlayer; }
     }
 
     public Status State
@@ -96,6 +132,8 @@ public class MonsterController : MonoBehaviour
         get { return _Estatus; }
         set { _Estatus = value; }
     }
+
+
 
     #endregion
 
@@ -105,15 +143,16 @@ public class MonsterController : MonoBehaviour
         // 1초에 120번만 계산되도록
         Application.targetFrameRate = 120;
 
-        _hp = monsterData.hp;
-        _damage = monsterData.damage;
-        _searchRange = monsterData.searchRange;
-        _angle = monsterData.angle;
-        _maxSpeed = monsterData.MaxSpeed;
-        _force = monsterData.Force;
+        _hp = MonsterData.hp;
+        _damage = MonsterData.damage;
+        _searchRange = MonsterData.searchRange;
+        _attackRange = MonsterData.attackRange;
+        _angle = MonsterData.angle;
+        _maxSpeed = MonsterData.MaxSpeed;
+        _force = MonsterData.Force;
 
         isDead = false;
-        isfounded = false;
+        isFounded = false;
         _Estatus = Status.Idle;
         _EpreStatus = Status.None;
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
@@ -134,10 +173,13 @@ public class MonsterController : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+        // 몬스터에서 플레이어 방향의 유닛벡터 계산
+        CaculateMonsterToPlayerVector();
 
         // 이전 상태와 동일하다면
         if (_Estatus == _EpreStatus) { return; }
 
+        Debug.Log("몬스터 상태 : " + _Estatus);
 
         // 상태에 따른 행동
         switch (_Estatus)
@@ -170,14 +212,6 @@ public class MonsterController : MonoBehaviour
 
         if (Mathf.Abs(wantSpeed) > _maxSpeed) { wantSpeed = _maxSpeed; }
 
-        //if (_frontVector.x < 0.1f && velocity.x > 0.1f)
-        //{
-        //    this.Front = new Vector2Int(1, 0); // 방향이 오른쪽
-        //}
-        //else if (_frontVector.x > 0.1f && velocity.x < 0.1f)
-        //{
-        //    this.Front = new Vector2Int(-1, 0); // 방향이 왼쪽
-        //}
 
         // 방향이 x방향이고 원하는 속도에 도달했으면
         if (dir.y == 0)
@@ -186,7 +220,7 @@ public class MonsterController : MonoBehaviour
             {
                 if (velocity.x < -wantSpeed - 1.0f && velocity.x < -wantSpeed + 1.0f)
                 {
-                    Debug.Log("_1 " +velocity.x);
+            
                     _rigidBody2D.linearVelocityX = wantSpeed * dir.x;
                     return;
                 }
@@ -195,7 +229,7 @@ public class MonsterController : MonoBehaviour
             {
                 if (velocity.x > wantSpeed - 1.0f && velocity.x > wantSpeed + 1.0f)
                 {
-                    Debug.Log("_2 " + velocity.x);
+                
                     _rigidBody2D.linearVelocityX = wantSpeed * dir.x;
                     return;
                 }
@@ -222,7 +256,7 @@ public class MonsterController : MonoBehaviour
             }
         }
 
-        //Debug.Log("force : " + dir*_force);
+       
         _rigidBody2D.AddForce(dir * _force, ForceMode2D.Force);
     }
 
@@ -232,9 +266,6 @@ public class MonsterController : MonoBehaviour
         if (_rigidBody2D.linearVelocity.magnitude < 0.05f) return true;
         return false;
     }
-
-
-
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -255,11 +286,23 @@ public class MonsterController : MonoBehaviour
         }
     }
 
+
+
+
     private void CaculateMonsterToPlayerVector()
     {
         // 플레이어 좌표를 받아서 
         // 몬스터의 위치에서 플레이어 좌표의 유닛 벡터를 구하고
         // _mToPlayer에 저장하기
+
+        Vector2 PlayerPos = Player.GetComponent<Transform>().position;
+        PlayerPos.y -= Player.GetComponent<CircleCollider2D>().radius;
+
+        Vector2 myPos = gameObject.GetComponent<Transform>().position;
+
+        _mToPlayerDistance = PlayerPos- myPos;
+        _mToPlayer = (_mToPlayerDistance).normalized;
+
     }
 
 }

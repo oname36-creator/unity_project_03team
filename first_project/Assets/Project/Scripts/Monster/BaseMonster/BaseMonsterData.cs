@@ -13,4 +13,8 @@ public class BaseMonsterData : ScriptableObject
     [Header("Search Settings")] // 인스펙터에 제목 표시
     public int searchRange;
     public float angle;
+
+    [Header("Attack Settings")] // 인스펙터에 제목 표시
+    public int attackRange;
+
 }
