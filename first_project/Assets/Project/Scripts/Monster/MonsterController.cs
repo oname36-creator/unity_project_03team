@@ -36,6 +36,7 @@ public class MonsterController : MonoBehaviour
     private bool isDead;
     private bool isFounded;
     private bool isAttack;
+    private bool isHurt;
 
     // 뒤집기 bool
     private bool onFlip;
@@ -83,6 +84,13 @@ public class MonsterController : MonoBehaviour
     public bool IsDead
     {
         get { return isDead; }
+        set { isDead = value;}
+    }
+
+    public bool IsHurt 
+    {
+        get { return isHurt;}
+        set { isHurt = value;}
     }
 
     public bool InRange  // Range 안에 있을때
@@ -151,6 +159,7 @@ public class MonsterController : MonoBehaviour
         isDead = false;
         isFounded = false;
         isAttack = false;
+        isHurt = false;
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
@@ -205,23 +214,23 @@ public class MonsterController : MonoBehaviour
     }
 
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.tag == "Attack")
-    //    {
-    //        //_hp -= collision.GetComponent<PlayerController>().GetDamage();
-    //        if (_hp <= 0)
-    //        {
-    //            Interface.Dead();
-    //            isDead = true;
-    //        }
-    //        else
-    //        {
-    //            Interface.Hurt();
-    //        }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Attack")
+        {
+            // 일단 float -> int로 
+            _hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
+            if (_hp <= 0)
+            {
+                isDead = true;
+            }
+            else
+            {
+                
+            }
 
-    //    }
-    //}
+        }
+    }
 
     private void CaculateMonsterToPlayerVector()
     {
