@@ -1,0 +1,242 @@
+using Unity.VisualScripting;
+using UnityEngine;
+
+
+
+public class MonsterController : MonoBehaviour
+{
+
+    #region Serialized Fields
+    [Header("Monster Data")] // 인스펙터에 제목 표시
+    public BaseMonsterData MonsterData;
+
+    [Header("Player Object")] 
+    public GameObject Player;
+
+
+    [Header("Player")]
+    //public PlayerController player;
+
+    #endregion
+
+
+    #region Private Fields
+    private int _hp;
+    private int _damage;
+    private int _searchRange; // 탐색 깊이
+    private int _attackRange; // 공격 가능 거리
+    private int _force; // 힘
+
+    private float _angle;   // 탐색 각도
+    private float _cosValue; // 각도의 cos 값
+
+    private float _speed;
+    private float _maxSpeed; // 최대 속도
+
+    private bool isDead;
+    private bool isFounded;
+    private bool isAttack;
+
+    // 뒤집기 bool
+    private bool onFlip;
+
+    private Vector2 _frontVector;  // 앞 방향 저장 // (1,0)이면 오른쪽 (-1,0)이면 왼쪽
+    private Vector2 _mToPlayer;
+    private Vector2 _mToPlayerDistance; // 거리
+
+
+    private Rigidbody2D _rigidBody2D;
+    private SpriteRenderer _renderer;
+
+    private MonsterStateMachine _monsterMachine;
+
+    private Transform _playerTransform;
+
+    private float _playerRadius;
+
+    private Transform _monsterTransform;
+
+    #endregion
+
+    #region Properties
+
+    public float MaxSpeed
+    {
+        get { return _maxSpeed; }
+    }
+    public float SearchRange
+    {
+        get { return _searchRange; }
+    }
+
+    public float CosValue
+    {
+        get { return _cosValue; }
+    }
+
+    public bool IsAttack 
+    {
+        get { return isAttack; }
+        set { isAttack = value;}
+    }
+
+    public bool IsDead
+    {
+        get { return isDead; }
+    }
+
+    public bool InRange  // Range 안에 있을때
+    {
+        get 
+        {
+            return _mToPlayerDistance.magnitude < _searchRange;
+        }
+
+    }
+
+    public bool InAngle 
+    {
+        get 
+        {
+            return Vector2.Dot(_frontVector, _mToPlayer) > _cosValue;
+        }
+    }
+
+
+
+    public bool InAttackRange  // AttackRange 안에 있을때
+    {
+        get
+        {
+            return _mToPlayerDistance.magnitude < _attackRange;
+        }
+
+    }
+
+
+    public Vector2 Front
+    {
+        get { return _frontVector; }
+        set
+        {
+            if (_frontVector == value) return;  // 방향이 바뀌지 않았다면 리턴
+            onFlip = !onFlip;                  // 방향이 바뀌면 true -> false,  false -> true로 바꾸고 
+            _renderer.flipX = onFlip;          // flip 해주기
+            _frontVector = value;
+        }
+    }
+    public Vector2 GetMToP // 몬스터에서 플레이어 방향의 유닛 벡터 Get
+    {
+        get { return _mToPlayer; }
+    }
+
+
+    #endregion
+
+    #region Unity Lifecycle
+    void Start()
+    {
+        // 1초에 120번만 계산되도록
+        Application.targetFrameRate = 120;
+
+        _hp = MonsterData.hp;
+        _damage = MonsterData.damage;
+        _searchRange = MonsterData.searchRange;
+        _attackRange = MonsterData.attackRange;
+        _angle = MonsterData.angle;
+        _speed = MonsterData.Speed;
+        _maxSpeed = MonsterData.MaxSpeed;
+        _force = MonsterData.Force;
+
+        isDead = false;
+        isFounded = false;
+        isAttack = false;
+
+        _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
+        _rigidBody2D = this.GetComponent<Rigidbody2D>();
+        _renderer = GetComponent<SpriteRenderer>();
+        _frontVector = new Vector2Int(-1, 0);
+        onFlip = true;
+        _renderer.flipX = onFlip;
+
+
+        _monsterMachine = MonsterAiBrain.MakeMachine(MonsterData.Name, this);
+
+        _playerTransform = Player.GetComponent<Transform>();
+        _playerRadius = Player.GetComponent<CircleCollider2D>().radius;
+        _monsterTransform = this.GetComponent<Transform>();
+    
+    }
+
+    void Update()
+    {
+
+        // 죽었다면
+        if (isDead)
+        { 
+            return;
+        }
+        
+        CaculateMonsterToPlayerVector();
+        _monsterMachine.Update();
+
+    }
+
+    #endregion
+
+
+    public void Move(Vector2 dir) 
+    {
+
+        if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed) 
+        {
+            _rigidBody2D.linearVelocity = dir * _maxSpeed; 
+        }
+
+        _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
+        Debug.Log(_rigidBody2D.linearVelocityX);
+    }
+
+
+    public bool Stop()
+    {
+        if (_rigidBody2D.linearVelocity.magnitude < 0.05f) return true;
+        return false;
+    }
+
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.tag == "Attack")
+    //    {
+    //        //_hp -= collision.GetComponent<PlayerController>().GetDamage();
+    //        if (_hp <= 0)
+    //        {
+    //            Interface.Dead();
+    //            isDead = true;
+    //        }
+    //        else
+    //        {
+    //            Interface.Hurt();
+    //        }
+
+    //    }
+    //}
+
+    private void CaculateMonsterToPlayerVector()
+    {
+        // 플레이어 좌표를 받아서 
+        // 몬스터의 위치에서 플레이어 좌표의 유닛 벡터를 구하고
+        // _mToPlayer에 저장하기
+
+        Vector2 PlayerPos = _playerTransform.position;
+        PlayerPos.y -= _playerRadius;
+
+        Vector2 myPos = _monsterTransform.position;
+
+        _mToPlayerDistance = PlayerPos- myPos;
+        _mToPlayer = (_mToPlayerDistance).normalized;
+
+    }
+
+}
