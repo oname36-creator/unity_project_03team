@@ -149,8 +149,8 @@ public class MonsterAiBrain
         else if (name == "Bird")
         {
 
-            IMonsterState search = new BaseMonsterSearch(owner);
-            IMonsterState chase = new BaseMonsterChase(owner);
+            IMonsterState search = new FlyMonsterSearch(owner);
+            IMonsterState fly = new FlyMonsterFly(owner);
             IMonsterState attack = new BaseMonsterAttack(owner);
             IMonsterState hurt = new MonsterHurt(owner);
             IMonsterState die = new MonsterDie(owner);
@@ -183,11 +183,11 @@ public class MonsterAiBrain
                     {
                         return owner.InRange && owner.InAngle;
                     },
-                    targetState: chase
+                    targetState: fly
                     )
             };
 
-            transitionMap[chase] = new List<Transition>
+            transitionMap[fly] = new List<Transition>
             {
                 new Transition( // chase -> die
                     condition: () =>
@@ -248,7 +248,7 @@ public class MonsterAiBrain
                     {
                       return !owner.IsAttack;
                     },
-                    targetState: chase
+                    targetState: fly
                     )
             };
 

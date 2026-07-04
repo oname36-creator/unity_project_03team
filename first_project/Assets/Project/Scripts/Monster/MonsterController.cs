@@ -36,6 +36,7 @@ public class MonsterController : MonoBehaviour
     private bool isDead;
     private bool isFounded;
     private bool isAttack;
+    private bool isAttackable;
     private bool isHurt;
 
     // µÚÁý±â bool
@@ -79,6 +80,11 @@ public class MonsterController : MonoBehaviour
     {
         get { return isAttack; }
         set { isAttack = value;}
+    }
+    public bool IsAttackable
+    {
+        get { return isAttackable; }
+        set { isAttackable = value; }
     }
 
     public bool IsDead
@@ -159,6 +165,7 @@ public class MonsterController : MonoBehaviour
         isDead = false;
         isFounded = false;
         isAttack = false;
+        isAttackable = true;
         isHurt = false;
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
@@ -194,8 +201,13 @@ public class MonsterController : MonoBehaviour
     #endregion
 
 
-    public void Move(Vector2 dir) 
+    public void Move(Vector2 dir, bool Fly = false) 
     {
+        if (Fly) 
+        {
+            _rigidBody2D.AddForce(9.81f * dir, ForceMode2D.Force);
+            return;
+        }
 
         if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed) 
         {
@@ -226,7 +238,7 @@ public class MonsterController : MonoBehaviour
             }
             else
             {
-                
+                isHurt = true;
             }
 
         }

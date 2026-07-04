@@ -38,9 +38,10 @@ public class BaseMonsterAttack : IMonsterState
 
     public void Exit() 
     {
+        _owner.IsAttack = false;
         _animator.SetBool(AnimatorHash.IsAttack, false);
     }
 
-
+    // 코루틴으로 attck이 연속으로 들어가지 않도록 1초에 한번만 공격 가능하도록 attackable을 만들어서 시간 재기
 
 }

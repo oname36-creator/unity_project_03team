@@ -41,6 +41,7 @@ public class MonsterHurt : IMonsterState
 
     public void Exit()
     {
+        _owner.IsHurt = false;
         _animator.SetBool(AnimatorHash.IsHurt, false);
     }
 

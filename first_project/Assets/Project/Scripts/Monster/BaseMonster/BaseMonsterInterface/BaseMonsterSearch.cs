@@ -22,7 +22,7 @@ public class BaseMonsterSearch :  IMonsterState
 
     public void Enter() 
     {
-        Debug.Log("대기");
+        //Debug.Log("대기");
         _animator.SetBool(AnimatorHash.Idle, true);
     }
 
