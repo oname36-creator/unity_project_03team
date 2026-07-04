@@ -5,22 +5,36 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 {
     [Header("Player Stat")]
     public int jumpCount = 0;
-    public float JumpForce = 5f;
+    public float JumpForce = 7.5f;
     public float MoveSpeed = 5f;
+
+    [Header("Aerial Damping (공중 감쇠)")]
+    [Range(0f, 1f)]
+    public float aerialDampingAmount = 0.5f;
+
+    [Header("Player Attack (공격 설정)")]
+    public float attackDamage = 10f;
+    public float attackRange = 1.2f;     
+    public Vector2 attackBoxSize = new Vector2(1.5f, 1f);
+    public string enemyTag = "Monster";
 
     public PlayerPos playerPosData;
 
     // 컴포넌트 참조 (상태 관리와 아이템 적용 분리)
     private PlayerStatus status;
     private ItemEffectApplicator itemApplicator;
+    private Rigidbody2D rb;
 
     private PlayerAction controls;
     private Vector2 moveInput;
+    private float aerialDirectionX = 0f;
 
+    private float facingDirectionX = 1f;
     void Awake()
     {
         status = GetComponent<PlayerStatus>();
         itemApplicator = GetComponent<ItemEffectApplicator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void OnEnable()
@@ -40,24 +54,65 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     void Update()
     {
-        if (status == null) return;
-        // PlayerStatus의 상태를 확인
-        if (status.isDead) return;
+        if (status == null || status.isDead) return;
 
-        Vector3 direction = new Vector3(moveInput.x, 0f, 0f);
+        status.isAerial = !status.isGrounded;
 
-        // 좌우 이동 처리
-        if (direction != Vector3.zero)
+        if (moveInput.x != 0f)
         {
-            transform.Translate(direction * MoveSpeed * Time.deltaTime);
-        }
+            facingDirectionX = Mathf.Sign(moveInput.x);
 
+            // 시각적으로 캐릭터 이미지를 뒤집고 싶다면 아래 주석을 해제하세요.
+            // transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
+        }
         // 데이터 저장
         if (playerPosData != null)
         {
             playerPosData.x = Mathf.RoundToInt(transform.position.x);
             playerPosData.y = Mathf.RoundToInt(transform.position.y);
         }
+    }
+
+    void FixedUpdate()
+    {
+        if (status == null || status.isDead) return;
+
+        float currentMoveX = 0f;
+        float currentVelocityY = rb.linearVelocity.y;
+
+        if (status.isGrounded)
+        {
+            currentMoveX = moveInput.x * MoveSpeed;
+        }
+        else
+        {
+            if (moveInput.x != 0f)
+            {
+                currentMoveX = moveInput.x * MoveSpeed;
+
+                if (aerialDirectionX != 0f && Mathf.Sign(aerialDirectionX) != Mathf.Sign(moveInput.x))
+                {
+                    currentMoveX *= (1f - aerialDampingAmount);
+                }
+            }
+            else
+            {
+                currentMoveX = aerialDirectionX * MoveSpeed;
+            }
+
+            if (currentVelocityY <= 0.1f)
+            {
+                currentVelocityY += Physics2D.gravity.y * Time.fixedDeltaTime * 2f;
+            }
+        }
+
+        rb.linearVelocity = new Vector2(currentMoveX, currentVelocityY);
+    }
+
+    // [유지] 입력 판단 기준을 0.01f로 낮춘 최적의 버전 하나만 남겨둡니다.
+    private void SetAerialDirection()
+    {
+        aerialDirectionX = moveInput.x > 0.01f ? 1f : (moveInput.x < -0.01f ? -1f : 0f);
     }
 
     // -----------------------------------------------------------------
@@ -71,33 +126,74 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        // 중복 조건문을 지우고 깔끔하게 하나로 합쳤습니다.
         if (context.started && jumpCount < 1 && status.isGrounded)
         {
-            GetComponent<Rigidbody2D>().AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
             jumpCount++;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.contacts[0].normal.y > 0.7f)
-        {
-            status.isGrounded = true;
-            jumpCount = 0;
-        }
+        CheckGrounded(collision);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        CheckGrounded(collision);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        status.isGrounded = false;
+        if (status.isGrounded)
+        {
+            // [교정] 바닥에서 벗어나는 순간 점프 관성 방향을 안전하게 저장해 줍니다.
+            SetAerialDirection();
+            status.isGrounded = false;
+        }
     }
+
+    private void CheckGrounded(Collision2D collision)
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.7f)
+            {
+                status.isGrounded = true;
+                jumpCount = 0;
+                aerialDirectionX = 0f;
+                return;
+            }
+        }
+    }
+
+    // ★ 하단에 있던 중복된 SetAerialDirection() 메서드는 깨끗하게 지웠습니다.
 
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            Debug.Log("공격!");
+            if (status == null || status.isDead) return;
+
+            Debug.Log("공격 발동!");
+
+            
+            Vector2 attackPosition = (Vector2)transform.position + new Vector2(facingDirectionX * attackRange, 0f);
+
+            
+            Collider2D[] hitColliders = Physics2D.OverlapBoxAll(attackPosition, attackBoxSize, 0f);
+
+            foreach (Collider2D col in hitColliders)
+            {
+                if (col.CompareTag(enemyTag))
+                {
+                    Debug.Log($"몬스터 적중: {col.name}");
+
+                    // [연동 예시] 몬스터에게 데미지 스크립트가 있다면 호출
+                    // MonsterStatus monster = col.GetComponent<MonsterStatus>();
+                    // if (monster != null) { monster.TakeDamage(attackDamage); }
+                }
+            }
         }
     }
 
@@ -120,12 +216,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
     }
 
-    // 아이템 매니저나 외부 데이터 매니저가 이 함수를 호출할 때의 브릿지 역할들
     public void ExecuteItemEffectByID(int itemNumber)
     {
         switch (itemNumber)
         {
-            case 1: // 1번 빨간 포션 사용 시 데이터 매니저가 아닌 실제 실시간 스탯을 올리도록 수정
+            case 1:
                 if (status != null)
                 {
                     status.ChangeHp(50f);
@@ -133,7 +228,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 }
                 break;
 
-            case 2: // 2번 은신 물약
+            case 2:
                 if (itemApplicator != null)
                 {
                     itemApplicator.ExecuteItemEffectByID(itemNumber);
@@ -162,4 +257,3 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
     }
 }
-

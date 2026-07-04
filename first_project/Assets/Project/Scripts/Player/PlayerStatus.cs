@@ -10,6 +10,8 @@ public class PlayerStatus : MonoBehaviour
     public bool isStealth = false;
     public bool isGrounded = false;
     public bool isDead = false;
+    public bool isAerial = false;
+    public bool isSlow = false;
 
     // HP 변경을 안전하게 처리하는 함수
     public void ChangeHp(float amount)
