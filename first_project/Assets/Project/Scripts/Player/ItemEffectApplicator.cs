@@ -31,6 +31,15 @@ public class ItemEffectApplicator : MonoBehaviour
             case ItemEffectType.Stealth:
                 StartCoroutine(StealthRoutine(data.duration));
                 break;
+            case ItemEffectType.Sword:
+                // ItemData에 적힌 기획 데이터를 플레이어 상태창으로 전달
+                // effectValue = 공격력 증가량, duration = 범위 증가량, usageCount = 6회
+                status.EnableSwordBuff(data.effectValue, data.duration, (int)data.usageCount);
+                break;
+            case ItemEffectType.Gun:
+                // usageCount(예: 6발)만큼 총 버프 활성화
+                status.EnableGunBuff((int)data.usageCount);
+                break;
         }
     }
 
@@ -47,30 +56,29 @@ public class ItemEffectApplicator : MonoBehaviour
             case 2:
                 StartCoroutine(StealthRoutine(5f));
                 break;
+            case 3:
+                // (추가공격력, 추가범위, 횟수)
+                status.EnableSwordBuff(15f, 2.0f, 6);
+                break;
         }
     }
 
     private System.Collections.IEnumerator StealthRoutine(float duration)
     {
         status.isStealth = true;
-        float elapsed = 0f;
 
-        
-        while (elapsed < duration)
+        // 시작할 때 딱 한 번만 알파값 변경
+        if (playerSprite != null)
         {
-            if (playerSprite != null)
-            {
-                
-                playerSprite.color = new Color(1f, 1f, 1f, 0.6f);
-            }
-
-            elapsed += Time.deltaTime;
-            yield return null;
+            playerSprite.color = new Color(1f, 1f, 1f, 0.6f);
         }
+
+        // 매 프레임 돌릴 필요 없이 duration만큼 통째로 대기
+        yield return new WaitForSeconds(duration);
 
         status.isStealth = false;
 
-        // 은신 종료 시 원래대로 원상복구
+        // 종료할 때 딱 한 번만 원상복구
         if (playerSprite != null)
         {
             playerSprite.color = new Color(1f, 1f, 1f, 1f);
