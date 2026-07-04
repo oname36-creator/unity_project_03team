@@ -307,10 +307,6 @@ GameObject:
   - component: {fileID: 1191418368}
   - component: {fileID: 1191418373}
   - component: {fileID: 1191418367}
-  - component: {fileID: 1191418369}
-  - component: {fileID: 1191418372}
-  - component: {fileID: 1191418371}
-  - component: {fileID: 1191418370}
   m_Layer: 0
   m_Name: Rat
   m_TagString: Monster
@@ -372,7 +368,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.7, y: 0.7}
+  m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -428,7 +424,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterController
   MonsterData: {fileID: 11400000, guid: 602dd3941d11da344afda700038bc49f, type: 2}
   Player: {fileID: 925722963}
-  Interface: {fileID: 1191418369}
 --- !u!50 &1191418368
 Rigidbody2D:
   serializedVersion: 5
@@ -456,57 +451,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1191418369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1191418363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca8012f8e9d6f5a41ba431e9bb59329e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IMonster
-  _monsterAttack: {fileID: 1191418372}
-  _monsterSearch: {fileID: 1191418371}
-  _monsterChase: {fileID: 1191418370}
---- !u!114 &1191418370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1191418363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51c7d509a4314ad498185881547434af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterChase
---- !u!114 &1191418371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1191418363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b47969c944717a498266b5eb058c084, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterSearch
---- !u!114 &1191418372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1191418363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c0d7e1aef0e624cba32bcbe1244b91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterAttack
 --- !u!61 &1191418373
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -546,7 +490,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.7, y: 0.7}
-    newSize: {x: 0.7, y: 0.7}
+    newSize: {x: 0.2, y: 0.2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
