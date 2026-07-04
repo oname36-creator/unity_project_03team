@@ -7,7 +7,9 @@ public class BaseMonsterSearch :  IMonsterState
 
     private MonsterController _owner;
     private Animator _animator;
-  
+
+    private float _directionTimer;
+    private readonly float _changeDirectionTime = 1.0f; // 1초마다 방향 전환
 
     // 생성자에서 owner를 직접 받도록 셋업
     public BaseMonsterSearch(MonsterController owner)
@@ -27,9 +29,17 @@ public class BaseMonsterSearch :  IMonsterState
     public void Update() 
     {
 
-        _owner.Move(_owner.Front); 
-        
-        
+        _directionTimer += Time.deltaTime;
+
+        // 지정한 시간이 지나면 몬스터의 앞 방향을 반대로 뒤집음
+        if (_directionTimer >= _changeDirectionTime)
+        {
+            _owner.Front = -_owner.Front;
+            _directionTimer = 0f;
+        }
+
+        // 현재 바라보는 방향으로 이동
+        _owner.Move(_owner.Front);
 
     }
 
