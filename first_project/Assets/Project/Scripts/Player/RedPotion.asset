@@ -9,6 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73cef35525dbcc347871166659cbf579, type: 3}
-  m_Name: PlayerPos
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerPos
+  m_Script: {fileID: 11500000, guid: c391187ee22598d448ffb78a98989dd3, type: 3}
+  m_Name: RedPotion
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemNumber: 1
+  itemName: RedPotion
+  effectType: 1
+  effectValue: 50
+  duration: 0

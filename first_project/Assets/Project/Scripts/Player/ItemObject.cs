@@ -15,7 +15,7 @@ public class ItemObject : MonoBehaviour
 
             // 데이터 매니저에게 이 아이템의 데이터를 주며 추가하라고 명령합니다!
             // 아이템 데이터에 itemNumber가 있다고 가정합니다 (ItemData.itemNumber)
-            //DataManager.Instance.AddItem(itemData.itemNumber);
+            DataManager.Instance.AddItem(itemData.itemNumber);
 
             // 아이템 먹었으니 필드에서 삭제
             Destroy(gameObject);
