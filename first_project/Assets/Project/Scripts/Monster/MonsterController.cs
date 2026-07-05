@@ -14,8 +14,8 @@ public class MonsterController : MonoBehaviour
     public GameObject Player;
 
 
-    [Header("Player")]
-    //public PlayerController player;
+    [Header("Obstacle Layer")]
+    public LayerMask _obstacleLayer;
 
     #endregion
 
@@ -134,7 +134,7 @@ public class MonsterController : MonoBehaviour
     {
         get 
         {
-            return Vector2.Dot(_frontVector, _mToPlayer) > _cosValue;
+            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && CheckForObstacles());
         }
     }
 
@@ -297,4 +297,26 @@ public class MonsterController : MonoBehaviour
 
     }
 
+    public bool CheckForObstacles()
+    {
+        // 지금 위치에서 플레이어 방향으로 
+        Vector2 origin = transform.position;
+        Vector2 direction = _mToPlayer;
+        RaycastHit hit;
+
+        
+        if (Physics.Raycast(origin, direction, out hit, _searchRange, _obstacleLayer))
+        {
+          
+            if (hit.collider.CompareTag("Obstacle"))
+            {
+                //Debug.Log($"[장애물 감지] 태그가 Obstacle인 {hit.collider.name} 발견!");
+                //Debug.DrawRay(origin, direction * hit.distance, Color.red);
+                return true;
+            }
+        }
+
+        //Debug.DrawRay(origin, direction * _searchRange, Color.green);
+        return false;
+    }
 }

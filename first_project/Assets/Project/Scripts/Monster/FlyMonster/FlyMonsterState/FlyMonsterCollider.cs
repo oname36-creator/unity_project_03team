@@ -17,7 +17,6 @@ public class FlyMonsterCollider : IMonsterState
     public void Enter()
     {
         _owner.IsHurt = true;
-        _owner.IsBack = true;
         _owner.Front = -_owner.Front;
     }
 

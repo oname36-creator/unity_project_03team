@@ -351,6 +351,26 @@ public class MonsterAiBrain
                     )
             };
 
+            transitionMap[collider] = new List<Transition>
+            {
+                new Transition( // attack -> die
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+
+                new Transition( // attack -> hurt
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    )
+            };
+
             transitionMap[hurt] = new List<Transition>
             {
 

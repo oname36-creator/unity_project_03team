@@ -16,6 +16,7 @@ public class FlyMonsterSearch : IMonsterState
     {
         _animator.SetBool(AnimatorHash.IsFly, false);
         _animator.SetBool(AnimatorHash.Idle, true);
+        _owner.IsAttackable = true;
     }
 
     public void Update()
