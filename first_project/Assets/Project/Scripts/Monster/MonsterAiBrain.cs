@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -151,7 +151,12 @@ public class MonsterAiBrain
 
             IMonsterState search = new FlyMonsterSearch(owner);
             IMonsterState fly = new FlyMonsterFly(owner);
-            IMonsterState attack = new BaseMonsterAttack(owner);
+            IMonsterState attack = new FlyMonsterAttack(owner);
+            IMonsterState flyEnd = new FlyMonsterFlyEnd(owner);
+            IMonsterState jump = new FlyMonsterJump(owner);
+            IMonsterState collider = new FlyMonsterCollider(owner);
+
+
             IMonsterState hurt = new MonsterHurt(owner);
             IMonsterState die = new MonsterDie(owner);
 
@@ -183,13 +188,13 @@ public class MonsterAiBrain
                     {
                         return owner.InRange && owner.InAngle;
                     },
-                    targetState: fly
+                    targetState: jump
                     )
             };
 
-            transitionMap[fly] = new List<Transition>
+            transitionMap[jump] = new List<Transition>
             {
-                new Transition( // chase -> die
+                new Transition( // search -> die
                     condition: () =>
                     {
                         return owner.IsDead;
@@ -198,7 +203,7 @@ public class MonsterAiBrain
                     ),
 
 
-                new Transition( // chase -> hurt
+                new Transition( // search -> hurt
                     condition: () =>
                     {
                         return owner.IsHurt;
@@ -210,10 +215,58 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
+                        return owner.IsCollision;
+                    },
+                    targetState: collider
+                    ),
+
+                // 람다식 문법( () => { 중괄호로 로직 감싸기 } )을 사용
+                new Transition(
+                    condition: () =>
+                    {
+                        return true;
+                    },
+                    targetState: fly
+                    )
+            };
+
+
+
+            transitionMap[fly] = new List<Transition>
+            {
+                new Transition( 
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+
+                new Transition( 
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsCollision;
+                    },
+                    targetState: collider
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
                       return !owner.InRange || !owner.InAngle;
                     },
-                    targetState: search
+                    targetState: flyEnd
                     ),
+
                 new Transition(
                     condition: () =>
                     {
@@ -222,6 +275,44 @@ public class MonsterAiBrain
                     targetState: attack
                     )
             };
+
+
+            transitionMap[flyEnd] = new List<Transition>
+            {
+                new Transition( // attack -> die
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+
+                new Transition( // attack -> hurt
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsCollision;
+                    },
+                    targetState: collider
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                      return !owner.IsFly;
+                    },
+                    targetState: search
+                    )
+            };
+
 
 
             transitionMap[attack] = new List<Transition>
@@ -246,9 +337,17 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
+                        return owner.IsCollision;
+                    },
+                    targetState: collider
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
                       return !owner.IsAttack;
                     },
-                    targetState: fly
+                    targetState: flyEnd
                     )
             };
 
@@ -258,10 +357,18 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return !owner.IsHurt;
+                        return !owner.IsHurt && owner.IsFly;
+                    },
+                    targetState:flyEnd
+                    ),
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsHurt && !owner.IsFly;
                     },
                     targetState:search
                     )
+
             };
 
 

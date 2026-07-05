@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using UnityEngine;
 
 public class BaseMonsterAttack : IMonsterState
@@ -19,7 +19,7 @@ public class BaseMonsterAttack : IMonsterState
     }
     public void Enter() 
     {
-        Debug.Log("공격");
+        //Debug.Log("공격");
         _owner.IsAttack = true;
         _animator.SetBool(AnimatorHash.IsAttack, true);
         _timer = 0f;

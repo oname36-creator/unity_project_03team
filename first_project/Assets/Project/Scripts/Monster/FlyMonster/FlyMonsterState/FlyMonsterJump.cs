@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FlyMonsterJump : IMonsterState
 {
@@ -16,7 +16,9 @@ public class FlyMonsterJump : IMonsterState
     }
     public void Enter()
     {
+        _animator.SetBool(AnimatorHash.IsFly, false);
         _animator.SetTrigger(AnimatorHash.IsJump);
+        
         _jumpDir = _owner.Front;
         _jumpDir.y = 1;
         _jumpDir = _jumpDir.normalized;

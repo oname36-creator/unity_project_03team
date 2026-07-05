@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+ï»¿using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -7,7 +7,7 @@ public class MonsterController : MonoBehaviour
 {
 
     #region Serialized Fields
-    [Header("Monster Data")] // ÀÎ½ºÆåÅÍ¿¡ Á¦¸ñ Ç¥½Ã
+    [Header("Monster Data")] // ì¸ìŠ¤í™í„°ì— ì œëª© í‘œì‹œ
     public BaseMonsterData MonsterData;
 
     [Header("Player Object")] 
@@ -23,28 +23,31 @@ public class MonsterController : MonoBehaviour
     #region Private Fields
     private int _hp;
     private int _damage;
-    private int _searchRange; // Å½»ö ±íÀÌ
-    private int _attackRange; // °ø°İ °¡´É °Å¸®
-    private int _force; // Èû
+    private int _searchRange; // íƒìƒ‰ ê¹Šì´
+    private int _attackRange; // ê³µê²© ê°€ëŠ¥ ê±°ë¦¬
+    private int _force; // í˜
 
-    private float _angle;   // Å½»ö °¢µµ
-    private float _cosValue; // °¢µµÀÇ cos °ª
+    private float _angle;   // íƒìƒ‰ ê°ë„
+    private float _cosValue; // ê°ë„ì˜ cos ê°’
 
     private float _speed;
-    private float _maxSpeed; // ÃÖ´ë ¼Óµµ
+    private float _maxSpeed; // ìµœëŒ€ ì†ë„
 
     private bool isDead;
     private bool isFounded;
     private bool isAttack;
     private bool isAttackable;
+    private bool isFly;
+    private bool isBack;
     private bool isHurt;
+    private bool isCollision;    
 
-    // µÚÁı±â bool
+    // ë’¤ì§‘ê¸° bool
     private bool onFlip;
 
-    private Vector2 _frontVector;  // ¾Õ ¹æÇâ ÀúÀå // (1,0)ÀÌ¸é ¿À¸¥ÂÊ (-1,0)ÀÌ¸é ¿ŞÂÊ
+    private Vector2 _frontVector;  // ì• ë°©í–¥ ì €ì¥ // (1,0)ì´ë©´ ì˜¤ë¥¸ìª½ (-1,0)ì´ë©´ ì™¼ìª½
     private Vector2 _mToPlayer;
-    private Vector2 _mToPlayerDistance; // °Å¸®
+    private Vector2 _mToPlayerDistance; // ê±°ë¦¬
 
 
     private Rigidbody2D _rigidBody2D;
@@ -99,7 +102,26 @@ public class MonsterController : MonoBehaviour
         set { isHurt = value;}
     }
 
-    public bool InRange  // Range ¾È¿¡ ÀÖÀ»¶§
+    public bool IsFly 
+    {
+        get { return isFly; }
+        set { isFly = value;}
+    }
+
+    public bool IsBack 
+    {
+        get { return isBack;}
+        set { isBack = value;}
+    }
+
+    public bool IsCollision 
+    {
+        get{ return isCollision; }
+        set { isCollision = value;}
+    }
+
+
+    public bool InRange  // Range ì•ˆì— ìˆì„ë•Œ
     {
         get 
         {
@@ -118,7 +140,7 @@ public class MonsterController : MonoBehaviour
 
 
 
-    public bool InAttackRange  // AttackRange ¾È¿¡ ÀÖÀ»¶§
+    public bool InAttackRange  // AttackRange ì•ˆì— ìˆì„ë•Œ
     {
         get
         {
@@ -133,15 +155,20 @@ public class MonsterController : MonoBehaviour
         get { return _frontVector; }
         set
         {
-            if (_frontVector == value) return;  // ¹æÇâÀÌ ¹Ù²îÁö ¾Ê¾Ò´Ù¸é ¸®ÅÏ
-            onFlip = !onFlip;                  // ¹æÇâÀÌ ¹Ù²î¸é true -> false,  false -> true·Î ¹Ù²Ù°í 
-            _renderer.flipX = onFlip;          // flip ÇØÁÖ±â
+            if (_frontVector == value) return;  // ë°©í–¥ì´ ë°”ë€Œì§€ ì•Šì•˜ë‹¤ë©´ ë¦¬í„´
+            onFlip = !onFlip;                  // ë°©í–¥ì´ ë°”ë€Œë©´ true -> false,  false -> trueë¡œ ë°”ê¾¸ê³  
+            _renderer.flipX = onFlip;          // flip í•´ì£¼ê¸°
             _frontVector = value;
         }
     }
-    public Vector2 GetMToP // ¸ó½ºÅÍ¿¡¼­ ÇÃ·¹ÀÌ¾î ¹æÇâÀÇ À¯´Ö º¤ÅÍ Get
+    public Vector2 GetMToP // ëª¬ìŠ¤í„°ì—ì„œ í”Œë ˆì´ì–´ ë°©í–¥ì˜ ìœ ë‹› ë²¡í„° Get
     {
         get { return _mToPlayer; }
+    }
+
+    public Vector2 GetMToPDistance // ëª¬ìŠ¤í„°ì—ì„œ í”Œë ˆì´ì–´ ë°©í–¥ì˜ ìœ ë‹› ë²¡í„° Get
+    {
+        get { return _mToPlayerDistance; }
     }
 
 
@@ -150,7 +177,7 @@ public class MonsterController : MonoBehaviour
     #region Unity Lifecycle
     void Start()
     {
-        // 1ÃÊ¿¡ 120¹ø¸¸ °è»êµÇµµ·Ï
+        // 1ì´ˆì— 120ë²ˆë§Œ ê³„ì‚°ë˜ë„ë¡
         Application.targetFrameRate = 120;
 
         _hp = MonsterData.hp;
@@ -167,6 +194,7 @@ public class MonsterController : MonoBehaviour
         isAttack = false;
         isAttackable = true;
         isHurt = false;
+        isBack = false;
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
@@ -187,7 +215,7 @@ public class MonsterController : MonoBehaviour
     void Update()
     {
 
-        // Á×¾ú´Ù¸é
+        // ì£½ì—ˆë‹¤ë©´
         if (isDead)
         { 
             return;
@@ -205,7 +233,7 @@ public class MonsterController : MonoBehaviour
     {
         if (Fly) 
         {
-            _rigidBody2D.AddForce(9.81f * dir, ForceMode2D.Force);
+            _rigidBody2D.AddForce(9.81f * dir, ForceMode2D.Impulse);
             return;
         }
 
@@ -219,18 +247,18 @@ public class MonsterController : MonoBehaviour
     }
 
 
-    public bool Stop()
+    public void Stop()
     {
-        if (_rigidBody2D.linearVelocity.magnitude < 0.05f) return true;
-        return false;
+        _rigidBody2D.linearVelocity = Vector2.zero;
     }
+
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Attack")
         {
-            // ÀÏ´Ü float -> int·Î 
+            // ì¼ë‹¨ float -> intë¡œ 
             _hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
             if (_hp <= 0)
             {
@@ -244,11 +272,20 @@ public class MonsterController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // ë²½ ë¶€ë”ªí˜ ì²´í¬
+        if (collision.gameObject.CompareTag("Wall")) 
+        {
+            isCollision = true;
+        }
+    }
+
     private void CaculateMonsterToPlayerVector()
     {
-        // ÇÃ·¹ÀÌ¾î ÁÂÇ¥¸¦ ¹Ş¾Æ¼­ 
-        // ¸ó½ºÅÍÀÇ À§Ä¡¿¡¼­ ÇÃ·¹ÀÌ¾î ÁÂÇ¥ÀÇ À¯´Ö º¤ÅÍ¸¦ ±¸ÇÏ°í
-        // _mToPlayer¿¡ ÀúÀåÇÏ±â
+        // í”Œë ˆì´ì–´ ì¢Œí‘œë¥¼ ë°›ì•„ì„œ 
+        // ëª¬ìŠ¤í„°ì˜ ìœ„ì¹˜ì—ì„œ í”Œë ˆì´ì–´ ì¢Œí‘œì˜ ìœ ë‹› ë²¡í„°ë¥¼ êµ¬í•˜ê³ 
+        // _mToPlayerì— ì €ì¥í•˜ê¸°
 
         Vector2 PlayerPos = _playerTransform.position;
         PlayerPos.y -= _playerRadius;

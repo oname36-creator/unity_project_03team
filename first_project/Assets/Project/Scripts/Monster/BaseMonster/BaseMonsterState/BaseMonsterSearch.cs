@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
 
@@ -34,6 +34,7 @@ public class BaseMonsterSearch :  IMonsterState
         // 지정한 시간이 지나면 몬스터의 앞 방향을 반대로 뒤집음
         if (_directionTimer >= _changeDirectionTime)
         {
+            _owner.Stop();
             _owner.Front = -_owner.Front;
             _directionTimer = 0f;
         }

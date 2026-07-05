@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MonsterHurt : IMonsterState
 {
@@ -25,10 +25,7 @@ public class MonsterHurt : IMonsterState
 
     public void Update()
     {
-        if (!_owner.Stop()) 
-        {
-            _owner.Move(-_owner.Front);
-        }
+        _owner.Stop();
 
         _timer += Time.deltaTime;
 

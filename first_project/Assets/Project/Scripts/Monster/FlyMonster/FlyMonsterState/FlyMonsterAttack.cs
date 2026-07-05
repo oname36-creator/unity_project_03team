@@ -1,9 +1,12 @@
+﻿using Unity.VisualScripting;
 using UnityEngine;
 
 public class FlyMonsterAttack : IMonsterState
 {
     private MonsterController _owner;
     private Animator _animator;
+    private Vector2 _playerPos;
+    private Vector2 _myPos;
 
     private float _timer;
     // 애니메이션 작동 시간
@@ -19,18 +22,13 @@ public class FlyMonsterAttack : IMonsterState
 
     public void Enter()
     {
-
+        _playerPos = _owner.GetMToP * _owner.GetMToPDistance;
+        _myPos = _owner.GetComponent<Transform>().position;
     }
 
 
     public void Update()
     {
-        _timer += Time.deltaTime;
-
-        if (_timer >= _attackDuration)
-        {
-            _owner.IsAttack = false;
-        }
 
     }
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FlyMonsterSearch : IMonsterState
 {
@@ -14,7 +14,8 @@ public class FlyMonsterSearch : IMonsterState
     }
     public void Enter()
     {
-        //_animator.SetBool(AnimatorHash.Idle, true);
+        _animator.SetBool(AnimatorHash.IsFly, false);
+        _animator.SetBool(AnimatorHash.Idle, true);
     }
 
     public void Update()
@@ -25,7 +26,7 @@ public class FlyMonsterSearch : IMonsterState
 
     public void Exit()
     {
-        //_animator.SetBool(AnimatorHash.Idle, false);
+        _animator.SetBool(AnimatorHash.Idle, false);
     }
 
 }

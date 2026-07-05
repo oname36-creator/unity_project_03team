@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5485d653af23a334f841532f5b2272b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 435133d6375fae94796da4ebb9029c53, type: 3}
   m_Name: FlyMonsterData
-  m_EditorClassIdentifier: Assembly-CSharp::FlyMonsterData
+  m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterData
   hp: 100
   damage: 10
-  Speed: 10
-  MaxSpeed: 30
+  Speed: 30
+  MaxSpeed: 50
   Force: 100
   Name: Bird
   searchRange: 30
   angle: 45
-  attackRange: 1
+  attackRange: 10
