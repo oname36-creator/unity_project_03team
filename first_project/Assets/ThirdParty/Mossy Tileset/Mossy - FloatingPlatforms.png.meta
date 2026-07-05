@@ -143,10 +143,10 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_0
       rect:
         serializedVersion: 2
-        x: 114
-        y: 1678
-        width: 260
-        height: 321
+        x: 115
+        y: 1679
+        width: 258
+        height: 318
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,10 +165,10 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_2
       rect:
         serializedVersion: 2
-        x: 477
-        y: 1560
-        width: 1052
-        height: 454
+        x: 479
+        y: 1562
+        width: 1049
+        height: 451
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,10 +187,10 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_3
       rect:
         serializedVersion: 2
-        x: 1593
-        y: 1061
-        width: 451
-        height: 944
+        x: 1595
+        y: 1063
+        width: 447
+        height: 941
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -209,10 +209,10 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_5
       rect:
         serializedVersion: 2
-        x: 46
-        y: 1136
-        width: 383
-        height: 372
+        x: 47
+        y: 1138
+        width: 381
+        height: 368
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -231,10 +231,10 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_6
       rect:
         serializedVersion: 2
-        x: 496
-        y: 1058
-        width: 1052
-        height: 454
+        x: 497
+        y: 1059
+        width: 1049
+        height: 451
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -253,10 +253,10 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_7
       rect:
         serializedVersion: 2
-        x: 111
-        y: 664
-        width: 286
-        height: 276
+        x: 113
+        y: 623
+        width: 281
+        height: 315
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -272,22 +272,66 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mossy - FloatingPlatforms_8
+      name: Mossy - FloatingPlatforms_1
       rect:
         serializedVersion: 2
-        x: 438
-        y: 528
-        width: 1562
-        height: 427
+        x: 366
+        y: 1826
+        width: 15
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c7460cbd4f9ba6cd0800000000000000
+      spriteID: 8d18b1df0ecee1b4cbeb076b31744480
+      internalID: -5043810790546849346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mossy - FloatingPlatforms_4
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 1169
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11f4f1696c83863478c72efcb5c375f7
+      internalID: 1823048953446468025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mossy - FloatingPlatforms_8
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 503
+        width: 1561
+        height: 450
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d66c462b519c5d4bad7b9038f5cd5e5
       internalID: -2564032576524098436
       vertices: []
       indices: 
@@ -297,19 +341,19 @@ TextureImporter:
       name: Mossy - FloatingPlatforms_9
       rect:
         serializedVersion: 2
-        x: 19
-        y: 30
-        width: 2016
-        height: 454
+        x: 20
+        y: 31
+        width: 2013
+        height: 451
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ae69a88372232be50800000000000000
+      spriteID: 05fa1b029a102bd4f9d97681c75635bd
       internalID: 6823571529453442794
       vertices: []
       indices: 
@@ -327,11 +371,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Mossy - FloatingPlatforms_0: -2527406384049011000
       Mossy - FloatingPlatforms_1: -5043810790546849346
-      Mossy - FloatingPlatforms_10: 204047232
       Mossy - FloatingPlatforms_2: 3758862390733383049
       Mossy - FloatingPlatforms_3: 927450667673174160
       Mossy - FloatingPlatforms_4: 1823048953446468025

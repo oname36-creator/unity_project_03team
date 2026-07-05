@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
+  m_Name: MapChenk_ATrap
+  m_EditorClassIdentifier: Assembly-CSharp::SOMapData
+  trapList:
+  - position: {x: 1.0119901, y: 1.03813, z: 0}
+    prefabIndex: 1
+  - position: {x: 0.01199007, y: 1.03813, z: 0}
+    prefabIndex: 1
+  - position: {x: -0.9880099, y: 1.03813, z: 0}
+    prefabIndex: 1
+  - position: {x: -2.9880104, y: 1.03813, z: 0}
+    prefabIndex: 1
+  - position: {x: -3.9880104, y: 1.03813, z: 0}
+    prefabIndex: 1
+  - position: {x: -4.9880104, y: 1.03813, z: 0}
+    prefabIndex: 1
+  chunkSequence:
+  - {fileID: 0}
