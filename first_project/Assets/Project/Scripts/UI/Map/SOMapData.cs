@@ -2,9 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[System.Serializable]
-public struct STrapSpawnData
+public enum EGimmickType
 {
+    Trap,
+    JumpPad,
+    Platform,
+    Breakable
+}
+
+[System.Serializable]
+public struct SGimmickSpawnData
+{
+    public EGimmickType gimmickType;
     public Vector3 position;
     public int prefabIndex;
 }
@@ -14,6 +23,6 @@ public class SOMapData : ScriptableObject
 {
     // 함정 위치
     [Header("함정 생성 위치 데이터")]
-    public List<STrapSpawnData> trapList = new List<STrapSpawnData>();
+    public List<SGimmickSpawnData> gimmicList = new List<SGimmickSpawnData>();
     public List<GameObject> chunkSequence;
 }
