@@ -23,7 +23,10 @@ public class MapBaker : MonoBehaviour
     [Header("데이터")]
     [SerializeField] private SOMapData mapData;     // 저장할 SO 파일
 
-    // 기믹 종류 여기다가 넣으면 됨
+    [Header("임시 타일맵")]
+    [Tooltip("오브젝트 브러시 사용 시 프리펩이 저장되는 임시 부모 오브젝트를 넣어주세요")]
+    [SerializeField] private Transform paintedObjectSource;
+
     [Header("기믹 종류 세팅 목록")]
     [SerializeField] private List<SGimmickBakeSetting> bakeSettings;
 
@@ -31,106 +34,98 @@ public class MapBaker : MonoBehaviour
     [ContextMenu("내가 원하는 오브젝트로 생성된 타일 이동")]
     public void BakeAllMapData()
     {
+        // SO 예외처리
         if(mapData == null)
         {
             Debug.LogError("[MapBaker] 저장할 SOMapData가 연결되지 않았습니다!");
             return;
         }
+        // 임시로부터 오브젝트 이동
+        int organizeCount = OrganizeNewObjects();
 
-        // 초기화
-        mapData.gimmicList.Clear();
+        // SO로 데이터 보냄
+        BakeAllData();
 
-        // 순회
-        foreach(SGimmickBakeSetting setting in bakeSettings)
-        {
-            // 비어있지 않을때만 실행
-            if (setting.parentTransform != null && setting.prefabList != null && setting.prefabList.Count > 0)
-            { 
-                BakeGroup(setting.parentTransform, setting.prefabList, setting.gimmickType);
-            }
-        }    
-       
-        
 #if UNITY_EDITOR
         EditorUtility.SetDirty(mapData);
+        EditorUtility.SetDirty(this.gameObject);
         AssetDatabase.SaveAssets();     // 변경된 에셋 파일 디스크에 즉시 물리 저장
 #endif
-        Debug.Log($"<color=cyan>[MapBaker] 베이킹 완료!");
+        Debug.Log($"<color=cyan>[MapBaker] 베이킹 완료! 신규 {organizeCount}개 이동됨");
     }
 
-    private void BakeGroup(Transform parent, List<GameObject> prefabTypeList, EGimmickType type)
+   
+
+    // 임시 부모 폴더를 내가 원하는 폴더로 이동
+    private int OrganizeNewObjects()
     {
-        for(int i=0; i<parent.childCount; ++i)
+        int count = 0;
+        for(int i= paintedObjectSource.childCount - 1; i >=0; --i)
         {
-            GameObject child = parent.GetChild(i).gameObject;
-
-#if UNITY_EDITOR
-            // 이 씬 오브젝트가 원래 어떤 프리팹에서 나왔는지 찾기
-            GameObject sourcePrefab = PrefabUtility.GetCorrespondingObjectFromSource(child);
-#else
-            GameObject sourcePrefab = null
-#endif
-            int matchedIndex = prefabTypeList.FindIndex(p => p == sourcePrefab);
-
-            if (matchedIndex == -1)
+            GameObject child = paintedObjectSource.GetChild(i).gameObject;
+            // BakeAllData와 겹치는 부분임 리펙토링 필요
+            string cleanName = child.name.Replace("(Clone)", "").Trim();
+            int bracketIndex = cleanName.LastIndexOf(" (");
+            if(bracketIndex > 0)
             {
-                Debug.LogWarning($"[MapBaker] '{child.name}'는 등록된 프리팹 종류와 일치하지 않아 건너뜁니다.");
-                continue;
+                cleanName = cleanName.Substring(0, bracketIndex);
             }
 
-            mapData.gimmicList.Add(new SGimmickSpawnData
+            bool isMoved = false;
+            foreach(var setting in bakeSettings)
             {
-                gimmickType = type,
-                position = child.transform.position,
-                prefabIndex = matchedIndex
-            });
+                if(setting.prefabList.Exists(p => p != null && p.name == cleanName))
+                {
+                    child.transform.SetParent(setting.parentTransform);
+                    count++;
+                    isMoved = true;
+                    break;
+                }
+            }
 
+            // 예외처리
+            if(!isMoved)
+            {
+                Debug.LogWarning($"[MapBaker] '{cleanName}'은(는) 인스펙터 프리팹 리스트에 등록되지 않아 이동되지 않았습니다!");
+
+            }
+        }
+        return count;
+    }
+
+    private void BakeAllData()
+    {
+        mapData.gimmicList.Clear();
+
+        foreach(SGimmickBakeSetting setting in bakeSettings)
+        {
+            if (setting.parentTransform == null)
+                continue;
+            for(int i=0; i < setting.parentTransform.childCount; ++i)
+            {
+                GameObject child = setting.parentTransform.GetChild(i).gameObject;
+
+                // 리펙토링 할 수 있을지도?
+                string cleanName = child.name.Replace("(Clone)", "").Trim();
+                int bracketIndex = cleanName.LastIndexOf(" (");
+                if(bracketIndex > 0)
+                {
+                    cleanName = cleanName.Substring(0, bracketIndex);
+                }
+
+
+                int matchedIndex = setting.prefabList.FindIndex(p => p != null && p.name == cleanName);
+
+                if(matchedIndex != -1)
+                {
+                    mapData.gimmicList.Add(new SGimmickSpawnData
+                    {
+                        gimmickType = setting.gimmickType,
+                        position = child.transform.position,
+                        prefabIndex = matchedIndex
+                    });
+                }
+            }
         }
     }
 }
-
-
-// 예외 처리 (연결이 안 되어 있으면 중단)
-//if (mapData == null || trapParent == null || trapPrefabTypes == null || tempTrapTilemap == null || trapPrefabTypes.Count == 0)
-//{
-//    Debug.LogError("[MapBaker] 연결되지 않은 오브젝트가 있습니다!");
-//    return;
-//}
-//// 1. 초기화
-//mapData.trapList.Clear();
-
-//// 내가 옮기려는 오브젝트 밑에 있던 것들 청소 (다시 구울 때 중복 방지)
-//for (int i = trapParent.childCount - 1; i >= 0; i--)
-//{
-//    DestroyImmediate(trapParent.GetChild(i).gameObject);
-//}
-
-//int count = 0;
-//int childCount = trapParent.childCount;
-//for (int i = tempTrapTilemap.childCount - 1; i >= 0; i--)
-//{
-//    GameObject child = tempTrapTilemap.GetChild(i).gameObject;
-
-//#if UNITY_EDITOR
-//    // 이 씬 오브젝트가 원래 어떤 프리팹에서 나왔는지 찾기
-//    GameObject sourcePrefab = PrefabUtility.GetCorrespondingObjectFromSource(child);
-//#else
-//           GameObject sourcePrefab = null;
-//#endif
-//    int matchedIndex = trapPrefabTypes.FindIndex(p => p == sourcePrefab);
-
-//    if (matchedIndex == -1)
-//    {
-//        Debug.LogWarning($"[MapBaker] '{child.name}'는 등록된 프리팹 종류와 일치하지 않아 건너뜁니다.");
-//        continue;
-//    }
-//    mapData.trapList.Add(new STrapSpawnData
-//    {
-//        position = child.transform.position,
-//        prefabIndex = matchedIndex
-//    });
-
-//    child.transform.SetParent(trapParent);
-
-//    count++;
-//}

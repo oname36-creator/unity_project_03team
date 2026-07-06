@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 public enum EGimmickType
 {
     Trap,
+    Pad,
     JumpPad,
     Platform,
     Breakable
