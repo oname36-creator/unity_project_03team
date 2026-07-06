@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Monster
   - Bullet
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 

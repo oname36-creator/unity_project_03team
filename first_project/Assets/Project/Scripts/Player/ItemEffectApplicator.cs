@@ -60,6 +60,17 @@ public class ItemEffectApplicator : MonoBehaviour
                 // (추가공격력, 추가범위, 횟수)
                 status.EnableSwordBuff(15f, 2.0f, 6);
                 break;
+            case 4:
+                if (status != null)
+                {
+                    // PlayerStatus에 구현해두신 Gun 버프 활성화 함수를 호출합니다. (예: 6발)
+                    status.EnableGunBuff(6);
+                    Debug.Log("총기 버프 활성화 완료! 이제 J키로 발사 가능.");
+                }
+                break;
+            default:
+                Debug.LogWarning($"정의되지 않은 아이템 번호입니다: {itemNumber}");
+                break;
         }
     }
 

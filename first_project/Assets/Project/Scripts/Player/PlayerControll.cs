@@ -5,7 +5,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 {
     [Header("Player Stat")]
     public int jumpCount = 0;
-    public float JumpForce = 7.5f;
+    public float JumpForce = 10f;
     public float MoveSpeed = 5f;
 
     [Header("Aerial Damping (공중 감쇠)")]
@@ -16,9 +16,16 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public Vector2 attackBoxSize = new Vector2(1.5f, 1f);
     public string enemyTag = "Monster";
 
+    [Header("Ground Check Settings (바닥 체크 설정)")]
+    [Tooltip("플레이어 발밑에 배치한 빈 오브젝트를 넣어주세요.")]
+    public Transform groundCheckPoint;
+    [Tooltip("바닥을 감지할 박스의 크기입니다.")]
+    public Vector2 groundCheckSize = new Vector2(0.6f, 0.1f);
+    [Tooltip("바닥으로 인식할 레이어(예: Ground)를 선택하세요.")]
+    public LayerMask groundLayer;
+
     public PlayerPos playerPosData;
 
-    // 컴포넌트 참조 (상태 관리와 아이템 적용 분리)
     private PlayerStatus status;
     private ItemEffectApplicator itemApplicator;
     private Rigidbody2D rb;
@@ -27,6 +34,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private Vector2 moveInput;
 
     private float facingDirectionX = 1f;
+
     void Awake()
     {
         status = GetComponent<PlayerStatus>();
@@ -53,16 +61,26 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
+        // [핵심 변경] 실시간으로 발밑에 groundLayer를 가진 콜라이더가 있는지 체크합니다.
+        if (groundCheckPoint != null)
+        {
+            status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
+        }
+
+        // 바닥에 닿아있다면 점프 카운트를 리셋합니다.
+        if (status.isGrounded)
+        {
+            jumpCount = 0;
+        }
+
         status.isAerial = !status.isGrounded;
 
         if (moveInput.x != 0f)
         {
             facingDirectionX = Mathf.Sign(moveInput.x);
-
-            // 시각적으로 캐릭터 이미지를 뒤집고 싶다면 아래 주석을 해제하세요.
             // transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
         }
-        // 데이터 저장
+
         if (playerPosData != null)
         {
             playerPosData.x = Mathf.RoundToInt(transform.position.x);
@@ -77,7 +95,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         float currentMoveX = rb.linearVelocity.x;
         float currentVelocityY = rb.linearVelocity.y;
 
-        // 1. 좌우 이동 제어 (기존 유지)
+        // 1. 좌우 이동 제어
         if (status.isGrounded)
         {
             currentMoveX = moveInput.x * MoveSpeed;
@@ -102,17 +120,15 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
 
-        // 2. [수정] 스피디한 중력 제어 (지루한 둥실거림 완벽 해결)
+        // 2. 스피디한 중력 제어
         if (!status.isGrounded)
         {
             if (currentVelocityY > 0f)
             {
-                // [상승 중] 상승할 때도 중력을 살짝 더 주어(1.5배) 붕 뜨는 느낌 없이 팍 치고 올라가게 합니다.
                 currentVelocityY += Physics2D.gravity.y * 1.5f * Time.fixedDeltaTime;
             }
             else if (currentVelocityY < 0f)
             {
-                // [하강 중] 최고점을 찍고 떨어질 때는 중력을 훨씬 강하게(4.0배) 주어 자석처럼 빠르게 착지시킵니다.
                 currentVelocityY += Physics2D.gravity.y * 4.0f * Time.fixedDeltaTime;
             }
         }
@@ -132,84 +148,62 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public void OnJump(InputAction.CallbackContext context)
     {
         if (status == null || status.isDead) return;
-
-        // [핵심] 오직 스페이스바를 누른 '순간'(started)에만 힘을 줍니다.
-        // 키를 언제 떼든(canceled) 속도를 건드리는 로직을 완전히 제거했습니다.
+        // 이제 정확한 isGrounded 판정 덕분에 점프가 씹히지 않습니다.
         if (context.started && jumpCount < 1 && status.isGrounded)
         {
             rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
             jumpCount++;
+            
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    // [팁] 에디터 뷰에서 바닥 체크 상자의 크기와 위치를 빨간 선으로 시각화해 줍니다.
+    private void OnDrawGizmosSelected()
     {
-        CheckGrounded(collision);
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        CheckGrounded(collision);
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        // 벼랑 끝에서 떨어질 때 IsGrounded를 해제하는 깔끔한 예외 처리
-        // 이전의 SetAerialDirection() 호출부를 제거하여 관성이 꼬이는 문제를 방지합니다.
-        if (status != null && status.isGrounded)
+        if (groundCheckPoint != null)
         {
-            status.isGrounded = false;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
         }
     }
 
-    private void CheckGrounded(Collision2D collision)
-    {
-        foreach (ContactPoint2D contact in collision.contacts)
-        {
-            // 경사면 판정 완화 (0.7f -> 0.6f) : 경사로에서 점프가 씹히는 현상 방지
-            if (contact.normal.y > 0.6f)
-            {
-                status.isGrounded = true;
-                jumpCount = 0;
-                return;
-            }
-        }
-    }
+    // 기존의 OnCollision 계열 메서드들은 중복 판정 및 꼬임 방지를 위해 모두 삭제했습니다.
 
-
-
-    public void OnAttack(InputAction.CallbackContext context)
+   
+       public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.started)
         {
+            // 1단계 테스트: J키 입력 자체가 들어오는가?
+            Debug.Log($"[공격 테스트] J키 누름 판정 들어옴! 현재 status 상태: {(status != null ? "존재함" : "Null!!")}");
+
             if (status == null || status.isDead) return;
 
-            // -------------------------------------------------------------
-            // 원거리 공격 (총을 들고 있을 때)
-            // -------------------------------------------------------------
+            // 2단계 테스트: 총을 가졌다고 판정되는가?
+            Debug.Log($"[공격 테스트] 현재 플레이어의 hasGun 상태: {status.hasGun}");
+
             if (status.hasGun)
             {
                 Debug.Log("총기 발사!");
-
-                // 플레이어 위치에서 약간 앞쪽 발사 지점 설정 (원한다면 FirePoint 오브젝트를 따로 선언해도 좋음)
                 Vector2 firePosition = (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
 
-                // 풀 매니저에서 총알 땡겨오기
-                GameObject bullet = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
+                // 1. 풀에서 총알을 가져옵니다.
+                GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
 
-                // [참고] 총알 스크립트에 방향을 넘겨주는 컴포넌트가 있다면 아래처럼 호출합니다.
-                // Bullet bulletScript = bullet.GetComponent<Bullet>();
-                // if (bulletScript != null) { bulletScript.Launch(facingDirectionX); }
+                // 2. 총알의 Bullet 스크립트 컴포넌트를 가져와 Launch를 호출합니다. ★★★
+                if (bulletGo != null)
+                {
+                    Bullet bulletScript = bulletGo.GetComponent<Bullet>();
+                    if (bulletScript != null)
+                    {
+                        bulletScript.Launch(facingDirectionX); // 플레이어가 보는 방향을 전달!
+                    }
+                }
 
-                // 총알 차감 및 로그 실행
                 status.OnGunAttackExecute();
-
-                return; // 총을 쐈으니 아래의 근접 공격 로직은 건너뜁니다.
+                return; // 총을 쐈으므로 아래 근접 공격 코드는 실행하지 않고 리턴
             }
 
-            // -------------------------------------------------------------
-            // 근접 공격 (기본 상태 또는 소드 상태일 때)
-            // -------------------------------------------------------------
             Debug.Log("근접 공격 발동!");
             float currentRange = status.currentAttackRange;
             Vector2 attackPosition = (Vector2)transform.position + new Vector2(facingDirectionX * currentRange, 0f);

@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviour
         timer = 0f; // 타이머 초기화
 
         // 플레이어가 왼쪽을 보고 쏘면 총알 이미지도 왼쪽으로 뒤집기
-        transform.localScale = new Vector3(directionX, 1f, 1f);
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * direction, transform.localScale.y, transform.localScale.z);
     }
 
     void Update()
