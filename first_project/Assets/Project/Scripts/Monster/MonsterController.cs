@@ -10,7 +10,7 @@ public class MonsterController : MonoBehaviour
     [Header("Monster Data")] // 인스펙터에 제목 표시
     public BaseMonsterData MonsterData;
 
-    [Header("Player Object")] 
+    [Header("Player Object")]
     public GameObject Player;
 
 
@@ -40,7 +40,7 @@ public class MonsterController : MonoBehaviour
     private bool isFly;
     private bool isBack;
     private bool isHurt;
-    private bool isCollision;    
+    private bool isCollision;
 
     // 뒤집기 bool
     private bool onFlip;
@@ -65,6 +65,11 @@ public class MonsterController : MonoBehaviour
 
     #region Properties
 
+    public float Speed
+    {
+        get { return _speed; }
+    }
+
     public float MaxSpeed
     {
         get { return _maxSpeed; }
@@ -79,10 +84,10 @@ public class MonsterController : MonoBehaviour
         get { return _cosValue; }
     }
 
-    public bool IsAttack 
+    public bool IsAttack
     {
         get { return isAttack; }
-        set { isAttack = value;}
+        set { isAttack = value; }
     }
     public bool IsAttackable
     {
@@ -93,48 +98,48 @@ public class MonsterController : MonoBehaviour
     public bool IsDead
     {
         get { return isDead; }
-        set { isDead = value;}
+        set { isDead = value; }
     }
 
-    public bool IsHurt 
+    public bool IsHurt
     {
-        get { return isHurt;}
-        set { isHurt = value;}
+        get { return isHurt; }
+        set { isHurt = value; }
     }
 
-    public bool IsFly 
+    public bool IsFly
     {
         get { return isFly; }
-        set { isFly = value;}
+        set { isFly = value; }
     }
 
-    public bool IsBack 
+    public bool IsBack
     {
-        get { return isBack;}
-        set { isBack = value;}
+        get { return isBack; }
+        set { isBack = value; }
     }
 
-    public bool IsCollision 
+    public bool IsCollision
     {
-        get{ return isCollision; }
-        set { isCollision = value;}
+        get { return isCollision; }
+        set { isCollision = value; }
     }
 
 
     public bool InRange  // Range 안에 있을때
     {
-        get 
+        get
         {
             return _mToPlayerDistance.magnitude < _searchRange;
         }
 
     }
 
-    public bool InAngle 
+    public bool InAngle
     {
-        get 
+        get
         {
-            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && CheckForObstacles());
+            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
         }
     }
 
@@ -209,7 +214,7 @@ public class MonsterController : MonoBehaviour
         _playerTransform = Player.GetComponent<Transform>();
         _playerRadius = Player.GetComponent<CircleCollider2D>().radius;
         _monsterTransform = this.GetComponent<Transform>();
-    
+
     }
 
     void Update()
@@ -217,33 +222,34 @@ public class MonsterController : MonoBehaviour
 
         // 죽었다면
         if (isDead)
-        { 
+        {
             return;
         }
-        
+
         CaculateMonsterToPlayerVector();
         _monsterMachine.Update();
+
 
     }
 
     #endregion
 
 
-    public void Move(Vector2 dir, bool Fly = false) 
+    public void Move(Vector2 dir, bool Fly = false)
     {
-        if (Fly) 
+        if (Fly)
         {
             _rigidBody2D.AddForce(9.81f * dir, ForceMode2D.Impulse);
             return;
         }
 
-        if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed) 
+        if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed)
         {
-            _rigidBody2D.linearVelocity = dir * _maxSpeed; 
+            _rigidBody2D.linearVelocity = dir * _maxSpeed;
         }
 
         _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
-        Debug.Log(_rigidBody2D.linearVelocityX);
+        //Debug.Log(_rigidBody2D.linearVelocityX);
     }
 
 
@@ -258,31 +264,30 @@ public class MonsterController : MonoBehaviour
     {
         if (collision.tag == "Attack")
         {
+            isHurt = true;
             // 일단 float -> int로 
             _hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
             if (_hp <= 0)
             {
                 isDead = true;
             }
-            else
-            {
-                isHurt = true;
-            }
+
 
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 벽 부딪힘 체크
-        if (collision.gameObject.CompareTag("Wall")) 
-        {
-            isCollision = true;
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    // 벽 부딪힘 체크
+    //    if (collision.gameObject.CompareTag("Untagged")) 
+    //    {
+    //        isHurt = true;
+    //    }
+    //}
 
     private void CaculateMonsterToPlayerVector()
     {
+
         // 플레이어 좌표를 받아서 
         // 몬스터의 위치에서 플레이어 좌표의 유닛 벡터를 구하고
         // _mToPlayer에 저장하기
@@ -292,7 +297,7 @@ public class MonsterController : MonoBehaviour
 
         Vector2 myPos = _monsterTransform.position;
 
-        _mToPlayerDistance = PlayerPos- myPos;
+        _mToPlayerDistance = PlayerPos - myPos;
         _mToPlayer = (_mToPlayerDistance).normalized;
 
     }
@@ -302,21 +307,20 @@ public class MonsterController : MonoBehaviour
         // 지금 위치에서 플레이어 방향으로 
         Vector2 origin = transform.position;
         Vector2 direction = _mToPlayer;
-        RaycastHit hit;
 
-        
-        if (Physics.Raycast(origin, direction, out hit, _searchRange, _obstacleLayer))
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, _searchRange, _obstacleLayer);
+
+
+        if (hit.collider != null)
         {
-          
-            if (hit.collider.CompareTag("Obstacle"))
+            if (hit.collider.CompareTag("Untagged"))
             {
-                //Debug.Log($"[장애물 감지] 태그가 Obstacle인 {hit.collider.name} 발견!");
-                //Debug.DrawRay(origin, direction * hit.distance, Color.red);
+
                 return true;
             }
         }
 
-        //Debug.DrawRay(origin, direction * _searchRange, Color.green);
+
         return false;
     }
 }

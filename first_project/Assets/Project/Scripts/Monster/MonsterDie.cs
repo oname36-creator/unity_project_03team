@@ -15,6 +15,7 @@ public class MonsterDie : IMonsterState
     public void Enter()
     {
         _animator.SetBool(AnimatorHash.IsDead, true);
+        _owner.gameObject.SetActive(false);
         _owner.Stop();
     }
 
@@ -27,6 +28,7 @@ public class MonsterDie : IMonsterState
     {
         _owner.IsDead = false;
         _animator.SetBool(AnimatorHash.IsDead, false);
+        _owner.gameObject.SetActive(true);
     }
 
 

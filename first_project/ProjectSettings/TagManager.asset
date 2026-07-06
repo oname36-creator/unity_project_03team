@@ -5,13 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Monster
-  - Wall
-  - LandingPoint
+  - MonsterBullet
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 

@@ -23,7 +23,7 @@ public class BaseMonsterSearch :  IMonsterState
     public void Enter() 
     {
         //Debug.Log("대기");
-        _animator.SetBool(AnimatorHash.Idle, true);
+        //_animator.SetBool(AnimatorHash.Idle, true);
     }
 
     public void Update() 
@@ -39,19 +39,11 @@ public class BaseMonsterSearch :  IMonsterState
             _directionTimer = 0f;
         }
 
-        // 현재 바라보는 방향으로 이동
-        _owner.Move(_owner.Front);
-
     }
 
     public void Exit() 
     {
-        _animator.SetBool(AnimatorHash.Idle, false);
+        //_animator.SetBool(AnimatorHash.Idle, false);
     }
-
-
-
-
-
 
 }
