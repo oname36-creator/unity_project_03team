@@ -14,7 +14,6 @@ public class PlayerStatus : MonoBehaviour
     public bool isGrounded = false;
     public bool isDead = false;
     public bool isAerial = false;
-    public bool isSlow = false;
     [HideInInspector] public bool hasGun = false; // 현재 총을 들고 있는가?
     private int gunAttackCount = 0;               // 총 남은 총알 수
 
@@ -22,6 +21,19 @@ public class PlayerStatus : MonoBehaviour
     public float currentAttackRange { get; private set; }
 
     private int swordAttackCount = 0; // 검 남은 사용 횟수
+    [HideInInspector] public float speedMultiplier = 1f;
+    private bool _isSlow = false;
+    public bool isSlow
+    {
+        get => _isSlow;
+        set
+        {
+            _isSlow = value;
+            // isSlow가 true면 0.4배속, false면 1배속(정상)
+            speedMultiplier = _isSlow ? 0.4f : 1f;
+            Debug.Log($"isSlow 상태 변경: {_isSlow} -> 현재 속도 배율: {speedMultiplier}");
+        }
+    }
 
     void Awake()
     {

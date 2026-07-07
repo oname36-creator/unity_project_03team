@@ -132,6 +132,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 currentVelocityY += Physics2D.gravity.y * 4.0f * Time.fixedDeltaTime;
             }
         }
+        currentMoveX *= status.speedMultiplier;
 
         rb.linearVelocity = new Vector2(currentMoveX, currentVelocityY);
     }
