@@ -1,78 +1,116 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MapManager : MonoBehaviour
 {
-    [Header("맵 세팅")]
-    public GameObject[] mapPrefabs;     // 맵 프리팹 연결
-    public Transform player;
-    
-    // 플레이어 앞쪽 거리에 도달하면 새 맵 스폰 
+    [Header("맵 데이터")]
+    public SOMapPalette currentMapData;
+
+    [Header("세팅")]
+    public Transform Player;
     public float spawnTriggerDistance = 30f;
 
-    // 오브젝트 풀링을 위한 2개의 바구니
-    private Queue<GameObject> mapPool = new Queue<GameObject>();
+    // 프리팹 종류별로 관리
+    private Dictionary<GameObject, Queue<GameObject>> mapPools = new Dictionary<GameObject, Queue<GameObject>>();
+
+    // 화면에 깔려있는 맵들
     private Queue<GameObject> activeMaps = new Queue<GameObject>();
 
-    private Vector3 nextSpawnPosition = Vector3.zero;   // 다음 맵이 생성될 좌표
+    // 테트리스처럼 골고루 뽑기 위한 주머니
+    private List<GameObject> shuffleBag = new List<GameObject>();
+
+    private Vector3 nextSpawnPosition = Vector3.zero;
     void Start()
     {
-        // 게임 시작 시 맵 4개 미리 깔아둠
-        for(int i=0; i<4; ++i)
+        if (currentMapData == null || currentMapData.chunkPrefabs.Count == 0)
         {
-            SpawnNextMap();
+            Debug.LogError("MapManager에 SO 데이터가 없거나 비어있다!");
+            return;
         }
-    }
 
-    void Update()
-    {
-        // 캐릭터가 다음 맵 생성 지점에 가까워지면 새 맵을 깐다
-        if(player.position.x + spawnTriggerDistance > nextSpawnPosition.x)
+        // 1. 게임 시작 시 각 프리팹마다 풀 바구니 생성 및 셔블 백 초기화
+        foreach (var prefab in currentMapData.chunkPrefabs)
+        {
+            mapPools.Add(prefab, new Queue<GameObject>());
+        }
+
+        // 2. 초기 맵 4개 세팅
+        for (int i = 0; i < 4; ++i)
         {
             SpawnNextMap();
-            RecycleOldMap();
         }
+
     }
 
     private void SpawnNextMap()
     {
-        GameObject mapToSpawn;
+        // 1. 셔블 백에서 다음 스폰할 프리팹 원본 결정
+        GameObject selectedPrefab = GetNextPrefabFromShuffleBag();
+        GameObject mapToSpawn = null;
 
-        // 남은 맵이 있으면 꺼내고 없으면 만듦
-        if (mapPool.Count > 0)
+        // 2. 해당 프리팹 전용 풀에 남은 거 있는지 확인
+        if (mapPools[selectedPrefab].Count > 0)
         {
-            mapToSpawn = mapPool.Dequeue();
+            mapToSpawn = mapPools[selectedPrefab].Dequeue();
             mapToSpawn.SetActive(true);
         }
         else
         {
-            // 랜덤 생성
-            int randomIndex = Random.Range(0, mapPrefabs.Length);
-            mapToSpawn = Instantiate(mapPrefabs[randomIndex]);
+            // 바구니가 null이면 새로 생성
+            mapToSpawn = Instantiate(selectedPrefab);
+
+            // 돌아갈 풀 알기 위해 이름꼬리표 유지
+            mapToSpawn.name = selectedPrefab.name;
         }
 
-        // 맵 위치를 다음 스폰 좌표로 이동
+        // 3. 맵 배치 및 EndPosition 갱신
         mapToSpawn.transform.position = nextSpawnPosition;
         activeMaps.Enqueue(mapToSpawn);
 
-        // 끝지점 체크를 하는 마커를 찾아서 다음 스폰 좌표로 갱신
         Transform endPos = mapToSpawn.transform.Find("EndPosition");
-
         if (endPos != null)
         {
             nextSpawnPosition = endPos.position;
         }
         else
         {
-            Debug.LogError($"{mapToSpawn.name}에 'EndPosition' 마커가 없다.");
+            Debug.LogError($"{mapToSpawn.name}에 앤드Position 마커가 없음!");
         }
     }
 
     private void RecycleOldMap()
     {
-        // 제일 뒤에 있는 맵 꺼내서 비활성화 시키고 Pool에 넣는다
+        // 화면 밖으로 나간 첫 번째 맵 수거
         GameObject oldMap = activeMaps.Dequeue();
         oldMap.SetActive(false);
-        mapPool.Enqueue(oldMap);
+
+        // 자신이 있던 pool의 위치 찾아서 다시 돌아감
+        foreach (var prefab in currentMapData.chunkPrefabs)
+        {
+            if (oldMap.name == prefab.name)
+            {
+                mapPools[prefab].Enqueue(oldMap);
+                break;
+            }
+        }
+    }
+
+    // 중복 없이 랜덤 추출
+    private GameObject GetNextPrefabFromShuffleBag()
+    {
+        // pool에 값 없으면 다시 채워 넣음
+        if(shuffleBag.Count ==0)
+        {
+            shuffleBag.AddRange(currentMapData.chunkPrefabs);
+        }
+
+        // 랜덤 뽑기
+        int randomIndex = Random.Range(0, shuffleBag.Count);
+        GameObject pickedPrefab = shuffleBag[randomIndex];
+
+        // 추출됬으면 풀에서 제거
+        shuffleBag.RemoveAt(randomIndex);
+
+        return pickedPrefab;
     }
 }

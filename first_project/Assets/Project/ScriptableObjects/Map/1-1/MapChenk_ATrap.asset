@@ -12,18 +12,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
   m_Name: MapChenk_ATrap
   m_EditorClassIdentifier: Assembly-CSharp::SOMapData
-  trapList:
-  - position: {x: 1.0119901, y: 1.03813, z: 0}
+  gimmicList:
+  - gimmickType: 0
+    position: {x: 1.09199, y: 0.20812988, z: 0}
     prefabIndex: 1
-  - position: {x: 0.01199007, y: 1.03813, z: 0}
+  - gimmickType: 0
+    position: {x: 0.091989994, y: 0.20812988, z: 0}
     prefabIndex: 1
-  - position: {x: -0.9880099, y: 1.03813, z: 0}
+  - gimmickType: 0
+    position: {x: -0.90801, y: 0.20812988, z: 0}
     prefabIndex: 1
-  - position: {x: -2.9880104, y: 1.03813, z: 0}
+  - gimmickType: 0
+    position: {x: -2.9080105, y: 0.20812988, z: 0}
     prefabIndex: 1
-  - position: {x: -3.9880104, y: 1.03813, z: 0}
+  - gimmickType: 0
+    position: {x: -3.9080105, y: 0.20812988, z: 0}
     prefabIndex: 1
-  - position: {x: -4.9880104, y: 1.03813, z: 0}
+  - gimmickType: 0
+    position: {x: -4.9080105, y: 0.20812988, z: 0}
     prefabIndex: 1
-  chunkSequence:
-  - {fileID: 0}
+  - gimmickType: 0
+    position: {x: 22.09199, y: 2.20813, z: 0}
+    prefabIndex: 2
+  - gimmickType: 0
+    position: {x: 21.09199, y: 2.20813, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 20.09199, y: 2.20813, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 19.09199, y: 2.20813, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 18.09199, y: 2.20813, z: 0}
+    prefabIndex: 2
+  - gimmickType: 0
+    position: {x: 12.0919895, y: 0.20812988, z: 0}
+    prefabIndex: 0

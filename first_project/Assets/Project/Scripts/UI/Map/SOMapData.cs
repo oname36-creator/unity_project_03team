@@ -25,5 +25,4 @@ public class SOMapData : ScriptableObject
     // 함정 위치
     [Header("함정 생성 위치 데이터")]
     public List<SGimmickSpawnData> gimmicList = new List<SGimmickSpawnData>();
-    public List<GameObject> chunkSequence;
 }
