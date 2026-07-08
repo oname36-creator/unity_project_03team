@@ -10,10 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72707167d84b50044911a2c5696659c2, type: 3}
-  m_Name: Stage1-1Prefab
+  m_Name: Stage1_Phase2
   m_EditorClassIdentifier: Assembly-CSharp::SOMapPalette
   chunkPrefabs:
-  - {fileID: 8673428918492383135, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
   - {fileID: 8916473074194248325, guid: e561fb5b032df124885b01da42561391, type: 3}
-  - {fileID: 4609161205030642019, guid: 9a83cd21949c0844a85054b729db545b, type: 3}
-  - {fileID: 4005591484691084725, guid: e764a5d9e85f49a408e137faee8cc109, type: 3}

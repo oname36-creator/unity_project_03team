@@ -487,9 +487,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b0255829c55834e8b846b8ab5236fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
-  currentMapData: {fileID: 11400000, guid: f2e306c2110c9dc4b80a9fe4555f2f86, type: 2}
+  safeZonePrefab: {fileID: 8274822112208100340, guid: 9b86a17bd642dfc4d907f591455885fb, type: 3}
   Player: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
-  spawnTriggerDistance: 30
+  spawnTriggerDistance: 15
+  phases:
+  - phaseName: "\uD398\uC774\uC9881"
+    timeThreshold: 20
+    phasePalette: {fileID: 11400000, guid: f2e306c2110c9dc4b80a9fe4555f2f86, type: 2}
+  - phaseName: "\uD398\uC774\uC9882"
+    timeThreshold: 20
+    phasePalette: {fileID: 11400000, guid: 2268e6ef58fbcae4fbbc5c0699017663, type: 2}
+  - phaseName: "\uD398\uC774\uC9883"
+    timeThreshold: 20
+    phasePalette: {fileID: 11400000, guid: 47f0a91a0259f8340935a085e7fb28f9, type: 2}
 --- !u!4 &245405373
 Transform:
   m_ObjectHideFlags: 0
@@ -820,7 +830,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 3.78
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -845,7 +855,7 @@ Transform:
   m_GameObject: {fileID: 436494359}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3, y: 0.4, z: -10}
+  m_LocalPosition: {x: -2.62, y: 0.85, z: -10}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -893,11 +903,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.3
+      value: -2.62
       objectReference: {fileID: 0}
     - target: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1516,7 +1526,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 60
-    OrthographicSize: 5
+    OrthographicSize: 3.78
     NearClipPlane: 0.4
     FarClipPlane: 1000
     Dutch: 0
@@ -1543,7 +1553,7 @@ Transform:
   m_GameObject: {fileID: 1919539568}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3, y: 0.4, z: -10}
+  m_LocalPosition: {x: -2.62, y: 0.85, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
