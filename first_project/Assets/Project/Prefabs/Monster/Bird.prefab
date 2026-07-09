@@ -143,7 +143,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &2478126253568356769
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -206,4 +206,4 @@ MonoBehaviour:
   Player: {fileID: 0}
   _obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8

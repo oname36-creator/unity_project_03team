@@ -20,4 +20,4 @@ MonoBehaviour:
   Name: Base
   searchRange: 5
   angle: 15
-  attackRange: 1
+  attackRange: 5

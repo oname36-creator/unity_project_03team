@@ -1,5 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 
@@ -34,7 +35,7 @@ public class MonsterController : MonoBehaviour
     private float _maxSpeed; // 최대 속도
 
     private bool isDead;
-    private bool isFounded;
+    //private bool isFounded;
     private bool isAttack;
     private bool isAttackable;
     private bool isFly;
@@ -48,7 +49,7 @@ public class MonsterController : MonoBehaviour
     private Vector2 _frontVector;  // 앞 방향 저장 // (1,0)이면 오른쪽 (-1,0)이면 왼쪽
     private Vector2 _mToPlayer;
     private Vector2 _mToPlayerDistance; // 거리
-
+    private Vector2 _attackStartPoint;
 
     private Rigidbody2D _rigidBody2D;
     private SpriteRenderer _renderer;
@@ -139,7 +140,7 @@ public class MonsterController : MonoBehaviour
     {
         get
         {
-            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
+            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue /*&& !CheckForObstacles()*/);
         }
     }
 
@@ -176,6 +177,17 @@ public class MonsterController : MonoBehaviour
         get { return _mToPlayerDistance; }
     }
 
+    public Vector2 GetPlayerPos 
+    {
+        get { return _playerTransform.position; }
+    }
+
+    public Vector2 AttackStartPoint 
+    {
+        get { return _attackStartPoint; }
+        set { _attackStartPoint = value;}
+    }
+
 
     #endregion
 
@@ -195,7 +207,7 @@ public class MonsterController : MonoBehaviour
         _force = MonsterData.Force;
 
         isDead = false;
-        isFounded = false;
+        //isFounded = false;
         isAttack = false;
         isAttackable = true;
         isHurt = false;
@@ -235,21 +247,34 @@ public class MonsterController : MonoBehaviour
     #endregion
 
 
-    public void Move(Vector2 dir, bool Fly = false)
+    public void Move(Vector2 dir, bool Impulse = false, bool Fly = false)
     {
         if (Fly)
         {
-            _rigidBody2D.AddForce(9.81f * dir, ForceMode2D.Impulse);
+            _rigidBody2D.AddForce(Vector2.up * 9.81f, ForceMode2D.Force);
             return;
+        }
+
+        if (Impulse)
+        {
+            _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Impulse);
+        }
+        else
+        {
+            //Debug.Log("dir * _speed : " + dir * _speed);
+            _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
         }
 
         if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed)
         {
-            _rigidBody2D.linearVelocity = dir * _maxSpeed;
+            _rigidBody2D.linearVelocity = _rigidBody2D.linearVelocity.normalized * _maxSpeed;
         }
+    }
 
-        _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
-        //Debug.Log(_rigidBody2D.linearVelocityX);
+    public void MoveToPosition(Vector2 dir) 
+    {
+        _rigidBody2D.MovePosition(dir);
+        //Debug.Log("current Pos:" + _rigidBody2D.position);
     }
 
 

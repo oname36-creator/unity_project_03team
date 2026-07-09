@@ -153,6 +153,8 @@ public class MonsterAiBrain
             Debug.Log(name);
             IMonsterState search = new FlyMonsterSearch(owner);
             IMonsterState attack = new FlyMonsterAttack(owner);
+            IMonsterState re = new FlyMonsterReturn(owner);
+
 
             IMonsterState hurt = new MonsterHurt(owner);
             IMonsterState die = new MonsterDie(owner);
@@ -173,7 +175,8 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.InAttackRange && owner.InAngle && !owner.IsAttack;
+                        //Debug.Log("Search -> Attack");
+                        return  owner.InRange && owner.InAngle && !owner.IsAttack;
                     },
                     targetState: attack
                     )
@@ -197,9 +200,29 @@ public class MonsterAiBrain
                     {
                       return !owner.IsAttack;
                     },
+                    targetState: re
+                    )
+            };
+            transitionMap[re] = new List<Transition>
+            {
+
+                new Transition( // attack -> hurt
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                      return owner.IsBack;
+                    },
                     targetState: search
                     )
             };
+
 
             transitionMap[hurt] = new List<Transition>
             {
@@ -216,9 +239,8 @@ public class MonsterAiBrain
                     {
                         return !owner.IsHurt && owner.IsAttack;
                     },
-                    targetState:attack
+                    targetState:re
                     ),
-
 
                 new Transition(
                     condition: () =>
