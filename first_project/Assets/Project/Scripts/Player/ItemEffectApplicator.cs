@@ -50,7 +50,16 @@ public class ItemEffectApplicator : MonoBehaviour
         switch (itemNumber)
         {
             case 1:
-                DataManager.Instance.PlayerHp += 50;
+                if (status != null)
+                {
+                    status.ChangeHp(50f);
+                }
+
+                // 그 후 UI용 데이터매니저도 동기화해줍니다.
+                if (DataManager.Instance != null && status != null)
+                {
+                    DataManager.Instance.PlayerHp = (int)status.currentHp;
+                }
                 break;
 
             case 2:
@@ -77,22 +86,28 @@ public class ItemEffectApplicator : MonoBehaviour
     private System.Collections.IEnumerator StealthRoutine(float duration)
     {
         status.isStealth = true;
+        // 💡 [추가] 은신이 시작되면 무적 상태도 함께 켜줍니다!
+        status.isInvincible = true;
 
-        // 시작할 때 딱 한 번만 알파값 변경
+        // 시작할 때 딱 한 번만 알파값 변경 (반투명)
         if (playerSprite != null)
         {
             playerSprite.color = new Color(1f, 1f, 1f, 0.6f);
         }
 
-        // 매 프레임 돌릴 필요 없이 duration만큼 통째로 대기
+        // 지정된 시간(duration) 동안 대기합니다.
         yield return new WaitForSeconds(duration);
 
         status.isStealth = false;
+        // 💡 [추가] 은신이 끝나면 무적 상태도 함께 꺼줍니다!
+        status.isInvincible = false;
 
-        // 종료할 때 딱 한 번만 원상복구
+        // 종료할 때 딱 한 번만 원상복구 (불투명)
         if (playerSprite != null)
         {
             playerSprite.color = new Color(1f, 1f, 1f, 1f);
         }
+
+        Debug.Log("은신 및 은신 무적 종료!");
     }
 }

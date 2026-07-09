@@ -17,6 +17,10 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool hasGun = false; // 현재 총을 들고 있는가?
     private int gunAttackCount = 0;               // 총 남은 총알 수
 
+    [Header("New States (피격 및 무적)")]
+    public bool isHurt = false;         // 현재 넉백/피격 중인가? (이동안 조작 불가)
+    public bool isInvincible = false;   // 현재 무적 상태인가?
+
     public float currentDamage { get; private set; }
     public float currentAttackRange { get; private set; }
 

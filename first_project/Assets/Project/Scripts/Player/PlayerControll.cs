@@ -24,6 +24,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     [Tooltip("바닥으로 인식할 레이어(예: Ground)를 선택하세요.")]
     public LayerMask groundLayer;
 
+    [Header("Player Attack Trigger Settings")]
+    public GameObject attackHitboxObj; 
+    public float attackDuration = 0.5f;
+
     public PlayerPos playerPosData;
 
     private PlayerStatus status;
@@ -59,6 +63,9 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     void Update()
     {
+        // 게임이 일시정지(정지화면) 상태면 입력을 처리하지 않고 리턴
+        if (Time.timeScale == 0f) return;
+
         if (status == null || status.isDead) return;
 
         // [핵심 변경] 실시간으로 발밑에 groundLayer를 가진 콜라이더가 있는지 체크합니다.
@@ -91,6 +98,9 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     void FixedUpdate()
     {
         if (status == null || status.isDead) return;
+
+        
+        if (status.isHurt) return;
 
         float currentMoveX = rb.linearVelocity.x;
         float currentVelocityY = rb.linearVelocity.y;
@@ -205,18 +215,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 return; // 총을 쐈으므로 아래 근접 공격 코드는 실행하지 않고 리턴
             }
 
-            Debug.Log("근접 공격 발동!");
-            float currentRange = status.currentAttackRange;
-            Vector2 attackPosition = (Vector2)transform.position + new Vector2(facingDirectionX * currentRange, 0f);
+            Debug.Log("근접 공격 발동! (히트박스 활성화)");
 
-            Collider2D[] hitColliders = Physics2D.OverlapBoxAll(attackPosition, attackBoxSize, 0f);
-            foreach (Collider2D col in hitColliders)
-            {
-                if (col.CompareTag(enemyTag))
-                {
-                    Debug.Log($"몬스터 적중: {col.name}");
-                }
-            }
+            // 공격 히트박스를 잠깐 켰다 끄는 코루틴을 시작합니다.
+            StartCoroutine(AttackHitboxRoutine());
 
             status.OnAttackExecute();
         }
@@ -279,6 +281,114 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (itemApplicator != null)
         {
             itemApplicator.ExecuteItemEffectByID(itemNumber);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (status == null || status.isDead) return;
+
+        // 1. 이미 무적 상태라면 충돌을 무시합니다.
+        if (status.isInvincible) return;
+
+        if (collision.CompareTag(enemyTag))
+        {
+            // 2. PlayerStatus에 만들어두신 ChangeHp 함수로 안전하게 체력을 깎습니다.
+            status.ChangeHp(-10f);
+
+            // 데이터 매니저의 HP도 동기화해 줍니다 (UI 반영용)
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.PlayerHp = (int)status.currentHp;
+            }
+
+            Debug.Log($"[피격] 몬스터 충돌! 현재 HP: {status.currentHp}");
+
+            // 사망하지 않았다면 넉백 및 무적 루틴 시작
+            if (!status.isDead)
+            {
+                StartCoroutine(KnockbackAndInvincibleRoutine(collision.transform.position));
+            }
+        }
+    }
+
+    // 넉백과 무적 처리를 한 번에 관리하는 코루틴
+    private System.Collections.IEnumerator KnockbackAndInvincibleRoutine(Vector3 enemyPosition)
+    {
+        // 1. 넉백 시작 (조작 불가 상태 돌입) 및 무적 상태 설정
+        status.isHurt = true;
+        status.isInvincible = true;
+
+        if (rb != null)
+        {
+            float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
+            rb.linearVelocity = Vector2.zero;
+            // 아까 조절한 수치 (가로 0.3f, 세로 0.2f 예시)
+            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.3f, JumpForce * 0.2f), ForceMode2D.Impulse);
+        }
+
+        // 💡 SpriteRenderer 컴포넌트를 가져옵니다.
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        // [깜빡거림 연출 시작]
+        // 무적 상태인 1초 동안 아주 빠르게 깜빡거리게 합니다.
+        float invincibleTime = 1.0f; // 총 무적 시간
+        float blinkInterval = 0.1f; // 깜빡거리는 간격 (0.1초마다)
+        float timer = 0f;
+
+        // 넉백 지속 시간 (0.2초)
+        float knockbackDuration = 0.2f;
+
+        // 무적 시간이 다 될 때까지 반복
+        while (timer < invincibleTime)
+        {
+            if (sr != null)
+            {
+                // 현재 알파값(투명도)을 가져와서 반전시킵니다. (1 -> 0.2 -> 1 -> 0.2...)
+                float currentAlpha = sr.color.a;
+                float nextAlpha = (currentAlpha == 1f) ? 0.2f : 1f; // 0.2f는 거의 투명
+
+                sr.color = new Color(1f, 1f, 1f, nextAlpha);
+            }
+
+            // 0.1초 대기
+            yield return new WaitForSeconds(blinkInterval);
+            timer += blinkInterval;
+
+            // 💡 넉백 시간이 지나면 조작 가능 상태로 돌려줍니다.
+            if (status.isHurt && timer >= knockbackDuration)
+            {
+                status.isHurt = false;
+            }
+        }
+
+        // [깜빡거림 연출 종료 및 원상복구]
+        if (sr != null)
+        {
+            sr.color = Color.white; // 색상 및 투명도 원상복구
+        }
+
+        // 최종 무적 해제
+        status.isInvincible = false;
+
+        Debug.Log("무적 상태 및 깜빡거림 종료!");
+    }
+    private System.Collections.IEnumerator AttackHitboxRoutine()
+    {
+        if (attackHitboxObj != null)
+        {
+            // 1. 공격 시작할 때 히트박스를 켭니다.
+            attackHitboxObj.SetActive(true);
+
+            // 2. 설정한 시간(예: 0.5초) 동안 플레이어가 공격 자세를 취하듯 대기합니다.
+            yield return new WaitForSeconds(attackDuration);
+
+            // 3. 시간이 지나면 히트박스를 다시 끕니다.
+            attackHitboxObj.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("PlayerControll에 AttackHitboxObj가 연결되지 않았습니다!");
         }
     }
 }
