@@ -17,15 +17,13 @@ public class MapManager : MonoBehaviour
 {
     [Header("시작 설정")]
     public GameObject safeZonePrefab;
-    public Transform Player;
-    public float spawnTriggerDistance = 30f;
 
     [Header("난이도 페이즈 설정")]
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
     private float gameTimer = 0f;
-   
 
+    #region DataStruct Fields
     // 프리팹 종류별로 관리
     private Dictionary<GameObject, Queue<GameObject>> mapPools = new Dictionary<GameObject, Queue<GameObject>>();
 
@@ -36,87 +34,70 @@ public class MapManager : MonoBehaviour
     private List<GameObject> shuffleBag = new List<GameObject>();
 
     private Vector3 nextSpawnPosition = Vector3.zero;
+    #endregion
+
+    private void OnEnable()
+    {
+        MapEvent.onPlayerHitSpawnTrigger += HandleMapSpawnEvent;
+    }
+
+    private void OnDisable()
+    {
+        MapEvent.onPlayerHitSpawnTrigger -= HandleMapSpawnEvent;
+    }
+
+
     void Start()
     {
         InitializationPools();
-
-        // 시작 위치 0으로 고정
-        Vector3 spawnPos = Vector3.zero;
 
         // 안전지대 생성
         SpawnSpecificMap(safeZonePrefab);
 
         UpdateShuffleBagForCurrentPhase();
-
-        spawnPos = SpawnMap(GetNextPrefabFromShuffleBag(), spawnPos);
-
-        nextSpawnPosition = spawnPos;
+        
+        nextSpawnPosition = SpawnMap(GetNextPrefabFromShuffleBag(), nextSpawnPosition);
         // 1페이즈 맵들로 셔플 백 채우기
-        StartCoroutine(PhaseTimerRoutine());
+        StartCoroutine(CoPhaseTimerRoutine());
     }
-
-    void Update()
+    private void HandleMapSpawnEvent()
     {
-        if(Player.position.x + spawnTriggerDistance > nextSpawnPosition.x)
+        // 1. 다음 맵 스폰
+        GameObject nextPrefab = GetNextPrefabFromShuffleBag();
+        nextSpawnPosition = SpawnMap(nextPrefab, nextSpawnPosition);
+
+        // 2. 맵 수거 로직(거리 계산X, 화면에 맵 3개 이상 깔려있으면 제일 뒤에것 자르기)
+        if (activeMaps.Count > 3)
         {
-            nextSpawnPosition = SpawnMap(GetNextPrefabFromShuffleBag(), nextSpawnPosition);
             RecycleOldMap();
         }
     }
-
-    
-
-    private void SpawnNextMap()
-    {
-        // 1. 셔블 백에서 다음 스폰할 프리팹 원본 결정
-        GameObject selectedPrefab = GetNextPrefabFromShuffleBag();
-        GameObject mapToSpawn = null;
-
-        // 2. 해당 프리팹 전용 풀에 남은 거 있는지 확인
-        if (mapPools[selectedPrefab].Count > 0)
-        {
-            mapToSpawn = mapPools[selectedPrefab].Dequeue();
-            mapToSpawn.SetActive(true);
-        }
-        else
-        {
-            // 바구니가 null이면 새로 생성
-            mapToSpawn = Instantiate(selectedPrefab);
-
-            // 돌아갈 풀 알기 위해 이름꼬리표 유지
-            mapToSpawn.name = selectedPrefab.name;
-        }
-
-        // 3. 맵 배치 및 EndPosition 갱신
-        mapToSpawn.transform.position = nextSpawnPosition;
-        activeMaps.Enqueue(mapToSpawn);
-
-        Transform endPos = mapToSpawn.transform.Find("EndPosition");
-        if (endPos != null)
-        {
-            nextSpawnPosition = endPos.position;
-        }
-        else
-        {
-            Debug.LogError($"{mapToSpawn.name}에 앤드Position 마커가 없음!");
-        }
-    }
-
     private void RecycleOldMap()
     {
+        if (activeMaps.Count == 0) return;
+
         // 화면 밖으로 나간 첫 번째 맵 수거
         GameObject oldMap = activeMaps.Dequeue();
         oldMap.SetActive(false);
 
-        // 자신이 있던 pool의 위치 찾아서 다시 돌아감
-        foreach (var prefab in phases[currentPhaseIndex].phasePalette.chunkPrefabs)
+        if(oldMap.name == safeZonePrefab.name)
         {
-            if (oldMap.name == prefab.name)
+            mapPools[safeZonePrefab].Enqueue(oldMap);
+            return;
+        }
+        foreach(var phase in phases)
+        {
+            // 자신이 있던 pool의 위치 찾아서 다시 돌아감
+            foreach (var prefab in phases[currentPhaseIndex].phasePalette.chunkPrefabs)
             {
-                mapPools[prefab].Enqueue(oldMap);
-                break;
+                if (oldMap.name == prefab.name)
+                {
+                    mapPools[prefab].Enqueue(oldMap);
+                    break;
+                }
             }
         }
+       
     }
 
     private void InitializationPools()
@@ -140,24 +121,11 @@ public class MapManager : MonoBehaviour
     // 특정 맵 강제 스폰
     private void SpawnSpecificMap(GameObject prefab)
     {
-        GameObject mapToSpawn;
-        if (mapPools[prefab].Count > 0)
-        {
-            mapToSpawn = mapPools[prefab].Dequeue();
-            mapToSpawn.SetActive(true);
-        }
-        else 
-        {
-            mapToSpawn = Instantiate(prefab);
-            mapToSpawn.name = prefab.name;
-        }
-
+       GameObject mapToSpawn = GetOrCreateMap(prefab);
         mapToSpawn.transform.position = nextSpawnPosition;
         activeMaps.Enqueue(mapToSpawn);
 
-        // Find 쓰지말랬는데
-        Transform endPos = mapToSpawn.transform.Find("EndPosition");
-        nextSpawnPosition = endPos != null ? endPos.position : nextSpawnPosition;   // 이것도 간단한 문법있지 않나?
+        nextSpawnPosition = GetEndPosition(mapToSpawn, nextSpawnPosition);
     }
 
     private void UpdateShuffleBagForCurrentPhase()
@@ -189,8 +157,16 @@ public class MapManager : MonoBehaviour
     // 스폰하고 나서 다음 스폰 위치를 반환하는 함수
     private Vector3 SpawnMap(GameObject prefab, Vector3 spawnPos)
     {
-        GameObject map = null;
+        GameObject map = GetOrCreateMap(prefab);
+        map.transform.position = spawnPos;
+        activeMaps.Enqueue(map);
 
+        return GetEndPosition(map, spawnPos);
+    }
+
+    private GameObject GetOrCreateMap(GameObject prefab)
+    {
+        GameObject map;
         if(mapPools.ContainsKey(prefab) && mapPools[prefab].Count > 0)
         {
             map = mapPools[prefab].Dequeue();
@@ -199,26 +175,24 @@ public class MapManager : MonoBehaviour
         else
         {
             map = Instantiate(prefab);
-            map.name = prefab.name;
+            map.name = prefab.name; // 클론 방지
         }
-
-        map.transform.position = spawnPos;
-        activeMaps.Enqueue(map);
-
-        // EndPosition 찾기
-        Transform endPos = map.transform.Find("EndPosition");
-        if (endPos != null)
-        {
-            return endPos.position;
-        }
-        else
-        {
-            Debug.LogError($"{prefab.name}에 EndPosition이 없습니다");
-            return spawnPos;
-        }
+        return map;
     }
 
-    private IEnumerator PhaseTimerRoutine()
+    // Find 리펙토링 함수
+    private Vector3 GetEndPosition(GameObject map, Vector3 fallbackPos)
+    {
+        if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.endPosition != null)
+        {
+            return chunk.endPosition.position;
+        }
+
+        Debug.LogError($"{map.name}에 EndPosition 앵커가 없습니다");
+        return fallbackPos;
+    }
+
+    private IEnumerator CoPhaseTimerRoutine()
     {
         for(currentPhaseIndex = 0; currentPhaseIndex < phases.Count; currentPhaseIndex++)
         {

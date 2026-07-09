@@ -488,8 +488,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   safeZonePrefab: {fileID: 8274822112208100340, guid: 9b86a17bd642dfc4d907f591455885fb, type: 3}
-  Player: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
-  spawnTriggerDistance: 15
   phases:
   - phaseName: "\uD398\uC774\uC9881"
     timeThreshold: 20
@@ -830,7 +828,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.78
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -952,6 +950,10 @@ PrefabInstance:
     - target: {fileID: 4602153000674934412, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4681613199278000432, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
+      propertyPath: JumpForce
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8695991814018176706, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LayerOverridePriority
@@ -1526,7 +1528,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 60
-    OrthographicSize: 3.78
+    OrthographicSize: 7
     NearClipPlane: 0.4
     FarClipPlane: 1000
     Dutch: 0
