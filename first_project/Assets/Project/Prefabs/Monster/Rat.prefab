@@ -154,7 +154,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 196aad87d77bd8547997c559e5e6bc93, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -204,3 +204,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterController
   MonsterData: {fileID: 11400000, guid: 602dd3941d11da344afda700038bc49f, type: 2}
   Player: {fileID: 0}
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 public class BaseMonsterChase : IMonsterState
 {
@@ -13,8 +13,8 @@ public class BaseMonsterChase : IMonsterState
     }
     public void Enter() 
     {
-        Debug.Log("추격");
-        _animator.SetBool(AnimatorHash.IsChase, true);
+        //Debug.Log("추격");
+        //_animator.SetBool(AnimatorHash.IsChase, true);
     }
 
     public void Update() 
@@ -24,7 +24,7 @@ public class BaseMonsterChase : IMonsterState
 
     public void Exit() 
     {
-        _animator.SetBool(AnimatorHash.IsChase, false);
+        //_animator.SetBool(AnimatorHash.IsChase, false);
 
     }
 
