@@ -16,6 +16,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public Vector2 attackBoxSize = new Vector2(1.5f, 1f);
     public string enemyTag = "Monster";
 
+    [Header("Weapon Settings (무기 설정)")]
+    [Tooltip("총알이 발사될 위치(총구)에 배치한 빈 오브젝트를 넣어주세요.")]
+    public Transform muzzlePoint;
+
     [Header("Ground Check Settings (바닥 체크 설정)")]
     [Tooltip("플레이어 발밑에 배치한 빈 오브젝트를 넣어주세요.")]
     public Transform groundCheckPoint;
@@ -25,7 +29,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public LayerMask groundLayer;
 
     [Header("Player Attack Trigger Settings")]
-    public GameObject attackHitboxObj; 
+    public GameObject attackHitboxObj;
+    public GameObject swordAttackHitboxObj;
     public float attackDuration = 0.5f;
 
     public PlayerPos playerPosData;
@@ -63,18 +68,14 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     void Update()
     {
-        // 게임이 일시정지(정지화면) 상태면 입력을 처리하지 않고 리턴
         if (Time.timeScale == 0f) return;
-
         if (status == null || status.isDead) return;
 
-        // [핵심 변경] 실시간으로 발밑에 groundLayer를 가진 콜라이더가 있는지 체크합니다.
         if (groundCheckPoint != null)
         {
             status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
         }
 
-        // 바닥에 닿아있다면 점프 카운트를 리셋합니다.
         if (status.isGrounded)
         {
             jumpCount = 0;
@@ -85,7 +86,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (moveInput.x != 0f)
         {
             facingDirectionX = Mathf.Sign(moveInput.x);
-            // transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
         }
 
         if (playerPosData != null)
@@ -98,14 +98,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     void FixedUpdate()
     {
         if (status == null || status.isDead) return;
-
-        
         if (status.isHurt) return;
 
         float currentMoveX = rb.linearVelocity.x;
         float currentVelocityY = rb.linearVelocity.y;
 
-        // 1. 좌우 이동 제어
         if (status.isGrounded)
         {
             currentMoveX = moveInput.x * MoveSpeed;
@@ -130,7 +127,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
 
-        // 2. 스피디한 중력 제어
         if (!status.isGrounded)
         {
             if (currentVelocityY > 0f)
@@ -147,10 +143,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         rb.linearVelocity = new Vector2(currentMoveX, currentVelocityY);
     }
 
-    // -----------------------------------------------------------------
-    // Input Action 콜백 메서드
-    // -----------------------------------------------------------------
-
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -158,17 +150,16 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0f) return;
         if (status == null || status.isDead) return;
-        // 이제 정확한 isGrounded 판정 덕분에 점프가 씹히지 않습니다.
+
         if (context.started && jumpCount < 1 && status.isGrounded)
         {
             rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
             jumpCount++;
-            
         }
     }
 
-    // [팁] 에디터 뷰에서 바닥 체크 상자의 크기와 위치를 빨간 선으로 시각화해 줍니다.
     private void OnDrawGizmosSelected()
     {
         if (groundCheckPoint != null)
@@ -176,56 +167,64 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
         }
+
+        if (muzzlePoint != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(muzzlePoint.position, 0.1f);
+        }
     }
 
-    // 기존의 OnCollision 계열 메서드들은 중복 판정 및 꼬임 방지를 위해 모두 삭제했습니다.
-
-   
-       public void OnAttack(InputAction.CallbackContext context)
+    public void OnAttack(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0f) return;
+
         if (context.started)
         {
-            // 1단계 테스트: J키 입력 자체가 들어오는가?
-            Debug.Log($"[공격 테스트] J키 누름 판정 들어옴! 현재 status 상태: {(status != null ? "존재함" : "Null!!")}");
-
             if (status == null || status.isDead) return;
 
-            // 2단계 테스트: 총을 가졌다고 판정되는가?
-            Debug.Log($"[공격 테스트] 현재 플레이어의 hasGun 상태: {status.hasGun}");
+            // 💡 [새로운 스텝] 공격하기 전에, 내가 바라보는 방향(facingDirectionX)에 맞춰 
+            // 두 히트박스의 X축 위치(localPosition)를 정방향 혹은 반대방향으로 꺾어줍니다.
+            FlipHitboxPosition(attackHitboxObj);
+            FlipHitboxPosition(swordAttackHitboxObj);
 
+            // 1. 총을 들고 있고, 총알이 남아있는가?
             if (status.hasGun)
             {
                 Debug.Log("총기 발사!");
-                Vector2 firePosition = (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
-
-                // 1. 풀에서 총알을 가져옵니다.
+                Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
                 GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
 
-                // 2. 총알의 Bullet 스크립트 컴포넌트를 가져와 Launch를 호출합니다. ★★★
                 if (bulletGo != null)
                 {
                     Bullet bulletScript = bulletGo.GetComponent<Bullet>();
-                    if (bulletScript != null)
-                    {
-                        bulletScript.Launch(facingDirectionX); // 플레이어가 보는 방향을 전달!
-                    }
+                    if (bulletScript != null) bulletScript.Launch(facingDirectionX);
                 }
 
                 status.OnGunAttackExecute();
-                return; // 총을 쐈으므로 아래 근접 공격 코드는 실행하지 않고 리턴
+                return;
             }
 
-            Debug.Log("근접 공격 발동! (히트박스 활성화)");
+            // 2. 검 장착 상태 체크
+            if (status.hasSword)
+            {
+                Debug.Log("검 공격 발동! (검 히트박스 활성화)");
+                StartCoroutine(SwordAttackHitboxRoutine());
+                status.OnSwordAttackExecute();
+                return;
+            }
 
-            // 공격 히트박스를 잠깐 켰다 끄는 코루틴을 시작합니다.
+            // 3. 둘 다 없다면 확실하게 맨손 공격
+            Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
             StartCoroutine(AttackHitboxRoutine());
-
             status.OnAttackExecute();
         }
     }
 
     public void OnItemUse(InputAction.CallbackContext context)
     {
+        if (Time.timeScale == 0f) return;
+
         if (context.started)
         {
             string pressedKey = context.control.name;
@@ -287,24 +286,22 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (status == null || status.isDead) return;
-
-        // 1. 이미 무적 상태라면 충돌을 무시합니다.
         if (status.isInvincible) return;
 
-        if (collision.CompareTag(enemyTag))
+        // 💡 [최종 안전 방어선] 내가 지금 맨손이든 검이든 공격 상자를 켜고 있는 중이라면
+        // 물리 엔진 타이밍 때문에 억울하게 들어오는 몸통 충돌 신호를 통째로 튕겨내 버립니다!
+        bool isCurrentlyAttacking = (attackHitboxObj != null && attackHitboxObj.activeSelf) ||
+                                    (swordAttackHitboxObj != null && swordAttackHitboxObj.activeSelf);
+        if (isCurrentlyAttacking) return;
+
+        // 💡 오직 순수하게 "Monster" 레이어를 가진 무언가가 내 몸통 트리거에 들어왔을 때만 피격!
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Monster") && collision.CompareTag(enemyTag))
         {
-            // 2. PlayerStatus에 만들어두신 ChangeHp 함수로 안전하게 체력을 깎습니다.
             status.ChangeHp(-10f);
+            if (DataManager.Instance != null) DataManager.Instance.PlayerHp = (int)status.currentHp;
 
-            // 데이터 매니저의 HP도 동기화해 줍니다 (UI 반영용)
-            if (DataManager.Instance != null)
-            {
-                DataManager.Instance.PlayerHp = (int)status.currentHp;
-            }
+            Debug.Log($"💥 [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
 
-            Debug.Log($"[피격] 몬스터 충돌! 현재 HP: {status.currentHp}");
-
-            // 사망하지 않았다면 넉백 및 무적 루틴 시작
             if (!status.isDead)
             {
                 StartCoroutine(KnockbackAndInvincibleRoutine(collision.transform.position));
@@ -312,83 +309,134 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
     }
 
-    // 넉백과 무적 처리를 한 번에 관리하는 코루틴
+    // ★ [개선] 넉백 힘 강화 및 무적 시간 동안 몬스터 완전 통과 처리
     private System.Collections.IEnumerator KnockbackAndInvincibleRoutine(Vector3 enemyPosition)
     {
-        // 1. 넉백 시작 (조작 불가 상태 돌입) 및 무적 상태 설정
         status.isHurt = true;
         status.isInvincible = true;
+
+        // 💡 [최종 치트키] 1초 무적 동안 내 몸통의 Collider를 잠시 껐다 켭니다!
+        // 이렇게 하면 내 몸에 물리적으로 비벼지며 겹쳐있던 모든 중복 충돌 신호가 "강제로 증발"합니다.
+        Collider2D myCollider = GetComponent<Collider2D>();
+        if (myCollider != null)
+        {
+            myCollider.enabled = false;
+        }
 
         if (rb != null)
         {
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
-            // 아까 조절한 수치 (가로 0.3f, 세로 0.2f 예시)
-            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.3f, JumpForce * 0.2f), ForceMode2D.Impulse);
+
+            // 찰진 넉백을 위해 힘 조절 (플레이 시 인스펙터에서 편하게 튜닝하세요)
+            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.4f, JumpForce * 0.2f), ForceMode2D.Impulse);
         }
 
-        // 💡 SpriteRenderer 컴포넌트를 가져옵니다.
+        // 💡 넉백 힘이 다 들어갈 수 있도록 물리적으로 아주 잠깐만 대기 후, 콜라이더를 다시 안전하게 켭니다.
+        // 이때는 이미 'IgnoreLayerCollision'이나 무적 상태가 작동하므로 안전합니다.
+        yield return new WaitForFixedUpdate();
+
+        if (myCollider != null)
+        {
+            myCollider.enabled = true;
+        }
+
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
-
-        // [깜빡거림 연출 시작]
-        // 무적 상태인 1초 동안 아주 빠르게 깜빡거리게 합니다.
-        float invincibleTime = 1.0f; // 총 무적 시간
-        float blinkInterval = 0.1f; // 깜빡거리는 간격 (0.1초마다)
+        float invincibleTime = 1.0f;
+        float blinkInterval = 0.1f;
         float timer = 0f;
-
-        // 넉백 지속 시간 (0.2초)
         float knockbackDuration = 0.2f;
 
-        // 무적 시간이 다 될 때까지 반복
         while (timer < invincibleTime)
         {
             if (sr != null)
             {
-                // 현재 알파값(투명도)을 가져와서 반전시킵니다. (1 -> 0.2 -> 1 -> 0.2...)
                 float currentAlpha = sr.color.a;
-                float nextAlpha = (currentAlpha == 1f) ? 0.2f : 1f; // 0.2f는 거의 투명
-
+                float nextAlpha = (currentAlpha == 1f) ? 0.2f : 1f;
                 sr.color = new Color(1f, 1f, 1f, nextAlpha);
             }
 
-            // 0.1초 대기
             yield return new WaitForSeconds(blinkInterval);
             timer += blinkInterval;
 
-            // 💡 넉백 시간이 지나면 조작 가능 상태로 돌려줍니다.
             if (status.isHurt && timer >= knockbackDuration)
             {
                 status.isHurt = false;
             }
         }
 
-        // [깜빡거림 연출 종료 및 원상복구]
         if (sr != null)
         {
-            sr.color = Color.white; // 색상 및 투명도 원상복구
+            sr.color = Color.white;
         }
 
-        // 최종 무적 해제
         status.isInvincible = false;
-
-        Debug.Log("무적 상태 및 깜빡거림 종료!");
+        Debug.Log("무적 상태 종료! 완벽하게 안전화 완료.");
     }
+
     private System.Collections.IEnumerator AttackHitboxRoutine()
     {
-        if (attackHitboxObj != null)
-        {
-            // 1. 공격 시작할 때 히트박스를 켭니다.
-            attackHitboxObj.SetActive(true);
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            true
+        );
 
-            // 2. 설정한 시간(예: 0.5초) 동안 플레이어가 공격 자세를 취하듯 대기합니다.
-            yield return new WaitForSeconds(attackDuration);
+        // 💡 [오타 수정 완료] swordAttackHitboxObj가 아니라 맨손 상자인 attackHitboxObj를 제어합니다!
+        if (attackHitboxObj != null) attackHitboxObj.SetActive(true);
 
-            // 3. 시간이 지나면 히트박스를 다시 끕니다.
-            attackHitboxObj.SetActive(false);
-        }
-        else
+        yield return new WaitForSeconds(0.3f);
+
+        if (attackHitboxObj != null) attackHitboxObj.SetActive(false);
+
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            false
+        );
+    }
+
+    private System.Collections.IEnumerator SwordAttackHitboxRoutine()
+    {
+        Physics2D.IgnoreLayerCollision(
+        LayerMask.NameToLayer("Player"),
+        LayerMask.NameToLayer("Monster"),
+        true
+    );
+
+        // 공격 히트박스 활성화 (기존 코드)
+        if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(true);
+
+        // 애니메이션이나 공격 판정 지속 시간 동안 대기 (예시로 0.3초, 기존 대기 시간 유지)
+        yield return new WaitForSeconds(0.3f);
+
+        // 공격 히트박스 비활성화 (기존 코드)
+        if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(false);
+
+        // 💡 [원상 복구] 공격 판정이 완전히 끝났으므로, 다시 플레이어와 몬스터가 부딪힐 수 있게 켭니다.
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            false
+        );
+    }
+    private void FlipHitboxPosition(GameObject hitboxObj)
+    {
+        if (hitboxObj == null) return;
+
+        // 현재 자식 히트박스의 상대적 위치(localPosition)를 가져옵니다.
+        Vector3 currentPos = hitboxObj.transform.localPosition;
+
+        // 무조건 원래 가있어야 할 절대적인 거리 값(절댓값)을 구합니다.
+        float baseDistance = Mathf.Abs(currentPos.x);
+
+        // 바라보는 방향(1 또는 -1)을 곱해서 왼쪽/오른쪽 위치를 정해줍니다.
+        // 만약 원래 위치가 0이라면 플레이어 중심에 있는 것이므로 굳이 안 움직여도 됩니다.
+        if (baseDistance > 0.01f)
         {
-            Debug.LogError("PlayerControll에 AttackHitboxObj가 연결되지 않았습니다!");
+            currentPos.x = baseDistance * facingDirectionX;
+            hitboxObj.transform.localPosition = currentPos;
         }
     }
+
 }

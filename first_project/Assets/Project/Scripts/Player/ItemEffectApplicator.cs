@@ -50,12 +50,7 @@ public class ItemEffectApplicator : MonoBehaviour
         switch (itemNumber)
         {
             case 1:
-                if (status != null)
-                {
-                    status.ChangeHp(50f);
-                }
-
-                // 그 후 UI용 데이터매니저도 동기화해줍니다.
+                if (status != null) status.ChangeHp(50f);
                 if (DataManager.Instance != null && status != null)
                 {
                     DataManager.Instance.PlayerHp = (int)status.currentHp;
@@ -65,18 +60,25 @@ public class ItemEffectApplicator : MonoBehaviour
             case 2:
                 StartCoroutine(StealthRoutine(5f));
                 break;
+
             case 3:
-                // (추가공격력, 추가범위, 횟수)
-                status.EnableSwordBuff(15f, 2.0f, 6);
-                break;
-            case 4:
-                if (status != null)
+                // 💡 [안전장치] 이미 검을 들고 있다면 중복 장착으로 횟수가 초기화되는 것을 막아줍니다.
+                if (status != null && !status.hasSword)
                 {
-                    // PlayerStatus에 구현해두신 Gun 버프 활성화 함수를 호출합니다. (예: 6발)
-                    status.EnableGunBuff(6);
-                    Debug.Log("총기 버프 활성화 완료! 이제 J키로 발사 가능.");
+                    status.EnableSwordBuff(15f, 2.0f, 6);
+                    Debug.Log("⚔️ 검 장착 완료! 6회 공격 가능.");
                 }
                 break;
+
+            case 4:
+                // 💡 [안전장치] 이미 총을 들고 있다면 중복 장착 방지
+                if (status != null && !status.hasGun)
+                {
+                    status.EnableGunBuff(6);
+                    Debug.Log("🔫 총기 버프 활성화 완료! 이제 J키로 발사 가능.");
+                }
+                break;
+
             default:
                 Debug.LogWarning($"정의되지 않은 아이템 번호입니다: {itemNumber}");
                 break;
