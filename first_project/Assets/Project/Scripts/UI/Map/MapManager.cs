@@ -54,9 +54,9 @@ public class MapManager : MonoBehaviour
         // 안전지대 생성
         SpawnSpecificMap(safeZonePrefab);
 
-        UpdateShuffleBagForCurrentPhase();
+       // UpdateShuffleBagForCurrentPhase();
         
-        nextSpawnPosition = SpawnMap(GetNextPrefabFromShuffleBag(), nextSpawnPosition);
+       // nextSpawnPosition = SpawnMap(GetNextPrefabFromShuffleBag(), nextSpawnPosition);
         // 1페이즈 맵들로 셔플 백 채우기
         StartCoroutine(CoPhaseTimerRoutine());
     }
@@ -121,11 +121,18 @@ public class MapManager : MonoBehaviour
     // 특정 맵 강제 스폰
     private void SpawnSpecificMap(GameObject prefab)
     {
-       GameObject mapToSpawn = GetOrCreateMap(prefab);
-        mapToSpawn.transform.position = nextSpawnPosition;
+        GameObject mapToSpawn = GetOrCreateMap(prefab);
+        Vector3 startOffset = Vector3.zero;
+        if(mapToSpawn.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
+        {
+            startOffset = chunk.startPosition.localPosition;
+        }
+
+        mapToSpawn.transform.position = nextSpawnPosition - startOffset;
         activeMaps.Enqueue(mapToSpawn);
 
-        nextSpawnPosition = GetEndPosition(mapToSpawn, nextSpawnPosition);
+        // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
+        nextSpawnPosition = GetEndPosition(mapToSpawn, mapToSpawn.transform.position);
     }
 
     private void UpdateShuffleBagForCurrentPhase()
@@ -158,10 +165,17 @@ public class MapManager : MonoBehaviour
     private Vector3 SpawnMap(GameObject prefab, Vector3 spawnPos)
     {
         GameObject map = GetOrCreateMap(prefab);
-        map.transform.position = spawnPos;
+        Vector3 startOffset = Vector3.zero;
+        if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
+        {
+            startOffset = chunk.startPosition.localPosition;
+        }
+
+        map.transform.position = nextSpawnPosition - startOffset;
         activeMaps.Enqueue(map);
 
-        return GetEndPosition(map, spawnPos);
+        // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
+        return GetEndPosition(map, map.transform.position);
     }
 
     private GameObject GetOrCreateMap(GameObject prefab)
@@ -185,7 +199,8 @@ public class MapManager : MonoBehaviour
     {
         if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.endPosition != null)
         {
-            return chunk.endPosition.position;
+            // return chunk.endPosition.position; <-- 글로벌 좌표 사용
+            return fallbackPos + chunk.endPosition.localPosition;
         }
 
         Debug.LogError($"{map.name}에 EndPosition 앵커가 없습니다");

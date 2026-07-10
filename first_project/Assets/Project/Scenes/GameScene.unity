@@ -953,7 +953,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4681613199278000432, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: JumpForce
-      value: 15
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4681613199278000432, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
+      propertyPath: jumpCount
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8695991814018176706, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LayerOverridePriority
