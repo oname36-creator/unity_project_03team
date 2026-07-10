@@ -1199,22 +1199,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1711292810465153845, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1711292810465153845, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1711292810465153845, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1711292810465153845, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1931344721595263000, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.72
@@ -1259,10 +1243,6 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 86049310}
-    - target: {fileID: 5907172389235831589, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
-      propertyPath: _obstacleLayer.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 6903376520089332880, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
       propertyPath: m_Name
       value: Rat
