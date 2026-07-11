@@ -287,11 +287,15 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Attack")
+        if (collision.tag == "PlayerAttack")
         {
             isHurt = true;
             // 일단 float -> int로 
-            //_hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
+
+
+            _hp -= collision.GetComponent<PlayerAttack>().Damage;
+            Debug.Log("Damage : " + collision.GetComponent<PlayerAttack>().Damage + " hp : " + _hp);
+
             if (_hp <= 0)
             {
                 isDead = true;
