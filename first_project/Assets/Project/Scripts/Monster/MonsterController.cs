@@ -291,7 +291,7 @@ public class MonsterController : MonoBehaviour
         {
             isHurt = true;
             // 일단 float -> int로 
-            _hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
+            //_hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
             if (_hp <= 0)
             {
                 isDead = true;

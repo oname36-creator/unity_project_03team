@@ -42,6 +42,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private PlayerAction controls;
     private Vector2 moveInput;
 
+    private MovingPlatform _activePlatform;
+
     private float facingDirectionX = 1f;
 
     void Awake()
@@ -140,8 +142,32 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         currentMoveX *= status.speedMultiplier;
 
-        rb.linearVelocity = new Vector2(currentMoveX, currentVelocityY);
+
+
+        Vector2 platformVelocity = Vector2.zero;
+        if (_activePlatform != null)
+        {
+            platformVelocity = _activePlatform.Velocity;
+        }
+
+        // 최종 속도 적용
+        rb.linearVelocity = new Vector2(currentMoveX + platformVelocity.x, currentVelocityY + platformVelocity.y);
     }
+
+    public void SetActivePlatform(MovingPlatform platform)
+    {
+        _activePlatform = platform;
+    }
+
+    // 🔥 [새로 추가된 메서드] 플랫폼 해제
+    public void ClearActivePlatform(MovingPlatform platform)
+    {
+        if (_activePlatform == platform)
+        {
+            _activePlatform = null;
+        }
+    }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -314,6 +340,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         status.isHurt = true;
         status.isInvincible = true;
+
+        _activePlatform = null;
 
         // 💡 [최종 치트키] 1초 무적 동안 내 몸통의 Collider를 잠시 껐다 켭니다!
         // 이렇게 하면 내 몸에 물리적으로 비벼지며 겹쳐있던 모든 중복 충돌 신호가 "강제로 증발"합니다.
