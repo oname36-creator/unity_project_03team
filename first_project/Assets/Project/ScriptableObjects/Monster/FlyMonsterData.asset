@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 435133d6375fae94796da4ebb9029c53, type: 3}
-  m_Name: BaseMonsterData
+  m_Name: FlyMonsterData
   m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterData
   hp: 100
   damage: 10
-  Speed: 5
-  MaxSpeed: 6
-  Force: 10
-  Name: Base
-  searchRange: 5
-  angle: 15
-  attackRange: 1
+  Speed: 2
+  MaxSpeed: 5
+  Force: 100
+  Name: Bird
+  searchRange: 30
+  angle: 45
+  attackRange: 30

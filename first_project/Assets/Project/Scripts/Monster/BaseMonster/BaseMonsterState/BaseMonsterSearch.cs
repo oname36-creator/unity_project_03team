@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
 
@@ -22,8 +22,8 @@ public class BaseMonsterSearch :  IMonsterState
 
     public void Enter() 
     {
-        Debug.Log("대기");
-        _animator.SetBool(AnimatorHash.Idle, true);
+        //Debug.Log("대기");
+        //_animator.SetBool(AnimatorHash.Idle, true);
     }
 
     public void Update() 
@@ -34,23 +34,16 @@ public class BaseMonsterSearch :  IMonsterState
         // 지정한 시간이 지나면 몬스터의 앞 방향을 반대로 뒤집음
         if (_directionTimer >= _changeDirectionTime)
         {
+            _owner.Stop();
             _owner.Front = -_owner.Front;
             _directionTimer = 0f;
         }
-
-        // 현재 바라보는 방향으로 이동
-        _owner.Move(_owner.Front);
 
     }
 
     public void Exit() 
     {
-        _animator.SetBool(AnimatorHash.Idle, false);
+        //_animator.SetBool(AnimatorHash.Idle, false);
     }
-
-
-
-
-
 
 }

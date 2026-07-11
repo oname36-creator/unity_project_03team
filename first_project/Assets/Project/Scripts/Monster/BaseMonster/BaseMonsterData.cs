@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [CreateAssetMenu(fileName = "BaseMonsterData", menuName = "Scriptable Objects/BaseMonsterData")]
 public class BaseMonsterData : ScriptableObject
 {
-    [Header("Monster Settings")] // ÀÎ½ºÆåÅÍ¿¡ Á¦¸ñ Ç¥½Ã
+    [Header("Monster Settings")] // ì¸ìŠ¤í™í„°ì— ì œëª© í‘œì‹œ
     public int hp;
     public int damage;
     public int Speed;
@@ -11,11 +11,11 @@ public class BaseMonsterData : ScriptableObject
     public int Force;
     public string Name; 
 
-    [Header("Search Settings")] // ÀÎ½ºÆåÅÍ¿¡ Á¦¸ñ Ç¥½Ã
+    [Header("Search Settings")] // ì¸ìŠ¤í™í„°ì— ì œëª© í‘œì‹œ
     public int searchRange;
     public float angle;
 
-    [Header("Attack Settings")] // ÀÎ½ºÆåÅÍ¿¡ Á¦¸ñ Ç¥½Ã
+    [Header("Attack Settings")] // ì¸ìŠ¤í™í„°ì— ì œëª© í‘œì‹œ
     public int attackRange;
 
 }
