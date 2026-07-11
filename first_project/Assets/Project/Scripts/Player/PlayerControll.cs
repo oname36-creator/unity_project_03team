@@ -46,6 +46,17 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float facingDirectionX = 1f;
 
+    void Start()
+    {
+        if (SceneManagerEx.Instance != null)
+        {
+            SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuCanvas");
+
+            if (SceneManagerEx.Instance.pauseMenuUI != null)
+                SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
+        }
+    }
+
     void Awake()
     {
         status = GetComponent<PlayerStatus>();
@@ -85,9 +96,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.isAerial = !status.isGrounded;
 
+  
         if (moveInput.x != 0f)
         {
-            facingDirectionX = Mathf.Sign(moveInput.x);
+            facingDirectionX = Mathf.Sign(moveInput.x); // 오른쪽이면 1, 왼쪽이면 -1
+
+           
+            transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
         }
 
         if (playerPosData != null)

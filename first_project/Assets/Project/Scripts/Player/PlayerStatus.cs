@@ -139,5 +139,10 @@ public class PlayerStatus : MonoBehaviour
     {
         isDead = true;
         Debug.Log("플레이어가 사망했습니다.");
+
+        if(SceneManagerEx.Instance != null)
+        {
+            SceneManagerEx.Instance.GameOver();
+        }
     }
 }
