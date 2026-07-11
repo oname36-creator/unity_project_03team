@@ -5,17 +5,20 @@ TagManager:
   serializedVersion: 3
   tags:
   - Monster
+  - Bullet
+  - Ground
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - AttackHitbox
+  - SwordHitbox
+  - Monster
   - 
   - 
   - 
