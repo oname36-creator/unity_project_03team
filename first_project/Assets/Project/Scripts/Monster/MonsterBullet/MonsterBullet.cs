@@ -43,7 +43,7 @@ public class MonsterBullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 1. 발사한 몬스터 자신이나 다른 총알에 부딪히는 예외 처리
-        if (collision.CompareTag("Monster") || collision.CompareTag("MonsterBullet"))
+        if (collision.CompareTag("Monster"))
         {
             return;
         }
