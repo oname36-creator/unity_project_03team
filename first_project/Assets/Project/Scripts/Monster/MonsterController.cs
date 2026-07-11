@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 
 
-public class MonsterController : MonoBehaviour
+public class MonsterController : MonoBehaviour 
 {
 
     #region Serialized Fields

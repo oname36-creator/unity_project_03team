@@ -7,13 +7,17 @@ public class MonsterStateMachine
 {
 
     private IMonsterState _currentState { get; set; }
-    private MonsterController _owner;
 
     private Dictionary<IMonsterState, List<Transition>> _transitionMap;
 
     public MonsterStateMachine(MonsterController owner, IMonsterState initialState, Dictionary<IMonsterState, List<Transition>> transitionMap) 
     {
-        _owner = owner;
+        _currentState = initialState;
+        _transitionMap = transitionMap;
+    }
+    public MonsterStateMachine(BossController owner, IMonsterState initialState, Dictionary<IMonsterState, List<Transition>> transitionMap)
+    {
+
         _currentState = initialState;
         _transitionMap = transitionMap;
     }

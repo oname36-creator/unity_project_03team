@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Searcher;
 using UnityEngine;
 
 public class MonsterAiBrain
@@ -267,6 +268,34 @@ public class MonsterAiBrain
 
         initialState.Enter();
         return new MonsterStateMachine(owner, initialState, transitionMap);
+    }
+    public static MonsterStateMachine MakeMachine(string name, BossController owner)
+    {
+
+        IMonsterState initialState = null;
+        var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
+
+        IMonsterState chase = new BossChase(owner);
+        // 보스룸 상태 추가할 예정
+
+        initialState = chase;
+
+        // 나중에 상태 추가
+        //transitionMap[chase] = new List<Transition>
+        //    {
+        //        new Transition(
+        //            condition: () =>
+        //            {
+        //                return !owner.Chase;
+        //            },
+        //            targetState:Attack
+        //            )
+        //    };
+
+
+
+        return new MonsterStateMachine(owner, initialState, transitionMap);
+
     }
 
 }
