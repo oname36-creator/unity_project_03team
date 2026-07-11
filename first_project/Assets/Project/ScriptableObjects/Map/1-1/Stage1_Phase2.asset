@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
-  m_Name: MidTrees
-  m_EditorClassIdentifier: Assembly-CSharp::MapData
-  speed: 0.08
+  m_Script: {fileID: 11500000, guid: 72707167d84b50044911a2c5696659c2, type: 3}
+  m_Name: Stage1_Phase2
+  m_EditorClassIdentifier: Assembly-CSharp::SOMapPalette
+  chunkPrefabs:
+  - {fileID: 8916473074194248325, guid: e561fb5b032df124885b01da42561391, type: 3}
