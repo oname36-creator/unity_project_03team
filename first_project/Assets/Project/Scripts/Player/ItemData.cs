@@ -6,7 +6,9 @@ public enum ItemEffectType
     None,
     HealHP,
     Stealth,    // 은신
-    Invincible  // 무적
+    Sword,
+    Gun
+
 }
 
 [CreateAssetMenu(fileName = "NewItemData", menuName = "Scriptable Objects/ItemData")]
@@ -19,4 +21,5 @@ public class ItemData : ScriptableObject
     public ItemEffectType effectType; // 어떤 효과인가?
     public float effectValue;         // 효과 수치 (회복량 등)
     public float duration;            // 지속 시간 (은신 시간 등)
+    public float usageCount;          // 아이템 사용 횟수
 }
