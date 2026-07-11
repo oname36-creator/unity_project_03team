@@ -1,5 +1,6 @@
-using Unity.VisualScripting;
+ï»¿using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 
@@ -7,15 +8,15 @@ public class MonsterController : MonoBehaviour
 {
 
     #region Serialized Fields
-    [Header("Monster Data")] // ÀÎ½ºÆåÅÍ¿¡ Á¦¸ñ Ç¥½Ã
+    [Header("Monster Data")] // ì¸ìŠ¤í™í„°ì— ì œëª© í‘œì‹œ
     public BaseMonsterData MonsterData;
 
-    [Header("Player Object")] 
+    [Header("Player Object")]
     public GameObject Player;
 
 
-    [Header("Player")]
-    //public PlayerController player;
+    [Header("Obstacle Layer")]
+    public LayerMask _obstacleLayer;
 
     #endregion
 
@@ -23,27 +24,32 @@ public class MonsterController : MonoBehaviour
     #region Private Fields
     private int _hp;
     private int _damage;
-    private int _searchRange; // Å½»ö ±íÀÌ
-    private int _attackRange; // °ø°İ °¡´É °Å¸®
-    private int _force; // Èû
+    private int _searchRange; // íƒìƒ‰ ê¹Šì´
+    private int _attackRange; // ê³µê²© ê°€ëŠ¥ ê±°ë¦¬
+    private int _force; // í˜
 
-    private float _angle;   // Å½»ö °¢µµ
-    private float _cosValue; // °¢µµÀÇ cos °ª
+    private float _angle;   // íƒìƒ‰ ê°ë„
+    private float _cosValue; // ê°ë„ì˜ cos ê°’
 
     private float _speed;
-    private float _maxSpeed; // ÃÖ´ë ¼Óµµ
+    private float _maxSpeed; // ìµœëŒ€ ì†ë„
 
     private bool isDead;
-    private bool isFounded;
+    //private bool isFounded;
     private bool isAttack;
+    private bool isAttackable;
+    private bool isFly;
+    private bool isBack;
+    private bool isHurt;
+    private bool isCollision;
 
-    // µÚÁı±â bool
+    // ë’¤ì§‘ê¸° bool
     private bool onFlip;
 
-    private Vector2 _frontVector;  // ¾Õ ¹æÇâ ÀúÀå // (1,0)ÀÌ¸é ¿À¸¥ÂÊ (-1,0)ÀÌ¸é ¿ŞÂÊ
+    private Vector2 _frontVector;  // ì• ë°©í–¥ ì €ì¥ // (1,0)ì´ë©´ ì˜¤ë¥¸ìª½ (-1,0)ì´ë©´ ì™¼ìª½
     private Vector2 _mToPlayer;
-    private Vector2 _mToPlayerDistance; // °Å¸®
-
+    private Vector2 _mToPlayerDistance; // ê±°ë¦¬
+    private Vector2 _attackStartPoint;
 
     private Rigidbody2D _rigidBody2D;
     private SpriteRenderer _renderer;
@@ -60,6 +66,11 @@ public class MonsterController : MonoBehaviour
 
     #region Properties
 
+    public float Speed
+    {
+        get { return _speed; }
+    }
+
     public float MaxSpeed
     {
         get { return _maxSpeed; }
@@ -74,37 +85,68 @@ public class MonsterController : MonoBehaviour
         get { return _cosValue; }
     }
 
-    public bool IsAttack 
+    public bool IsAttack
     {
         get { return isAttack; }
-        set { isAttack = value;}
+        set { isAttack = value; }
+    }
+    public bool IsAttackable
+    {
+        get { return isAttackable; }
+        set { isAttackable = value; }
     }
 
     public bool IsDead
     {
         get { return isDead; }
+        set { isDead = value; }
     }
 
-    public bool InRange  // Range ¾È¿¡ ÀÖÀ»¶§
+    public bool IsHurt
     {
-        get 
+        get { return isHurt; }
+        set { isHurt = value; }
+    }
+
+    public bool IsFly
+    {
+        get { return isFly; }
+        set { isFly = value; }
+    }
+
+    public bool IsBack
+    {
+        get { return isBack; }
+        set { isBack = value; }
+    }
+
+    public bool IsCollision
+    {
+        get { return isCollision; }
+        set { isCollision = value; }
+    }
+
+
+    public bool InRange  // Range ì•ˆì— ìˆì„ë•Œ
+    {
+        get
         {
             return _mToPlayerDistance.magnitude < _searchRange;
         }
 
     }
 
-    public bool InAngle 
+    public bool InAngle
     {
-        get 
+        get
         {
-            return Vector2.Dot(_frontVector, _mToPlayer) > _cosValue;
+            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue /*&& !CheckForObstacles()*/);
         }
     }
 
 
 
-    public bool InAttackRange  // AttackRange ¾È¿¡ ÀÖÀ»¶§
+    public bool InAttackRange  // AttackRange ì•ˆì— ìˆì„ë•Œ
     {
         get
         {
@@ -119,15 +161,31 @@ public class MonsterController : MonoBehaviour
         get { return _frontVector; }
         set
         {
-            if (_frontVector == value) return;  // ¹æÇâÀÌ ¹Ù²îÁö ¾Ê¾Ò´Ù¸é ¸®ÅÏ
-            onFlip = !onFlip;                  // ¹æÇâÀÌ ¹Ù²î¸é true -> false,  false -> true·Î ¹Ù²Ù°í 
-            _renderer.flipX = onFlip;          // flip ÇØÁÖ±â
+            if (_frontVector == value) return;  // ë°©í–¥ì´ ë°”ë€Œì§€ ì•Šì•˜ë‹¤ë©´ ë¦¬í„´
+            onFlip = !onFlip;                  // ë°©í–¥ì´ ë°”ë€Œë©´ true -> false,  false -> trueë¡œ ë°”ê¾¸ê³  
+            _renderer.flipX = onFlip;          // flip í•´ì£¼ê¸°
             _frontVector = value;
         }
     }
-    public Vector2 GetMToP // ¸ó½ºÅÍ¿¡¼­ ÇÃ·¹ÀÌ¾î ¹æÇâÀÇ À¯´Ö º¤ÅÍ Get
+    public Vector2 GetMToP // ëª¬ìŠ¤í„°ì—ì„œ í”Œë ˆì´ì–´ ë°©í–¥ì˜ ìœ ë‹› ë²¡í„° Get
     {
         get { return _mToPlayer; }
+    }
+
+    public Vector2 GetMToPDistance // ëª¬ìŠ¤í„°ì—ì„œ í”Œë ˆì´ì–´ ë°©í–¥ì˜ ìœ ë‹› ë²¡í„° Get
+    {
+        get { return _mToPlayerDistance; }
+    }
+
+    public Vector2 GetPlayerPos 
+    {
+        get { return _playerTransform.position; }
+    }
+
+    public Vector2 AttackStartPoint 
+    {
+        get { return _attackStartPoint; }
+        set { _attackStartPoint = value;}
     }
 
 
@@ -136,7 +194,7 @@ public class MonsterController : MonoBehaviour
     #region Unity Lifecycle
     void Start()
     {
-        // 1ÃÊ¿¡ 120¹ø¸¸ °è»êµÇµµ·Ï
+        // 1ì´ˆì— 120ë²ˆë§Œ ê³„ì‚°ë˜ë„ë¡
         Application.targetFrameRate = 120;
 
         _hp = MonsterData.hp;
@@ -149,8 +207,11 @@ public class MonsterController : MonoBehaviour
         _force = MonsterData.Force;
 
         isDead = false;
-        isFounded = false;
+        //isFounded = false;
         isAttack = false;
+        isAttackable = true;
+        isHurt = false;
+        isBack = false;
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
@@ -165,78 +226,126 @@ public class MonsterController : MonoBehaviour
         _playerTransform = Player.GetComponent<Transform>();
         _playerRadius = Player.GetComponent<CircleCollider2D>().radius;
         _monsterTransform = this.GetComponent<Transform>();
-    
+
     }
 
     void Update()
     {
 
-        // Á×¾ú´Ù¸é
+        // ì£½ì—ˆë‹¤ë©´
         if (isDead)
-        { 
+        {
             return;
         }
-        
+
         CaculateMonsterToPlayerVector();
         _monsterMachine.Update();
+
 
     }
 
     #endregion
 
 
-    public void Move(Vector2 dir) 
+    public void Move(Vector2 dir, bool Impulse = false, bool Fly = false)
     {
-
-        if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed) 
+        if (Fly)
         {
-            _rigidBody2D.linearVelocity = dir * _maxSpeed; 
+            _rigidBody2D.AddForce(Vector2.up * 9.81f, ForceMode2D.Force);
+            return;
         }
 
-        _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
-        Debug.Log(_rigidBody2D.linearVelocityX);
+        if (Impulse)
+        {
+            _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Impulse);
+        }
+        else
+        {
+            //Debug.Log("dir * _speed : " + dir * _speed);
+            _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
+        }
+
+        if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed)
+        {
+            _rigidBody2D.linearVelocity = _rigidBody2D.linearVelocity.normalized * _maxSpeed;
+        }
     }
 
-
-    public bool Stop()
+    public void MoveToPosition(Vector2 dir) 
     {
-        if (_rigidBody2D.linearVelocity.magnitude < 0.05f) return true;
-        return false;
+        _rigidBody2D.MovePosition(dir);
+        //Debug.Log("current Pos:" + _rigidBody2D.position);
     }
 
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.tag == "Attack")
-    //    {
-    //        //_hp -= collision.GetComponent<PlayerController>().GetDamage();
-    //        if (_hp <= 0)
-    //        {
-    //            Interface.Dead();
-    //            isDead = true;
-    //        }
-    //        else
-    //        {
-    //            Interface.Hurt();
-    //        }
+    public void Stop()
+    {
+        _rigidBody2D.linearVelocity = Vector2.zero;
+    }
 
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Attack")
+        {
+            isHurt = true;
+            // ì¼ë‹¨ float -> intë¡œ 
+            _hp -= (int)collision.GetComponent<PlayerControll>().attackDamage;
+            if (_hp <= 0)
+            {
+                isDead = true;
+            }
+
+
+        }
+    }
+
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    // ë²½ ë¶€ë”ªí˜ ì²´í¬
+    //    if (collision.gameObject.CompareTag("Untagged")) 
+    //    {
+    //        isHurt = true;
     //    }
     //}
 
     private void CaculateMonsterToPlayerVector()
     {
-        // ÇÃ·¹ÀÌ¾î ÁÂÇ¥¸¦ ¹Ş¾Æ¼­ 
-        // ¸ó½ºÅÍÀÇ À§Ä¡¿¡¼­ ÇÃ·¹ÀÌ¾î ÁÂÇ¥ÀÇ À¯´Ö º¤ÅÍ¸¦ ±¸ÇÏ°í
-        // _mToPlayer¿¡ ÀúÀåÇÏ±â
+
+        // í”Œë ˆì´ì–´ ì¢Œí‘œë¥¼ ë°›ì•„ì„œ 
+        // ëª¬ìŠ¤í„°ì˜ ìœ„ì¹˜ì—ì„œ í”Œë ˆì´ì–´ ì¢Œí‘œì˜ ìœ ë‹› ë²¡í„°ë¥¼ êµ¬í•˜ê³ 
+        // _mToPlayerì— ì €ì¥í•˜ê¸°
 
         Vector2 PlayerPos = _playerTransform.position;
         PlayerPos.y -= _playerRadius;
 
         Vector2 myPos = _monsterTransform.position;
 
-        _mToPlayerDistance = PlayerPos- myPos;
+        _mToPlayerDistance = PlayerPos - myPos;
         _mToPlayer = (_mToPlayerDistance).normalized;
 
     }
 
+    public bool CheckForObstacles()
+    {
+        // ì§€ê¸ˆ ìœ„ì¹˜ì—ì„œ í”Œë ˆì´ì–´ ë°©í–¥ìœ¼ë¡œ 
+        Vector2 origin = transform.position;
+        Vector2 direction = _mToPlayer;
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, _searchRange, _obstacleLayer);
+
+
+        if (hit.collider != null)
+        {
+            if (hit.collider.CompareTag("Untagged"))
+            {
+
+                return true;
+            }
+        }
+
+
+        return false;
+    }
 }

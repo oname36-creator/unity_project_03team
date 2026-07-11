@@ -11,4 +11,7 @@ public static class AnimatorHash
 	public static readonly int IsAttack = Animator.StringToHash("isAttack");
 	public static readonly int IsHurt = Animator.StringToHash("isHurt");
 
+	public static readonly int IsJump = Animator.StringToHash("isJump");
+	public static readonly int IsFly = Animator.StringToHash("isFly");
+
 }
