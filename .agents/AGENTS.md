@@ -13,6 +13,9 @@
     - 3페이즈 : 5초정도  왼쪽에서 오른쪽으로 움직인 후, 위에서 아래로 움직임.
    상자 : 일반 타일 중에 랜덤으로 스폰
    단, 함정이나 점프대, 풀숲(발판)에서는 스폰 되지 않음.
+  - 맵의 배경은 2.5D와 같이 생동감(원근감 부여) 있게 구현한다.
+   - 구현 방식 : 카메라의 Orthographic을 사용하고, z축은 0으로 고정된 상태에서 스크립트로 구현.
+   - 배경 원근감을 넣을 때는 항상 Parallax.cs의 기법들을 읽어온다.
 코드 베이스는 크게 다음과 같은 레이어로 나뉩니다.
 - **Core**: 글로벌 데이터 관리 및 유틸리티 매니저 클래스 (`DataManager.cs`, `Singleton.cs`)
 - **Player**: 플레이어 입력 처리, 물리 운동, 상태 값(HP, 디버프 등) 및 아이템 효과 적용 (`PlayerControll.cs`, `PlayerStatus.cs`, `ItemEffectApplicator.cs`)
@@ -46,6 +49,23 @@
 
 ### 3.3 오브젝트 풀링 (Object Pooling)
 - 맵 덩어리(`MapChunk`) 및 몬스터 등 자주 생성/파괴되는 리소스는 `MapManager`의 `InitializationPools()`와 `GetOrCreateMap()`처럼 오브젝트 풀을 활용하여 가비지 컬렉션(GC) 부하를 최소화해야 합니다.
+
+### 3.4 2.5D 배경 원근감 및 Parallax 규칙
+- **스크립트 기반 원근감**: 카메라는 Orthographic 모드를 사용하며, z축은 0으로 고정합니다. 카메라 이동량(`camMoveDistance`)에 비례해 배경 레이어가 다르게 움직이도록 `Parallax.cs`를 활용합니다.
+- **페이즈별 Y축 적용**: 1페이즈(CurrentPhaseIndex == 0)에서는 y축 카메라 흔들림에 따른 배경 어색함을 방지하기 위해 Y축 Parallax를 완전히 비활성화하며, 2페이즈(CurrentPhaseIndex >= 1) 이상일 때만 활성화합니다.
+- **무한 루핑 보정**: 루핑 배경은 `SpriteRenderer` 크기를 pixelsPerUnit 단위로 변환해 텍스처 실제 물리 크기를 계산하고, 카메라 이동 오프셋에 맞춰 기준 시작점(`startPos`)을 프레임별로 보정합니다.
+- **대기 원근 효과**: 원근 깊이에 따른 안개/대기 효과를 위해 `applyAtmosphereTint`를 활성화하고, `atmosphereColor`와 `tintStrength`를 이용해 스프라이트 원래 색상을 `Color.Lerp`하여 보정합니다.
+
+### 3.5 이동 플랫폼(Moving Platform) 및 관성 연동 규칙
+- **로컬 좌표계 기반 왕복**: 플랫폼 스폰 시의 오작동 및 맵 덩어리와의 연동 딜레이를 방지하기 위해 이동 타겟(시작점/끝점)은 월드 좌표가 아닌 부모 기준의 로컬 좌표(`transform.localPosition`)를 바탕으로 정의합니다.
+- **FixedUpdate 물리 이동**: 플랫폼의 실제 물리적 이동은 로컬 타겟 좌표를 부모 기준으로 월드 좌표로 변환(`TransformPoint`)한 뒤, `FixedUpdate` 안에서 `Rigidbody2D.MovePosition`을 사용하여 덜컹거림이 없도록 부드럽게 구현합니다.
+- **플레이어 관성 결합**: 플레이어가 플랫폼 위에 서 있을 때(`OnCollisionEnter2D`), 플랫폼의 `Velocity` 정보를 플레이어(`PlayerControll`)에 주입하며, 플레이어는 이동 처리 시 자신의 x 속도 및 플랫폼 속도를 합산해 `linearVelocity`를 대입합니다.
+- **Gizmos 가시화**: 개발 중 디버깅의 편의를 위해 `OnDrawGizmos`를 오버라이드하여 플랫폼의 로컬 시작점과 끝점 경로, 크기를 씬 뷰에 시각적(초록색 라인 및 큐브)으로 상시 노출시킵니다.
+
+### 3.6 플레이어 전투 판정 및 피격 예외 처리
+- **히트박스 대칭 이동**: 플레이어가 바라보는 방향(`facingDirectionX`)에 맞추어 맨손(`attackHitboxObj`) 및 검(`swordAttackHitboxObj`) 히트박스의 로컬 x 좌표 부호를 반전(대칭 이동)시켜 앞뒤 판정이 알맞게 적용되도록 합니다.
+- **피격 시 충돌 버그 방지**: 공격 중(코루틴 처리 시) 또는 피격 직후 무적 상태 동안 플레이어와 몬스터 레이어의 물리 충돌을 `IgnoreLayerCollision`으로 일시 격리하여, 다중 충돌로 인한 억울한 체력 차감을 방지합니다.
+- **물리 겹침 튕겨내기**: 넉백 및 무적 발생 순간, 몬스터와 캐릭터의 Collider가 비벼져 다중 피격 판정이 일어나는 것을 방지하고자 피격 당하는 즉시 플레이어 `Collider2D`를 1프레임 동안 완전히 비활성화했다가 안전하게 재활성화합니다.
 
 ---
 

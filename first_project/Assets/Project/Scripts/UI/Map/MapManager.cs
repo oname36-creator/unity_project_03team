@@ -21,6 +21,8 @@ public class MapManager : MonoBehaviour
     [Header("난이도 페이즈 설정")]
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
+
+    public int CurrentPhaseIndex => currentPhaseIndex;
     private float gameTimer = 0f;
 
     #region DataStruct Fields
