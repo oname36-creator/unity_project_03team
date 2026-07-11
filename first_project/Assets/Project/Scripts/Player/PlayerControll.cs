@@ -159,7 +159,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         _activePlatform = platform;
     }
 
-    // 🔥 [새로 추가된 메서드] 플랫폼 해제
     public void ClearActivePlatform(MovingPlatform platform)
     {
         if (_activePlatform == platform)
@@ -410,7 +409,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             true
         );
 
-        // 💡 [오타 수정 완료] swordAttackHitboxObj가 아니라 맨손 상자인 attackHitboxObj를 제어합니다!
+        
         if (attackHitboxObj != null) attackHitboxObj.SetActive(true);
 
         yield return new WaitForSeconds(0.3f);
