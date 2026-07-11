@@ -20,6 +20,8 @@ public class MovingPlatform : MonoBehaviour
     private Rigidbody2D _rb;
     private bool _isWaiting = false;
     private bool _isInitialized = false;
+    public Vector2 Velocity { get; private set; }
+
 
     void OnEnable()
     {
@@ -53,31 +55,42 @@ public class MovingPlatform : MonoBehaviour
         Vector2 newPos = Vector3.MoveTowards(_rb.position, worldTargetPos, speed * Time.fixedDeltaTime);
         _rb.MovePosition(newPos);
 
+        Velocity = (newPos - _rb.position) / Time.fixedDeltaTime;
         // 목표 지점에 거의 도달했으면 코루틴 실행
-        if(Vector3.Distance(_rb.position, worldTargetPos) < 0.01f)
+        if (Vector3.Distance(_rb.position, worldTargetPos) < 0.01f)
         {
             StartCoroutine(WaitAndchangeDirection());
         }
     }
 
-    
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            collision.transform.SetParent(transform);   // [유지] 플레이어 발판 위에 있을 시 같이 움직이게 하는 기성 로직 유지
+            PlayerControll player = collision.gameObject.GetComponent<PlayerControll>();
+            if (player != null)
+            {
+                // 플레이어에게 내 정보 전달하기
+                player.SetActivePlatform(this);
+            }
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            collision.transform.SetParent(null); // [유지] 플레이어 이탈 시 부모 해제 기성 로직 유지
+            PlayerControll player = collision.gameObject.GetComponent<PlayerControll>();
+            if (player != null)
+            {
+                // 발판에서 벗어났으니 해제 요청
+                player.ClearActivePlatform(this);
+            }
         }
     }
-    
+
 
     // 씬에서 시각적으로 시작점과 끝점 보여주게 하는 함수
     private void OnDrawGizmos()
