@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
-  m_Name: FarTrees
-  m_EditorClassIdentifier: Assembly-CSharp::MapData
-  speed: 0.2
+  m_Script: {fileID: 11500000, guid: 72707167d84b50044911a2c5696659c2, type: 3}
+  m_Name: Stage1_Phase3
+  m_EditorClassIdentifier: Assembly-CSharp::SOMapPalette
+  chunkPrefabs:
+  - {fileID: 4609161205030642019, guid: 9a83cd21949c0844a85054b729db545b, type: 3}
