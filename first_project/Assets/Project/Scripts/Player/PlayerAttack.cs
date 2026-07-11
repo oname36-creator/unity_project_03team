@@ -3,6 +3,13 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     private PlayerStatus playerStatus;
+    private int _damge;
+
+
+    public int Damage
+    {
+        get { return  _damge; }
+    }
 
     void Awake()
     {
