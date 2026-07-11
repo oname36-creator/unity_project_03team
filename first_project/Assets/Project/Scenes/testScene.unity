@@ -683,6 +683,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
   _monsterBulletPrefab: {fileID: 345861578278468913, guid: d2d71bb5923757d40bc40464e05f6a47, type: 3}
+  bulletPrefab: {fileID: 2021141242}
+  poolSize: 20
 --- !u!1 &1289488390
 GameObject:
   m_ObjectHideFlags: 0
@@ -1096,6 +1098,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90.117}
+--- !u!1 &2021141242 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 345861578278468913, guid: d2d71bb5923757d40bc40464e05f6a47, type: 3}
+  m_PrefabInstance: {fileID: 3908186263078324795}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2140132455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1244,11 +1251,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1931344721595263000, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.72
+      value: -4.5682
       objectReference: {fileID: 0}
     - target: {fileID: 1931344721595263000, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.92
+      value: -3.0428
       objectReference: {fileID: 0}
     - target: {fileID: 1931344721595263000, guid: 4c63b258384f59f448ae967527ef4459, type: 3}
       propertyPath: m_LocalPosition.z
