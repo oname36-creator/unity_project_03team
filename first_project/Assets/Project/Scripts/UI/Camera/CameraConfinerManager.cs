@@ -8,6 +8,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     [SerializeField] private CinemachineCamera virtualCamera;
 
     private CinemachineConfiner2D confiner;
+    private CinemachinePositionComposer positionComposer;
     #endregion
     public override void Awake()
     {
@@ -35,6 +36,8 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
         if (virtualCamera != null)
         {
             confiner = virtualCamera.GetComponent<CinemachineConfiner2D>();
+
+            positionComposer = virtualCamera.GetComponent<CinemachinePositionComposer>();
         }
     }
     #endregion
@@ -72,6 +75,38 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
             Debug.LogError("CineamachineConfiner2D 컴포넌트를 찾을 수 없습니다. 카메라 설정을 확인해 주세요.");
         }
     }
-#endregion
+    #endregion
+
+    #region SetCameraYTrackingByPhase
+    ///<summary>
+    ///페이즈 번호에 따라 카메라의 Y축 고정 여부를 결정합니다.
+    /// </summary>
+    public void SetCameraYTrackingByPhase(int phaseindex)
+    {
+        var composition = positionComposer.Composition;
+        var deadZoneSettings = composition.DeadZone;
+        if (positionComposer == null)
+        {
+            InitCameraReferences();
+        }
+
+        if(positionComposer != null)
+        {
+            if(phaseindex == 0)
+            {
+                // 1페이즈
+                deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 1.0f);
+            }
+            else
+            {
+                // 2,3페이즈
+                deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 0.2f);
+            }
+
+            composition.DeadZone = deadZoneSettings;
+            positionComposer.Composition = composition;
+        }
+    }
+    #endregion
 
 }
