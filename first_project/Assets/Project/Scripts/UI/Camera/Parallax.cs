@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
+    #region Inspector Data
     [Header("References")]
     [SerializeField] private Transform cam;
 
@@ -10,19 +11,14 @@ public class Parallax : MonoBehaviour
     [Range(0f, 2f)][SerializeField] private float parallaxEffectX = 0.5f;
     [Range(0f, 2f)][SerializeField] private float parallaxEffectY = 0.5f;
 
-    [Header("Loop Settings")]
-    [SerializeField] private bool loopHorizontal = true;
-    [SerializeField] private bool loopVertical = false;
-
     [Header("Atmospheric Perspective (Color Tint)")]
     [SerializeField] private bool applyAtmosphereTint = false;
     [SerializeField] private Color atmosphereColor = Color.white;
     [Range(0f, 1f)][SerializeField] private float tintStrength = 0.2f;
+    #endregion
 
     private Vector3 startPos;
     private Vector3 startCamPos;
-    private float textureUnitSizeX;
-    private float textureUnitSizeY;
     private SpriteRenderer spriteRenderer;
     private MapManager mapManager;
 
@@ -54,8 +50,6 @@ public class Parallax : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null && spriteRenderer.sprite != null)
         {
-            textureUnitSizeX = spriteRenderer.sprite.rect.width / spriteRenderer.sprite.pixelsPerUnit;
-            textureUnitSizeY = spriteRenderer.sprite.rect.height / spriteRenderer.sprite.pixelsPerUnit;
 
             if (applyAtmosphereTint)
             {
@@ -65,7 +59,6 @@ public class Parallax : MonoBehaviour
         }
 
         mapManager = FindAnyObjectByType<MapManager>();
-
         startPos = transform.position;
         startCamPos = cam.position;
     }
@@ -73,49 +66,17 @@ public class Parallax : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 camMoveDistance = cam.position - startCamPos;
-
         bool isYParallaxActive = mapManager != null && mapManager.CurrentPhaseIndex >= 1;
 
-        // 1. [X축 무한 루핑 검사 및 startPos 보정]
-        if (loopHorizontal && textureUnitSizeX > 0)
-        {
-            float tempX = camMoveDistance.x * parallaxEffectX;
-            if (tempX > startPos.x - startCamPos.x + textureUnitSizeX)
-            {
-                startPos.x += textureUnitSizeX;
-            }
-            else if (tempX < startPos.x - startCamPos.x - textureUnitSizeX)
-            {
-                startPos.x -= textureUnitSizeX;
-            }
-        }
-
-        // 2. [Y축 무한 루핑 검사 및 startPos 보정]
-        if (isYParallaxActive && loopVertical && textureUnitSizeY > 0)
-        {
-            float tempY = camMoveDistance.y * parallaxEffectY;
-            if (tempY > startPos.y - startCamPos.y + textureUnitSizeY)
-            {
-                startPos.y += textureUnitSizeY;
-            }
-            else if (tempY < startPos.y - startCamPos.y - textureUnitSizeY)
-            {
-                startPos.y -= textureUnitSizeY;
-            }
-        }
-
-        // 3. [보정이 끝난 startPos를 기반으로 최종 오프셋 계산]
+        // 원근감 최종 오프셋 계산
         float distX = camMoveDistance.x * (1 - parallaxEffectX);
-        float distY = 0f;
-        if (isYParallaxActive)
-        {
-            distY = camMoveDistance.y * (1 - parallaxEffectY);
-        }
+        float distY = isYParallaxActive ? camMoveDistance.y * (1 - parallaxEffectY) : 0f;
 
         float targetX = startPos.x + distX;
         float targetY = startPos.y + distY;
 
-        // 4. [최종 좌표 대입] (튀는 현상 완벽 방지)
+        // 4. [최종 좌표 대입]
         transform.position = new Vector3(targetX, targetY, transform.position.z);
     }
+    
 }
