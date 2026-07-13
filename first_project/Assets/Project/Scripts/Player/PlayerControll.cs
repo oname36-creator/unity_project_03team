@@ -46,6 +46,17 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float facingDirectionX = 1f;
 
+    void Start()
+    {
+        if (SceneManagerEx.Instance != null)
+        {
+            SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuCanvas");
+
+            if (SceneManagerEx.Instance.pauseMenuUI != null)
+                SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
+        }
+    }
+
     void Awake()
     {
         status = GetComponent<PlayerStatus>();
@@ -85,9 +96,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.isAerial = !status.isGrounded;
 
+  
         if (moveInput.x != 0f)
         {
-            facingDirectionX = Mathf.Sign(moveInput.x);
+            facingDirectionX = Mathf.Sign(moveInput.x); // 오른쪽이면 1, 왼쪽이면 -1
+
+           
+            transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
         }
 
         if (playerPosData != null)
@@ -312,7 +327,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
         if (status.isInvincible) return;
-
+       
         // 💡 [최종 안전 방어선] 내가 지금 맨손이든 검이든 공격 상자를 켜고 있는 중이라면
         // 물리 엔진 타이밍 때문에 억울하게 들어오는 몸통 충돌 신호를 통째로 튕겨내 버립니다!
         bool isCurrentlyAttacking = (attackHitboxObj != null && attackHitboxObj.activeSelf) ||
