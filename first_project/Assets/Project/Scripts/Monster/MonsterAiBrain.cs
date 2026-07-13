@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Searcher;
 using UnityEngine;
 
 public class MonsterAiBrain
@@ -266,7 +267,147 @@ public class MonsterAiBrain
         }
 
         initialState.Enter();
-        return new MonsterStateMachine(owner, initialState, transitionMap);
+        return new MonsterStateMachine(initialState, transitionMap);
+    }
+    public static MonsterStateMachine MakeMachine(string name, BossController owner)
+    {
+        Debug.Log("BossController");
+        IMonsterState initialState = null;
+        var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
+
+        IMonsterState chase = new BossChase(owner);
+        // 보스룸 상태 추가할 예정
+
+        initialState = chase;
+
+        // 나중에 상태 추가
+        //transitionMap[chase] = new List<Transition>
+        //    {
+        //        new Transition(
+        //            condition: () =>
+        //            {
+        //                return !owner.Chase;
+        //            },
+        //            targetState:Attack
+        //            )
+        //    };
+
+
+        initialState.Enter();
+        return new MonsterStateMachine(initialState, transitionMap);
+
+    }
+
+    public static MonsterStateMachine MakeMachine(string name, BodyController owner)
+    {
+        Debug.Log("Body");
+        IMonsterState initialState = null;
+        var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
+
+        IMonsterState idle = new BodyIdle(owner);
+        IMonsterState move = new BodyMove(owner);
+        // 보스룸 상태 추가할 예정
+
+        initialState = idle;
+
+        // 나중에 상태 추가
+        transitionMap[idle] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Boss.Attached;
+                    },
+                    targetState:move
+                    )
+            };
+
+        transitionMap[move] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.Move;
+                    },
+                    targetState:idle
+                    )
+            };
+
+
+        initialState.Enter();
+        return new MonsterStateMachine(initialState, transitionMap);
+
+    }
+
+
+    public static MonsterStateMachine MakeMachine(string name, TentacleController owner)
+    {
+        Debug.Log("TentacleController");
+        IMonsterState initialState = null;
+        var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
+
+        IMonsterState idle = new TentacleIdle(owner);
+        IMonsterState stretch = new TentacleStretch(owner);
+        IMonsterState attach = new TentacleAttach(owner);
+
+        initialState = idle;
+
+        // 나중에 상태 추가
+        transitionMap[idle] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsSearch;
+                    },
+                    targetState:stretch
+                    ),
+                
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Boss.Attached;
+                    },
+                    targetState:stretch
+                    )
+            };
+
+        transitionMap[stretch] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsAttach;;
+                    },
+                    targetState:attach
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsSearch;
+                    },
+                    targetState:idle
+                    )
+            };
+
+        transitionMap[attach] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsAttach;;
+                    },
+                    targetState:idle
+                    )
+            };
+
+
+
+
+        initialState.Enter();
+        return new MonsterStateMachine(initialState, transitionMap);
+
     }
 
 }

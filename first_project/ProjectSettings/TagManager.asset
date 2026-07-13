@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - Ground
   - PlayerAttack
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - AttackHitbox
   - SwordHitbox
   - Monster
-  - 
+  - MonsterBody
   - 
   - 
   - 
@@ -53,6 +54,9 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 4202246503
+    locked: 0
+  - name: Player
+    uniqueID: 3821858653
     locked: 0
   m_RenderingLayers:
   - Default
