@@ -16,6 +16,9 @@ public class DataManager : Singleton<DataManager>
             {
                 PlayerInventory[i] = itemNumber; // 아이템 번호 저장
                 Debug.Log($"인벤토리 {i}번 슬롯에 아이템 {itemNumber} 추가 완료!");
+
+                Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
+
                 return true; // 습득 성공!
             }
         }
@@ -51,6 +54,8 @@ public class DataManager : Singleton<DataManager>
             // 사용 완료 후 인벤토리 비우기
             PlayerInventory[slotIndex] = 0;
             Debug.Log($"{slotIndex + 1}번 슬롯의 아이템(ID: {itemNumber}) 사용 및 소모 완료.");
+
+            Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
         }
         else
         {

@@ -21,6 +21,8 @@ public class MapManager : MonoBehaviour
     [Header("난이도 페이즈 설정")]
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
+
+    public int CurrentPhaseIndex => currentPhaseIndex;
     private float gameTimer = 0f;
 
     #region DataStruct Fields
@@ -36,6 +38,7 @@ public class MapManager : MonoBehaviour
     private Vector3 nextSpawnPosition = Vector3.zero;
     #endregion
 
+    #region Event
     private void OnEnable()
     {
         MapEvent.onPlayerHitSpawnTrigger += HandleMapSpawnEvent;
@@ -45,8 +48,7 @@ public class MapManager : MonoBehaviour
     {
         MapEvent.onPlayerHitSpawnTrigger -= HandleMapSpawnEvent;
     }
-
-
+    #endregion
     void Start()
     {
         InitializationPools();
@@ -100,6 +102,7 @@ public class MapManager : MonoBehaviour
        
     }
 
+    #region InitPool
     private void InitializationPools()
     {
         // 안전지대 바구니 생성
@@ -117,7 +120,9 @@ public class MapManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Spawn & GetCreate
     // 특정 맵 강제 스폰
     private void SpawnSpecificMap(GameObject prefab)
     {
@@ -134,6 +139,39 @@ public class MapManager : MonoBehaviour
         // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
         nextSpawnPosition = GetEndPosition(mapToSpawn, mapToSpawn.transform.position);
     }
+    // 스폰하고 나서 다음 스폰 위치를 반환하는 함수
+    private Vector3 SpawnMap(GameObject prefab, Vector3 spawnPos)
+    {
+        GameObject map = GetOrCreateMap(prefab);
+        Vector3 startOffset = Vector3.zero;
+        if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
+        {
+            startOffset = chunk.startPosition.localPosition;
+        }
+
+        map.transform.position = nextSpawnPosition - startOffset;
+        activeMaps.Enqueue(map);
+
+        // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
+        return GetEndPosition(map, map.transform.position);
+    }
+
+    private GameObject GetOrCreateMap(GameObject prefab)
+    {
+        GameObject map;
+        if (mapPools.ContainsKey(prefab) && mapPools[prefab].Count > 0)
+        {
+            map = mapPools[prefab].Dequeue();
+            map.SetActive(true);
+        }
+        else
+        {
+            map = Instantiate(prefab);
+            map.name = prefab.name; // 클론 방지
+        }
+        return map;
+    }
+    #endregion
 
     private void UpdateShuffleBagForCurrentPhase()
     {
@@ -160,40 +198,7 @@ public class MapManager : MonoBehaviour
 
         return pickedPrefab;
     }
-
-    // 스폰하고 나서 다음 스폰 위치를 반환하는 함수
-    private Vector3 SpawnMap(GameObject prefab, Vector3 spawnPos)
-    {
-        GameObject map = GetOrCreateMap(prefab);
-        Vector3 startOffset = Vector3.zero;
-        if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
-        {
-            startOffset = chunk.startPosition.localPosition;
-        }
-
-        map.transform.position = nextSpawnPosition - startOffset;
-        activeMaps.Enqueue(map);
-
-        // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
-        return GetEndPosition(map, map.transform.position);
-    }
-
-    private GameObject GetOrCreateMap(GameObject prefab)
-    {
-        GameObject map;
-        if(mapPools.ContainsKey(prefab) && mapPools[prefab].Count > 0)
-        {
-            map = mapPools[prefab].Dequeue();
-            map.SetActive(true);
-        }
-        else
-        {
-            map = Instantiate(prefab);
-            map.name = prefab.name; // 클론 방지
-        }
-        return map;
-    }
-
+    #region Find
     // Find 리펙토링 함수
     private Vector3 GetEndPosition(GameObject map, Vector3 fallbackPos)
     {
@@ -206,7 +211,9 @@ public class MapManager : MonoBehaviour
         Debug.LogError($"{map.name}에 EndPosition 앵커가 없습니다");
         return fallbackPos;
     }
+    #endregion
 
+    #region CoRoutine
     private IEnumerator CoPhaseTimerRoutine()
     {
         for(currentPhaseIndex = 0; currentPhaseIndex < phases.Count; currentPhaseIndex++)
@@ -216,6 +223,9 @@ public class MapManager : MonoBehaviour
             // 테스트용 디버깅
             Debug.Log($"[{currentPhase.phaseName}] 돌입!, 맵 세팅 변경됨");
 
+            // 페이즈 변경 시점에 맞춰 카메라의 Y축 추적 모드를 변경
+            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentPhaseIndex);
+           
             // 현재 페이즈의 맵들로 셔플 백 갈아끼우기
             UpdateShuffleBagForCurrentPhase();
 
@@ -230,4 +240,5 @@ public class MapManager : MonoBehaviour
             }
         }
     }
+    #endregion
 }

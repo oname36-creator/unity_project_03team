@@ -14,38 +14,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SOMapData
   gimmicList:
   - gimmickType: 0
-    position: {x: 64.58288, y: -8.75325, z: 0}
+    position: {x: 7.62216, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 63.58288, y: -8.75325, z: 0}
+    position: {x: 6.62216, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 65.58288, y: -8.75325, z: 0}
+    position: {x: 5.62216, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 41.58288, y: -6.75325, z: 0}
+    position: {x: 3.62216, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 40.58288, y: -6.75325, z: 0}
+    position: {x: 2.62216, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 39.58288, y: -6.75325, z: 0}
+    position: {x: 1.62216, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 37.58288, y: -6.75325, z: 0}
+    position: {x: 0.62215996, y: -7.00758, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 36.58288, y: -6.75325, z: 0}
-    prefabIndex: 1
-  - gimmickType: 0
-    position: {x: 35.58288, y: -6.75325, z: 0}
-    prefabIndex: 1
-  - gimmickType: 0
-    position: {x: 34.58288, y: -6.75325, z: 0}
-    prefabIndex: 1
-  - gimmickType: 0
-    position: {x: 45.58288, y: -6.75325, z: 0}
+    position: {x: 9.62216, y: -7.00758, z: 0}
     prefabIndex: 0
   - gimmickType: 0
-    position: {x: 43.58288, y: -6.75325, z: 0}
+    position: {x: 32.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 31.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 30.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 28.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 27.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 26.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 24.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 23.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 22.62216, y: -5.00758, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 12.62216, y: -9.00758, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 14.62216, y: -9.00758, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 13.62216, y: -9.00758, z: 0}
     prefabIndex: 0

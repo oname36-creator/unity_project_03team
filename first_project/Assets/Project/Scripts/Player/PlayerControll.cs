@@ -42,7 +42,20 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private PlayerAction controls;
     private Vector2 moveInput;
 
+    private MovingPlatform _activePlatform;
+
     private float facingDirectionX = 1f;
+
+    void Start()
+    {
+        if (SceneManagerEx.Instance != null)
+        {
+            SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuCanvas");
+
+            if (SceneManagerEx.Instance.pauseMenuUI != null)
+                SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
+        }
+    }
 
     void Awake()
     {
@@ -83,9 +96,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.isAerial = !status.isGrounded;
 
+  
         if (moveInput.x != 0f)
         {
-            facingDirectionX = Mathf.Sign(moveInput.x);
+            facingDirectionX = Mathf.Sign(moveInput.x); // 오른쪽이면 1, 왼쪽이면 -1
+
+           
+            transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
         }
 
         if (playerPosData != null)
@@ -140,8 +157,31 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         currentMoveX *= status.speedMultiplier;
 
-        rb.linearVelocity = new Vector2(currentMoveX, currentVelocityY);
+
+
+        Vector2 platformVelocity = Vector2.zero;
+        if (_activePlatform != null)
+        {
+            platformVelocity = _activePlatform.Velocity;
+        }
+
+        // 최종 속도 적용
+        rb.linearVelocity = new Vector2(currentMoveX + platformVelocity.x, currentVelocityY + platformVelocity.y);
     }
+
+    public void SetActivePlatform(MovingPlatform platform)
+    {
+        _activePlatform = platform;
+    }
+
+    public void ClearActivePlatform(MovingPlatform platform)
+    {
+        if (_activePlatform == platform)
+        {
+            _activePlatform = null;
+        }
+    }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -287,7 +327,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
         if (status.isInvincible) return;
-
+       
         // 💡 [최종 안전 방어선] 내가 지금 맨손이든 검이든 공격 상자를 켜고 있는 중이라면
         // 물리 엔진 타이밍 때문에 억울하게 들어오는 몸통 충돌 신호를 통째로 튕겨내 버립니다!
         bool isCurrentlyAttacking = (attackHitboxObj != null && attackHitboxObj.activeSelf) ||
@@ -314,6 +354,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         status.isHurt = true;
         status.isInvincible = true;
+
+        _activePlatform = null;
 
         // 💡 [최종 치트키] 1초 무적 동안 내 몸통의 Collider를 잠시 껐다 켭니다!
         // 이렇게 하면 내 몸에 물리적으로 비벼지며 겹쳐있던 모든 중복 충돌 신호가 "강제로 증발"합니다.
@@ -382,7 +424,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             true
         );
 
-        // 💡 [오타 수정 완료] swordAttackHitboxObj가 아니라 맨손 상자인 attackHitboxObj를 제어합니다!
+        
         if (attackHitboxObj != null) attackHitboxObj.SetActive(true);
 
         yield return new WaitForSeconds(0.3f);
