@@ -705,8 +705,8 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -533350569
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
@@ -878,6 +878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapChunk
   startPosition: {fileID: 7073038307474420182}
   endPosition: {fileID: 1398808308320012327}
+  cameraBoundaryCollider: {fileID: 0}
 --- !u!1001 &191806618759987609
 PrefabInstance:
   m_ObjectHideFlags: 0

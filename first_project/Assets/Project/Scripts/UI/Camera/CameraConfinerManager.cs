@@ -6,11 +6,20 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 {
     #region Class Attribute
     [Header("시네머신 카메라 설정")]
-    [SerializeField] private CinemachineCamera virtualCamera;
+    [SerializeField] private CinemachineCamera virtualCameraA;
+    [SerializeField] private CinemachineCamera virtualCameraB;
 
-    private CinemachineConfiner2D confiner;
-    private CinemachinePositionComposer positionComposer;
-    private Coroutine _yTrackingCoroutine;  // 처음 y축 보정 제어용 변수
+    private CinemachineConfiner2D confinerA;
+    private CinemachineConfiner2D confinerB;
+
+    private CinemachinePositionComposer positionComposerA;
+    private CinemachinePositionComposer positionComposerB;
+
+    private Coroutine _yTrackingCoroutineA;  // 처음 y축 보정 제어용 변수
+    private Coroutine _yTrackingCoroutineB;
+
+    // 현재 카메라를 화면 출력용 메인으로 쓰고 있는지 기록(NextCamera와 교차 활성화하기 위함)
+    private bool _isUsingCameraA = true;
     #endregion
     public override void Awake()
     {
@@ -30,16 +39,16 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
     private void InitCameraReferences()
     {
-        if(virtualCamera == null)
+        if(virtualCameraA != null)
         {
-            virtualCamera = FindAnyObjectByType<CinemachineCamera>();
+            confinerA = virtualCameraA.GetComponent<CinemachineConfiner2D>();
+            positionComposerA = virtualCameraA.GetComponent<CinemachinePositionComposer>();
         }
 
-        if (virtualCamera != null)
+        if(virtualCameraA != null)
         {
-            confiner = virtualCamera.GetComponent<CinemachineConfiner2D>();
-
-            positionComposer = virtualCamera.GetComponent<CinemachinePositionComposer>();
+            confinerB = virtualCameraB.GetComponent<CinemachineConfiner2D>();
+            positionComposerB = virtualCameraB.GetComponent<CinemachinePositionComposer>();
         }
     }
     #endregion
@@ -50,31 +59,46 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// </summary>
     public void UpdateBoundary(Collider2D newBoundary)
     {
-        // 2. 씬 전환 등으로 인해 레퍼런스가 비어버렸을 경우를 대비해 실시간 예외 검사를 수행
-        if(confiner == null || virtualCamera == null)
+        if(confinerA == null || confinerB == null)
         {
             InitCameraReferences();
         }
 
-        if(confiner != null)
+        if(newBoundary == null)
         {
-            if (newBoundary != null)
-            {
-                confiner.BoundingShape2D = newBoundary;
-
-                // 변경사항 강제 반영하는 함수
-                confiner.InvalidateBoundingShapeCache();
-            }
-            else
-            {
-                Debug.LogWarning("전달된 새로운 카메라 바운더리 콜라이더가 null입니다.");
-            }
-
+            Debug.LogWarning("전달된 새로운 카메라 바운더리 콜라이더가 null입니다.");
+            return;
         }
-        
+
+        if(_isUsingCameraA)
+        {
+            if(confinerB != null && virtualCameraB != null && virtualCameraA != null)
+            {
+                // 대기 중인 카메라의 바운더리만 업데이트
+                confinerB.BoundingShape2D = newBoundary;
+                confinerB.InvalidateBoundingShapeCache();
+
+                // 우선순위를 전환하여 CinemachineBrain이 두 가상 카메라 간의 Blending을 수행하도록 유도
+                virtualCameraA.Priority = 10;
+                virtualCameraB.Priority = 15;
+
+                _isUsingCameraA = false;
+            }
+        }
         else
         {
-            Debug.LogError("CineamachineConfiner2D 컴포넌트를 찾을 수 없습니다. 카메라 설정을 확인해 주세요.");
+            if(confinerA != null && virtualCameraA != null && virtualCameraB != null)
+            {
+                // 대기 중인 A 카메라의 바운더리만 업데이트
+                confinerA.BoundingShape2D = newBoundary;
+                confinerA.InvalidateBoundingShapeCache();
+
+                // 우선순위를 전환하여 A로 Blending
+                virtualCameraA.Priority = 15;
+                virtualCameraB.Priority = 10;
+
+                _isUsingCameraA = true;
+            }
         }
     }
     #endregion
@@ -85,34 +109,54 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// </summary>
     public void SetCameraYTrackingByPhase(int phaseindex)
     {
-        if (positionComposer == null)
+        if (positionComposerA == null)
         {
             InitCameraReferences();
         }
 
-        if(positionComposer != null)
+        // 실행 중이던 기존 보정 코루틴들을 정리
+        if(_yTrackingCoroutineA != null)
         {
-            // 진행 중이던 기존 보정 코루틴이 있다면 중지
-            if(_yTrackingCoroutine != null)
-            {
-                StopCoroutine(_yTrackingCoroutine);
-                _yTrackingCoroutine = null;
-            }
+            StopCoroutine(_yTrackingCoroutineA);
+            _yTrackingCoroutineA = null;
+        }
+        if(_yTrackingCoroutineB != null)
+        {
+            StopCoroutine(_yTrackingCoroutineB);
+            _yTrackingCoroutineB = null;
+        }
 
-            var composition = positionComposer.Composition;
-            var deadZoneSettings = composition.DeadZone;
-            if(phaseindex == 0)
+        if(phaseindex == 0)
+        {
+            if(positionComposerA != null)
             {
-                _yTrackingCoroutine = StartCoroutine(CoInitialYCorrection(1.5f));
+                _yTrackingCoroutineA = StartCoroutine(CoInitialYCorrection(positionComposerA, 1.5f));
             }
-            else
+            if (positionComposerB != null)
             {
-                // 2,3페이즈
-                deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 0.2f);
-                composition.DeadZone = deadZoneSettings;
-                positionComposer.Composition = composition;
+                _yTrackingCoroutineB = StartCoroutine(CoInitialYCorrection(positionComposerB, 1.5f));
             }
         }
+        else
+        {
+            SetDeadZoneY(positionComposerA, 0.2f);
+            SetDeadZoneY(positionComposerB, 0.2f);
+        }
+    }
+    #endregion
+
+    #region SetDeadZoneY
+    private void SetDeadZoneY(CinemachinePositionComposer composer, float deadZoneY)
+    {
+        if(composer == null)
+        {
+            return;
+        }
+        var composition = composer.Composition;
+        var deadZoneSettings = composition.DeadZone;
+        deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, deadZoneY);
+        composition.DeadZone = deadZoneSettings;
+        composer.Composition = composition;
     }
     #endregion
 
@@ -120,27 +164,11 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     ///<summary>
     /// 1페이즈 시작 시 카메라 Y축 위치를 부드럽게 보정하기 위한 코루틴
     /// </summary>
-    private IEnumerator CoInitialYCorrection(float duration)
+    private IEnumerator CoInitialYCorrection(CinemachinePositionComposer composer, float duration)
     {
-        var composition = positionComposer.Composition;
-        var deadZoneSettings = composition.DeadZone;
-
-        // 처음 메인 씬에 진입 시 보정
-        deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 0.2f);
-        composition.DeadZone = deadZoneSettings;
-        positionComposer.Composition = composition;
-
-        // 카메라가 플레이어 Y축 위치를 충분히 정렬할 수 있도록 설정된 시간 대기
+        SetDeadZoneY(composer, 0.2f);
         yield return new WaitForSeconds(duration);
-
-        // 정렬 후 Y축 고정상태로 변경
-        composition = positionComposer.Composition;
-        deadZoneSettings = composition.DeadZone;
-        deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 1.0f);
-        composition.DeadZone = deadZoneSettings;
-        positionComposer.Composition = composition;
-
-        _yTrackingCoroutine = null;
+        SetDeadZoneY(composer, 1.0f);
     }
     #endregion
 }
