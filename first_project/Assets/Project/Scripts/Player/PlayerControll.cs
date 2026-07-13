@@ -42,7 +42,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private PlayerAction controls;
     private Vector2 moveInput;
 
-    private MovingPlatform _activePlatform;
+    private System.Collections.Generic.List<MovingPlatform> _activePlatforms = new System.Collections.Generic.List<MovingPlatform>(); // 리스트로 변경
+    private Transform _currentPlatformTransform = null;
 
     private float facingDirectionX = 1f;
 
@@ -157,28 +158,43 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         currentMoveX *= status.speedMultiplier;
 
+        float platformXVelocity = 0f;
 
-
-        Vector2 platformVelocity = Vector2.zero;
-        if (_activePlatform != null)
+        // 만약 내가 누군가의 자식(즉, 발판 위)에 있다면, 부모 발판의 속도를 가로챕니다.
+        if (transform.parent != null)
         {
-            platformVelocity = _activePlatform.Velocity;
+            if (transform.parent.TryGetComponent<MovingPlatform>(out var platform))
+            {
+                platformXVelocity = platform.Velocity.x;
+            }
         }
 
-        // 최종 속도 적용
-        rb.linearVelocity = new Vector2(currentMoveX + platformVelocity.x, currentVelocityY + platformVelocity.y);
+        // 최종 속도 적용: 내 순수 이동 속도에 발판 속도를 명확하게 더해줍니다!
+        rb.linearVelocity = new Vector2(currentMoveX + platformXVelocity, currentVelocityY);
     }
 
     public void SetActivePlatform(MovingPlatform platform)
     {
-        _activePlatform = platform;
+      
+        //  새 코드: 발판 코드를 건들지 않고, 전달받은 platform 오브젝트를 부모로 삼습니다.
+        if (platform != null)
+        {
+            _currentPlatformTransform = platform.transform;
+            transform.SetParent(_currentPlatformTransform);
+        }
     }
 
     public void ClearActivePlatform(MovingPlatform platform)
     {
-        if (_activePlatform == platform)
+        
+        //  새 코드: 내가 밟고 있던 부모 발판이 맞다면 자식 관계를 안전하게 해제합니다.
+        if (platform != null && _currentPlatformTransform == platform.transform)
         {
-            _activePlatform = null;
+            if (transform.parent == _currentPlatformTransform)
+            {
+                transform.SetParent(null);
+            }
+            _currentPlatformTransform = null;
         }
     }
 
@@ -355,7 +371,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         status.isHurt = true;
         status.isInvincible = true;
 
-        _activePlatform = null;
+        if (transform.parent != null)
+        {
+            transform.SetParent(null);
+        }
+        _currentPlatformTransform = null;
 
         // 💡 [최종 치트키] 1초 무적 동안 내 몸통의 Collider를 잠시 껐다 켭니다!
         // 이렇게 하면 내 몸에 물리적으로 비벼지며 겹쳐있던 모든 중복 충돌 신호가 "강제로 증발"합니다.
