@@ -203,8 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56fbde61846dce842880c73f862a6a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControll
-  jumpCount: 0
-  JumpForce: 10
+  jumpCount: 5
+  JumpForce: 13
   MoveSpeed: 5
   aerialDampingAmount: 0.5
   attackBoxSize: {x: 1.5, y: 1}
@@ -417,9 +417,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -533350569
+  m_SortingLayer: 3
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3340702149494360738, guid: 0b540da74ee97a648828d258822b166f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
