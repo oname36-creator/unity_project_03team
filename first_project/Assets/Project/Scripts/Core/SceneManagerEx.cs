@@ -1,33 +1,84 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // 씬 전환을 위해 반드시 필요해요!
+using UnityEngine.SceneManagement;
 
-// 이전에 만들어두신 Singleton을 상속받습니다.
 public class SceneManagerEx : Singleton<SceneManagerEx>
 {
+    private bool isPaused = false;
+
+    [HideInInspector]
+    public GameObject pauseMenuUI;
+    [HideInInspector]
+    public GameObject gameOverUI;
+
     public override void Awake()
     {
-        // 부모(Singleton)의 Awake 메소드를 실행해 싱글톤 초기화를 해줍니다.
         base.Awake();
     }
 
-    // [게임 시작] 버튼을 누르면 호출할 함수
-       public void LoadGameScene()
+    void Update()
     {
-        // 버튼이 눌리면 유니티 하단 콘솔(Console) 창에 이 문장이 뜹니다!
-        Debug.Log("게임 시작 버튼이 눌렸습니다!");
+        if (SceneManager.GetActiveScene().name == "GameScenePlayer")
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (isPaused) ResumeGame();
+                else PauseGame();
+            }
+        }
+    }
 
+    public void PauseGame()
+    {
+        isPaused = true;
+        Time.timeScale = 0f;
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+        Debug.Log("게임 일시정지");
+    }
+
+    public void ResumeGame()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;
+        if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        Debug.Log("게임 재개");
+    }
+
+    public void LoadGameScene()
+    {
+        // 💡 핵심: 멈췄던 시간을 반드시 1(정상 속도)로 초기화하고 씬을 넘겨야 합니다!
+        Time.timeScale = 1f;
+        isPaused = false; // 일시정지 상태 변수도 거짓으로 초기화
+
+        Debug.Log("게임 시작");
         SceneManager.LoadScene("GameScenePlayer");
     }
 
-    // [종료] 버튼을 누르면 호출할 함수
     public void QuitGame()
     {
 #if UNITY_EDITOR
-        // 유니티 에디터 상에서 테스트할 때 꺼지도록 하는 코드
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-        // 실제 빌드된 게임이 종료되는 코드
         Application.Quit();
 #endif
+    }
+    public void GameOver()
+    {
+        Time.timeScale = 0f; // 게임 정지
+
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(true); // 사망 창 켜기
+        }
+        Debug.Log("게임 오버 UI 활성화");
+    }
+
+    // 🔄 다시 시작 버튼용 함수
+    public void Btn_Restart()
+    {
+        Time.timeScale = 1f; // 💡 중요: 정지된 시간을 풀고 씬을 새로고침합니다.
+
+        // 현재 씬("GameScenePlayer")을 다시 로드하여 처음부터 시작하게 만듭니다.
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScenePlayer");
+        Debug.Log("게임 다시 시작");
     }
 }

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 84f37e45648f56e4594cae3434300ce7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - redPotionSprite: {fileID: 731806605160617493, guid: 6e4633b58480a024f802d9343750af98, type: 3}
+  - swordSprite: {fileID: -3753825769889500098, guid: 5c1f538a93ea13345a2c469616477f7d, type: 3}
+  - gunSprite: {fileID: -6628414004274166170, guid: a92df931d01d7b74ea307e872f96d9f7, type: 3}
+  - transparentPotionSprite: {fileID: 2646380193704231037, guid: 7c511444066745d489439a1ea5a9cf11, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
