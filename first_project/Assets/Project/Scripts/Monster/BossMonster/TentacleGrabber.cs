@@ -6,39 +6,42 @@ public class TentacleGrabber : MonoBehaviour
     private BodyController _bodyController;
     private BossController _bossController;
 
-    private GameObject _anchorPoint; // 추가
-
     public void Start()
     {
         _bodyController = Tentacle.Body;
         _bossController = Tentacle.Boss;
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 잡을 수 있는 태그인지 확인
-        if (other.CompareTag("Player") || other.CompareTag("Ground"))
+        // 땅(Ground) 로직 제거. 플레이어(Player) 또는 몬스터(Monster)만 판정
+        if (other.CompareTag("Player") || other.CompareTag("Monster"))
         {
-            if (other.CompareTag("Ground"))
-            {
-                if (_anchorPoint == null)
-                {
-                    _anchorPoint = new GameObject("TentacleAnchor");
-                }
-                // 부착된 순간의 촉수 머리 위치를 타겟으로 고정
-                _anchorPoint.transform.position = this.transform.position;
-                _anchorPoint.transform.SetParent(other.transform);
+            // 이미 무언가를 잡고 끌고 오는 중(IsAttach == true)이라면 중복 충돌 무시
+            if (Tentacle.IsAttach) return;
+            GameObject hitObj = other.gameObject;
 
-                Tentacle.Boss.Target = _anchorPoint.transform;
-            }
-            else
+            // 1. 내가 찜한 애가 맞다면 정상적으로 잡기 성공
+            if (Tentacle.Target == hitObj)
             {
-                Tentacle.Boss.Target = other.transform;
+                Tentacle.IsAttach = true;
+                Debug.Log($"TentacleGrabber: 내 타겟 {hitObj.name} 잡기 성공!");
             }
+            // 2. 우연히 다른 애를 건드렸는데, 아무도 찜하지 않은 애라면 낚아채기
+            else if (!Tentacle.Boss.IsTargeted(hitObj))
+            {
+                // 기존 타겟이 있었다면 놔줌
+                if (Tentacle.Target != null)
+                    Tentacle.Boss.RemoveTarget(Tentacle.Target);
 
-            _bossController.Attached = true;
-            Tentacle.IsAttach = true;
+                // 새 타겟 찜하기
+                Tentacle.Target = hitObj;
+                Tentacle.Boss.AddTarget(hitObj);
+
+                Tentacle.IsAttach = true;
+                Debug.Log($"TentacleGrabber: 지나가다 {hitObj.name} 낚아챔!");
+            }
+            // 3. 남이 찜한 애를 건드렸다면 무시하고 통과 (아무 처리 안 함)
         }
     }
 }

@@ -163,10 +163,12 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (_activePlatform != null)
         {
             platformVelocity = _activePlatform.Velocity;
+
         }
 
         // 최종 속도 적용
         rb.linearVelocity = new Vector2(currentMoveX + platformVelocity.x, currentVelocityY + platformVelocity.y);
+
     }
 
     public void SetActivePlatform(MovingPlatform platform)
@@ -225,8 +227,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             // 💡 [새로운 스텝] 공격하기 전에, 내가 바라보는 방향(facingDirectionX)에 맞춰 
             // 두 히트박스의 X축 위치(localPosition)를 정방향 혹은 반대방향으로 꺾어줍니다.
-            FlipHitboxPosition(attackHitboxObj);
-            FlipHitboxPosition(swordAttackHitboxObj);
+            //FlipHitboxPosition(attackHitboxObj);
+            //FlipHitboxPosition(swordAttackHitboxObj);
 
             // 1. 총을 들고 있고, 총알이 남아있는가?
             if (status.hasGun)

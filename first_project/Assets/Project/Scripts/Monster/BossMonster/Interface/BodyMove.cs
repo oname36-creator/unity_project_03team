@@ -5,53 +5,46 @@ public class BodyMove : IMonsterState
     private BodyController _owner;
     private Transform _ownerTransform;
     private Rigidbody2D _rigidbody2D;
-    private Transform _targetTransform;
-
-    private float maxSpeed;
+    private float _timeCounter = 0f;
 
     public BodyMove(BodyController owner)
     {
         this._owner = owner;
         _ownerTransform = _owner.GetComponent<Transform>();
-
         _rigidbody2D = _owner.GetComponent<Rigidbody2D>();
-
-        maxSpeed = _owner.Boss.MaxSpeed;
     }
 
     public void Enter()
     {
-        _targetTransform = _owner.Boss.Target;
+        _timeCounter = 0f;
         Debug.Log("BodyMove");
     }
 
     public void Update()
     {
-        if (_targetTransform == null) return;
 
-        // 현재 위치와 목적지(타겟) 사이의 거리 계산
-        float distance = Vector2.Distance(_rigidbody2D.position, _targetTransform.position);
+        _timeCounter += Time.deltaTime;
 
-        // 목적지에 도달하면 Move false로
-        if (distance <= _owner.ReleaseDistance) 
-        {
-            _owner.Move = false; 
-            return;
-        }
+        // 1. Front 방향 
+        Vector2 forwardDir = _owner.Boss.Front;
 
-        Vector2 direction = ((Vector2)_targetTransform.position - _rigidbody2D.position).normalized;
-        _rigidbody2D.AddForce(direction * _owner.PullForce * Time.deltaTime, ForceMode2D.Force);
+        // 2. 수직 방향 벡터 (정면 벡터의 90도 회전: (-y, x))
+        Vector2 perpDir = new Vector2(-forwardDir.y, forwardDir.x);
 
-        if (_rigidbody2D.linearVelocity.magnitude > maxSpeed)
-        {
-            _rigidbody2D.linearVelocity = _rigidbody2D.linearVelocity.normalized * maxSpeed;
-        }
+        // 3. 속도 벡터 계산
+        // 위치를 A * sin(wt)로 만들기 위해 속도에는 미분값인 A * w * cos(wt)를 적용
+        Vector2 forwardVelocity = forwardDir * _owner.MoveSpeed;
+        float sineSpeed = Mathf.Cos(_timeCounter * _owner.SineFrequency) * _owner.SineAmplitude * _owner.SineFrequency;
+        Vector2 sineVelocity = perpDir * sineSpeed;
+
+        // 4. 리지드바디에 합성된 속도 적용
+        _rigidbody2D.linearVelocity = forwardVelocity + sineVelocity;
+
 
     }
 
     public void Exit()
     {
-        _owner.Boss.Attached = false; // 도착 시 부착 상태 해제 (필요에 따라 유지 가능)
-        _rigidbody2D.linearVelocity = Vector2.zero; // 정지
+        _rigidbody2D.linearVelocity = Vector2.zero;
     }
 }

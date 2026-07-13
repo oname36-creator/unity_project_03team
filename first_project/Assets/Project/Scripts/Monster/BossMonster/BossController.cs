@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 
 public class BossController : MonoBehaviour
@@ -23,7 +24,6 @@ public class BossController : MonoBehaviour
     private int _searchRange; // 탐색 깊이
     private int _attackRange; // 공격 가능 거리
     private int _force; // 힘
-    private int _nodeCount;
 
     private float _angle;   // 탐색 각도
     private float _cosValue; // 각도의 cos 값
@@ -38,16 +38,17 @@ public class BossController : MonoBehaviour
     private bool _isGround;
 
 
-
     private Vector2 _frontVector;
 
-    private Vector3[] _ableTargetVectors;
 
 
 
     private MonsterStateMachine _monsterMachine;
     private Transform _transform;
-    private Transform _targetTransform;
+
+    // 현재 촉수들이 찜한 타겟들을 모아두는 목록
+    private HashSet<GameObject> _targetedObjects = new HashSet<GameObject>();
+
 
     #endregion
 
@@ -73,12 +74,17 @@ public class BossController : MonoBehaviour
     {
         get { return _maxSpeed; }
     }
-
-
-    public Vector2 TargetVector 
+    public float MoveSpeed
     {
-        get;
-        private set;
+        get { return _speed; }
+    }
+
+
+
+    public Vector3 Front 
+    {
+        get { return _frontVector; }
+        set { _frontVector = value; }
     }
 
 
@@ -86,22 +92,9 @@ public class BossController : MonoBehaviour
     {
         get { return  _transform; }
     }
-    public Transform Target
+
+    private void Awake()
     {
-        get { return _targetTransform; }
-        set 
-        {
-            _targetTransform = value;
-            CalculateTargetPointVector(_targetTransform.position);
-        }
-    }
-
-
-    #region Unity Lifecycle
-    void Start()
-    {
-        Application.targetFrameRate = 120;
-
         _hp = MonsterData.hp;
         _damage = MonsterData.damage;
         _searchRange = MonsterData.searchRange;
@@ -111,7 +104,7 @@ public class BossController : MonoBehaviour
         _maxSpeed = MonsterData.MaxSpeed;
         _force = MonsterData.Force;
 
-        _frontVector.x = 1;
+        _frontVector = Vector3.right;
 
         _isDead = false;
         _isChase = true;
@@ -119,17 +112,13 @@ public class BossController : MonoBehaviour
         _isAttached = false;
 
         _transform = GetComponent<Transform>();
+    }
 
 
-
-        _ableTargetVectors = new Vector3[_nodeCount];
-
-        for (int i = 0; i < _nodeCount; i++)
-        {
-            float randomXAngle = Random.Range(-_angle, _angle);
-            Quaternion spreadRotation = Quaternion.Euler(randomXAngle, 0f, 0f);
-            _ableTargetVectors[i] = spreadRotation * Vector3.forward;
-        }
+    #region Unity Lifecycle
+    void Start()
+    {
+        Application.targetFrameRate = 120;
 
         _monsterMachine = MonsterAiBrain.MakeMachine("Boss", this);
     }
@@ -145,9 +134,26 @@ public class BossController : MonoBehaviour
 
     #endregion
 
-    private void CalculateTargetPointVector(Vector3 targetPoint)
+
+    // 해당 오브젝트가 이미 다른 촉수에게 타겟팅 되었는지 확인
+    public bool IsTargeted(GameObject obj)
     {
-        TargetVector = (targetPoint - _transform.position).normalized;
+        return _targetedObjects.Contains(obj);
+    }
+
+    // 타겟 찜하기
+    public void AddTarget(GameObject obj)
+    {
+        _targetedObjects.Add(obj);
+    }
+
+    // 타겟 놓아주기 (회수하거나 다 끌고왔을 때)
+    public void RemoveTarget(GameObject obj)
+    {
+        if (_targetedObjects.Contains(obj))
+        {
+            _targetedObjects.Remove(obj);
+        }
     }
 
 

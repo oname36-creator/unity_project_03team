@@ -316,7 +316,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.Boss.Attached;
+                        return owner.Move;
                     },
                     targetState:move
                     )
@@ -359,14 +359,6 @@ public class MonsterAiBrain
                     condition: () =>
                     {
                         return owner.IsSearch;
-                    },
-                    targetState:stretch
-                    ),
-                
-                new Transition(
-                    condition: () =>
-                    {
-                        return owner.Boss.Attached;
                     },
                     targetState:stretch
                     )

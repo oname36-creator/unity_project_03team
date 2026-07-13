@@ -61,6 +61,7 @@ public class TentacleController : MonoBehaviour
     }
 
 
+    public GameObject Target { get; set; } 
 
 
     void Start()
@@ -110,7 +111,6 @@ public class TentacleController : MonoBehaviour
             _segmentPos[i] = Vector2.SmoothDamp(_segmentPos[i], targetPos, ref _segmentVelocity[i], smoothSpeed);
         }
 
-        // 3. (선택) 시작점을 보스 몸통(Root)에 고정하고 싶다면 FABRIK 알고리즘처럼 역순으로 다시 맞춰야 하지만,
         // 단순하고 자연스러운 움직임을 위해 마지막 마디를 Root에 강제 고정
         _segmentPos[segmentLength - 1] = tentacleRoot.position;
 

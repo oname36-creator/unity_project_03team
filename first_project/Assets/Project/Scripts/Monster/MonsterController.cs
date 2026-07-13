@@ -140,7 +140,7 @@ public class MonsterController : MonoBehaviour
     {
         get
         {
-            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue /*&& !CheckForObstacles()*/);
+            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
         }
     }
 
@@ -224,7 +224,7 @@ public class MonsterController : MonoBehaviour
         _monsterMachine = MonsterAiBrain.MakeMachine(MonsterData.Name, this);
 
         _playerTransform = Player.GetComponent<Transform>();
-        _playerRadius = Player.GetComponent<CircleCollider2D>().radius;
+        _playerRadius = Player.GetComponent<CapsuleCollider2D>().size.y/2;
         _monsterTransform = this.GetComponent<Transform>();
 
     }
@@ -287,7 +287,7 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "PlayerAttack")
+        if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
         {
             isHurt = true;
             // 일단 float -> int로 
@@ -342,7 +342,7 @@ public class MonsterController : MonoBehaviour
 
         if (hit.collider != null)
         {
-            if (hit.collider.CompareTag("Untagged"))
+            if (hit.collider.CompareTag("Ground"))
             {
 
                 return true;

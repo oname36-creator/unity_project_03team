@@ -32,7 +32,7 @@ public class MonsterHurt : IMonsterState
 
         _timer += Time.deltaTime;
         // 반투명한 빨간색
-        _spriteRenderer.color = new Color(1f, 0f, 0f, 0.5f);
+        _spriteRenderer.color = new Color(1f, 0f, 0f, 1f);
         if (_timer >= _attackDuration)
         {
 
@@ -45,7 +45,7 @@ public class MonsterHurt : IMonsterState
     {
         _owner.IsHurt = false;
         // 원상복귀
-        _spriteRenderer.color = new Color(0f, 0f, 0f, 1f);
+        _spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
         _animator.SetBool(AnimatorHash.IsHurt, false);
     }
 

@@ -790,7 +790,7 @@ GameObject:
   - component: {fileID: 3452967155236221581}
   m_Layer: 3
   m_Name: MapChenk_A
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
