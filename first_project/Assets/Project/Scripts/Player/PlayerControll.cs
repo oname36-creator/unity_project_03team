@@ -241,8 +241,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             // 💡 [새로운 스텝] 공격하기 전에, 내가 바라보는 방향(facingDirectionX)에 맞춰 
             // 두 히트박스의 X축 위치(localPosition)를 정방향 혹은 반대방향으로 꺾어줍니다.
-            FlipHitboxPosition(attackHitboxObj);
-            FlipHitboxPosition(swordAttackHitboxObj);
+           /* FlipHitboxPosition(attackHitboxObj);
+            FlipHitboxPosition(swordAttackHitboxObj);*/
 
             // 1. 총을 들고 있고, 총알이 남아있는가?
             if (status.hasGun)
@@ -342,10 +342,17 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (status == null || status.isDead) return;
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            Debug.Log("💀 [즉사] Boss 레이어 오브젝트와 충돌하여 즉시 사망합니다.");
+            status.ChangeHp(-status.maxHp); // 체력을 최대 체력만큼 통째로 깎아 Die() 호출 유도
+
+            if (transform.parent != null) transform.SetParent(null);
+            return; 
+        }
+
         if (status.isInvincible) return;
-       
-        // 💡 [최종 안전 방어선] 내가 지금 맨손이든 검이든 공격 상자를 켜고 있는 중이라면
-        // 물리 엔진 타이밍 때문에 억울하게 들어오는 몸통 충돌 신호를 통째로 튕겨내 버립니다!
         bool isCurrentlyAttacking = (attackHitboxObj != null && attackHitboxObj.activeSelf) ||
                                     (swordAttackHitboxObj != null && swordAttackHitboxObj.activeSelf);
         if (isCurrentlyAttacking) return;

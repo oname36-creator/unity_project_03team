@@ -224,7 +224,7 @@ public class MonsterController : MonoBehaviour
         _monsterMachine = MonsterAiBrain.MakeMachine(MonsterData.Name, this);
 
         _playerTransform = Player.GetComponent<Transform>();
-        _playerRadius = Player.GetComponent<CircleCollider2D>().radius;
+        _playerRadius = Player.GetComponent<CapsuleCollider2D>().size.y/2;
         _monsterTransform = this.GetComponent<Transform>();
 
     }
