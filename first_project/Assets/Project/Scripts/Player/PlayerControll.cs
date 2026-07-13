@@ -327,7 +327,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
         if (status.isInvincible) return;
-
+       
         // 💡 [최종 안전 방어선] 내가 지금 맨손이든 검이든 공격 상자를 켜고 있는 중이라면
         // 물리 엔진 타이밍 때문에 억울하게 들어오는 몸통 충돌 신호를 통째로 튕겨내 버립니다!
         bool isCurrentlyAttacking = (attackHitboxObj != null && attackHitboxObj.activeSelf) ||

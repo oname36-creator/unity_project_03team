@@ -74,6 +74,8 @@ public class PlayerStatus : MonoBehaviour
             {
                 ResetAttackStatus();
                 Debug.LogWarning("⚠️ [알림] 검의 내구도가 다하여 기본 상태로 돌아갑니다.");
+
+                Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
             }
         }
     }
@@ -117,6 +119,8 @@ public class PlayerStatus : MonoBehaviour
             {
                 hasGun = false;
                 Debug.LogWarning("⚠️ [알림] 총알을 모두 소모하여 기본 상태로 돌아갑니다.");
+
+                Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
             }
         }
     }
