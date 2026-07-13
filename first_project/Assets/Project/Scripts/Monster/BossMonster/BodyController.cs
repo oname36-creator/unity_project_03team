@@ -32,7 +32,11 @@ public class BodyController : MonoBehaviour
         get { return Boss; }
     }
 
-    public bool Move { get; set; }
+    public bool Move 
+    {
+        get; 
+        set; 
+    }
 
     public bool Chase
     {

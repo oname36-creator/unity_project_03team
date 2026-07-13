@@ -41,7 +41,7 @@ public class TentacleStretch : IMonsterState
         {
             // 랜덤한 위치로 약간 빗나가게 공격하거나 위협하는 연출
             _targetPosition.x += Random.Range(-2f, 2f);
-            _targetPosition.y += Random.Range(-2f, 2f); // y축도 추가하면 더 자연스럽습니다.
+            _targetPosition.y += Random.Range(-2f, 2f); 
         }
     }
 }

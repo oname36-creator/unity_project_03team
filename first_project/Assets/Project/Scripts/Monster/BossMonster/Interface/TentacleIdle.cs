@@ -6,93 +6,75 @@ public class TentacleIdle : IMonsterState
     private TentacleController _owner;
     private Transform _ownerTransform;
 
-    private Coroutine _swayCoroutine;
-    private Vector2 _idleBasePosition;
+    private float _rayDistance = 10f;
+    private LayerMask _targetLayer;
 
-
-    private float _rayDistance = 10f; // 아래로 쏘는 Ray의 길이
-    private LayerMask _playerLayer;   // 감지할 대상의 레이어 (예: Player)
-    private LayerMask _groundLayer;   // 감지할 대상의 레이어 (예: Player)
+    // 탐색 범위 및 속도 변수
+   
+    private GameObject _anchorPoint;
+    private float _sweepAngle = 45f; // 위아래 탐색 각도
+    private float _sweepSpeed = 2f;
+    private float _time = 0f;
+    private float _fixedLength = 5f;
 
     public TentacleIdle(TentacleController owner)
     {
         this._owner = owner;
         _ownerTransform = owner.GetComponent<Transform>();
 
-        _playerLayer = LayerMask.GetMask("Player");
-        _groundLayer = LayerMask.GetMask("Ground");
+        _targetLayer = LayerMask.GetMask("Player", "Ground");
     }
 
     public void Enter()
     {
-        // 촉수가 대기할 기본 위치 설정 (뿌리에서 약간 위쪽으로 뻗은 상태)
-        _idleBasePosition = _owner.tentacleRoot.position + Vector3.up * 3f;
-
-        // Owner(MonoBehaviour)를 통해 코루틴 실행
-        _swayCoroutine = _owner.StartCoroutine(SwayRoutine());
+        _time = 0f;
+        _owner.IsSearch = false; 
         Debug.Log("TentacleIdle");
     }
 
     public void Update()
     {
-        // 1. Ray 쏘기 (촉수 끝단에서 아래 방향으로)
-        Vector2 rayOrigin = _owner.grabberHead.position;
-        Debug.DrawRay(rayOrigin, Vector2.down * _rayDistance, Color.red);
+        // 1. Ray로 지정 범위를 위에서 아래로 훑기 위한 각도 계산 (Sin을 이용한 왕복)
+        _time += Time.deltaTime * _sweepSpeed;
+        float currentAngle = Mathf.Sin(_time) * _sweepAngle;
 
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, _rayDistance, _playerLayer);
+        // 기준 방향(오른쪽)에서 currentAngle만큼 회전한 방향 벡터
+        Vector2 rayDirection = Quaternion.Euler(0, 0, currentAngle) * Vector2.right;
+        Vector2 rayOrigin = _owner.tentacleRoot.position;
 
-        // 2. 타겟 감지 및 상태 전이
+        // 2. 촉수의 끝 방향을 Ray의 방향으로 고정 (길이는 _fixedLength)
+        _owner.IkTargetPosition = rayOrigin + rayDirection * _fixedLength;
+        Debug.DrawRay(rayOrigin, rayDirection * _rayDistance, Color.red);
+
+        // 3. 타겟 탐색
+        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection, _rayDistance, _targetLayer);
+
         if (hit.collider != null)
         {
-            // 보스의 타겟을 감지된 오브젝트로 변경
-            _owner.Boss.Target = hit.transform;
+            if (hit.collider.CompareTag("Ground"))
+            {
+                // 땅일 경우: 맞은 표면에 임시 닻(Anchor)을 만들고 타겟으로 설정
+                if (_anchorPoint == null)
+                {
+                    _anchorPoint = new GameObject("TentacleAnchor");
+                }
+                _anchorPoint.transform.position = hit.point; // Ray가 맞은 정확한 표면 좌표
+                _anchorPoint.transform.SetParent(hit.collider.transform); // 땅이 움직일 경우를 대비해 자식으로 설정
 
-            // 상태를 Stretch(공격/뻗기)로 전이 
-            // (사용하시는 상태 머신의 전환 메서드 이름에 맞게 수정하세요)
-            // 예시: _owner.ChangeState("TentacleStretch"); 
-        }
+                _owner.Boss.Target = _anchorPoint.transform;
+            }
+            else
+            {
+                // 플레이어일 경우: 기존대로 플레이어 자체를 타겟
+                _owner.Boss.Target = hit.transform;
+            }
 
-        hit = Physics2D.Raycast(rayOrigin, Vector2.down, _rayDistance, _groundLayer);
-
-        if (hit.collider != null) 
-        {
-            if(hit.collider.gameObject.transform.position.x < _ownerTransform.position.x)
-            { return; }
-            // 보스의 타겟을 감지된 오브젝트로 변경
-            _owner.Boss.Target = hit.transform;
+            _owner.IsSearch = true;
         }
     }
 
     public void Exit()
     {
-        // 상태를 빠져나갈 때 흔들거리는 코루틴 정지
-        if (_swayCoroutine != null)
-        {
-            _owner.StopCoroutine(_swayCoroutine);
-            _swayCoroutine = null;
-        }
-    }
-
-    // 촉수를 자연스럽게 흔들기 위한 코루틴
-    private IEnumerator SwayRoutine()
-    {
-        float time = 0f;
-
-        // 랜덤한 흔들림 시작점 (여러 촉수가 있을 경우 똑같이 안 움직이게)
-        float randomOffset = Random.Range(0f, 100f);
-
-        while (true)
-        {
-            time += Time.deltaTime;
-
-            // Sin, Cos을 이용해 부드러운 8자 또는 타원 궤도 생성
-            float xOffset = Mathf.Sin(time * 2f + randomOffset) * 2f;
-            float yOffset = Mathf.Cos(time * 3f + randomOffset) * 0.5f;
-
-            // 앞서 구현한 TentacleController의 IK 타겟 좌표를 계속 업데이트
-            _owner.IkTargetPosition = _idleBasePosition + new Vector2(xOffset, yOffset);
-
-            yield return null;
-        }
+        
     }
 }

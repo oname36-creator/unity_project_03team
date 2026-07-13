@@ -316,7 +316,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.Move;
+                        return owner.Boss.Attached;
                     },
                     targetState:move
                     )
@@ -327,7 +327,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.IsGround && !owner.Move;
+                        return !owner.Move;
                     },
                     targetState:idle
                     )
@@ -348,7 +348,7 @@ public class MonsterAiBrain
 
         IMonsterState idle = new TentacleIdle(owner);
         IMonsterState stretch = new TentacleStretch(owner);
-        // 보스룸 상태 추가할 예정
+        IMonsterState attach = new TentacleAttach(owner);
 
         initialState = idle;
 
@@ -358,7 +358,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.IsAttach;
+                        return owner.IsSearch;
                     },
                     targetState:stretch
                     ),
@@ -377,7 +377,26 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return !owner.Boss.Attached;
+                        return owner.IsAttach;;
+                    },
+                    targetState:attach
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsSearch;
+                    },
+                    targetState:idle
+                    )
+            };
+
+        transitionMap[attach] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsAttach;;
                     },
                     targetState:idle
                     )

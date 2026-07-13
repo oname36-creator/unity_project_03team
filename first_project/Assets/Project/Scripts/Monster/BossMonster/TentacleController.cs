@@ -13,6 +13,8 @@ public class TentacleController : MonoBehaviour
     public float segmentDistance = 0.5f;  // 마디 사이의 간격
     public float smoothSpeed = 0.05f;     // 끝단이 목표로 이동하는 속도
 
+
+
     [Header("Components")]
     public Transform tentacleRoot;        // 촉수가 시작되는 위치 (보스 몸통 등)
     public Transform grabberHead;         // 물건을 잡을 트리거가 있는 실제 오브젝트
@@ -23,20 +25,43 @@ public class TentacleController : MonoBehaviour
     private Vector2[] _segmentPos;
     private Vector2[] _segmentVelocity;
 
-    // 상태 머신(TentacleStretch 등)에서 이 값을 변경하여 촉수를 조종합니다.
     public Vector2 IkTargetPosition { get; set; }
 
     private bool _isDead = false;
     private bool _isAttach = false;
+    private bool _isSearch = false;
+
     private MonsterStateMachine _monsterMachine;
 
-    public BossController GetBoss => Boss;
-    public BodyController GetBody => Body;
+    public BossController GetBoss
+    {
+        get { return Boss; } 
+    }
+    public BodyController GetBody 
+    {
+        get { return Body; }
+    }
+
+    public Transform GetGrabber 
+    {
+        get { return  grabberHead; }
+    }
+
+
     public bool IsAttach
     {
-        get => _isAttach;
-        set => _isAttach = value;
+        get { return _isAttach; }
+        set { _isAttach = value; }
     }
+
+    public bool IsSearch 
+    {
+        get { return _isSearch; }
+        set { _isSearch = value; }
+    }
+
+
+
 
     void Start()
     {
@@ -53,6 +78,9 @@ public class TentacleController : MonoBehaviour
             _segmentPos[i] = tentacleRoot.position;
         }
         IkTargetPosition = tentacleRoot.position;
+
+
+
 
         _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }

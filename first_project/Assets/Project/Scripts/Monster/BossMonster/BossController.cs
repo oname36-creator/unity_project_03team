@@ -66,7 +66,12 @@ public class BossController : MonoBehaviour
     public bool Attached
     {
         get { return _isAttached; }
-        set { _isAttached =  value; }
+        set  { _isAttached =  value; }
+    }
+
+    public float MaxSpeed 
+    {
+        get { return _maxSpeed; }
     }
 
 
