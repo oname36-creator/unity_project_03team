@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
+using System.Collections;
 public class CameraConfinerManager : Singleton<CameraConfinerManager>
 {
     #region Class Attribute
@@ -9,6 +10,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
     private CinemachineConfiner2D confiner;
     private CinemachinePositionComposer positionComposer;
+    private Coroutine _yTrackingCoroutine;  // 처음 y축 보정 제어용 변수
     #endregion
     public override void Awake()
     {
@@ -83,8 +85,6 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// </summary>
     public void SetCameraYTrackingByPhase(int phaseindex)
     {
-        var composition = positionComposer.Composition;
-        var deadZoneSettings = composition.DeadZone;
         if (positionComposer == null)
         {
             InitCameraReferences();
@@ -92,21 +92,55 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
         if(positionComposer != null)
         {
+            // 진행 중이던 기존 보정 코루틴이 있다면 중지
+            if(_yTrackingCoroutine != null)
+            {
+                StopCoroutine(_yTrackingCoroutine);
+                _yTrackingCoroutine = null;
+            }
+
+            var composition = positionComposer.Composition;
+            var deadZoneSettings = composition.DeadZone;
             if(phaseindex == 0)
             {
-                // 1페이즈
-                deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 1.0f);
+                _yTrackingCoroutine = StartCoroutine(CoInitialYCorrection(1.5f));
             }
             else
             {
                 // 2,3페이즈
                 deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 0.2f);
+                composition.DeadZone = deadZoneSettings;
+                positionComposer.Composition = composition;
             }
-
-            composition.DeadZone = deadZoneSettings;
-            positionComposer.Composition = composition;
         }
     }
     #endregion
 
+    #region CoInitialYCorrection
+    ///<summary>
+    /// 1페이즈 시작 시 카메라 Y축 위치를 부드럽게 보정하기 위한 코루틴
+    /// </summary>
+    private IEnumerator CoInitialYCorrection(float duration)
+    {
+        var composition = positionComposer.Composition;
+        var deadZoneSettings = composition.DeadZone;
+
+        // 처음 메인 씬에 진입 시 보정
+        deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 0.2f);
+        composition.DeadZone = deadZoneSettings;
+        positionComposer.Composition = composition;
+
+        // 카메라가 플레이어 Y축 위치를 충분히 정렬할 수 있도록 설정된 시간 대기
+        yield return new WaitForSeconds(duration);
+
+        // 정렬 후 Y축 고정상태로 변경
+        composition = positionComposer.Composition;
+        deadZoneSettings = composition.DeadZone;
+        deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, 1.0f);
+        composition.DeadZone = deadZoneSettings;
+        positionComposer.Composition = composition;
+
+        _yTrackingCoroutine = null;
+    }
+    #endregion
 }

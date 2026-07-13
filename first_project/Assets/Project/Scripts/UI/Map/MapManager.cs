@@ -22,6 +22,9 @@ public class MapManager : MonoBehaviour
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
 
+    [SerializeField] private int currentLogicalPhase = 0;
+    public int CurrentLogicalPhase => currentLogicalPhase;
+
     public int CurrentPhaseIndex => currentPhaseIndex;
     private float gameTimer = 0f;
 
@@ -216,18 +219,39 @@ public class MapManager : MonoBehaviour
     #region CoRoutine
     private IEnumerator CoPhaseTimerRoutine()
     {
+        // 누적 시간을 트래킹하기 위한 로컬 변수
+        float cumulativeTime = 0f;
+
         for(currentPhaseIndex = 0; currentPhaseIndex < phases.Count; currentPhaseIndex++)
         {
             PhaseData currentPhase = phases[currentPhaseIndex];
 
+            // 누적 시간에 따라 논리적 이즈 설정(기준 : 1분)
+            if(cumulativeTime < 60f)
+            {
+                currentLogicalPhase = 0;    // 1페이즈(Y축 고정)
+            }
+            else if(cumulativeTime < 120f)
+            {
+                currentLogicalPhase = 1; // 2페이즈(Y축 추적)
+            }
+            else
+            {
+                currentLogicalPhase = 2;    // 3페이즈
+            }
+
             // 테스트용 디버깅
-            Debug.Log($"[{currentPhase.phaseName}] 돌입!, 맵 세팅 변경됨");
+            Debug.Log($"[{currentPhase.phaseName}] 돌입! " +
+                $"누적 시작 시간: {cumulativeTime}초, 논리적 페이즈: {currentLogicalPhase}");
 
             // 페이즈 변경 시점에 맞춰 카메라의 Y축 추적 모드를 변경
-            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentPhaseIndex);
+            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentLogicalPhase);
            
             // 현재 페이즈의 맵들로 셔플 백 갈아끼우기
             UpdateShuffleBagForCurrentPhase();
+
+            // 현재 페이즈의 대기시간 누적
+            cumulativeTime += currentPhase.timeThreshold;
 
             // 마지막 페이즈 -> 무한 대기(영원히 지속됨)
             if(currentPhaseIndex < phases.Count-1)
