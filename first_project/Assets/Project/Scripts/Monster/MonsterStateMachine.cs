@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -7,13 +7,11 @@ public class MonsterStateMachine
 {
 
     private IMonsterState _currentState { get; set; }
-    private MonsterController _owner;
 
     private Dictionary<IMonsterState, List<Transition>> _transitionMap;
 
-    public MonsterStateMachine(MonsterController owner, IMonsterState initialState, Dictionary<IMonsterState, List<Transition>> transitionMap) 
+    public MonsterStateMachine(IMonsterState initialState, Dictionary<IMonsterState, List<Transition>> transitionMap) 
     {
-        _owner = owner;
         _currentState = initialState;
         _transitionMap = transitionMap;
     }
