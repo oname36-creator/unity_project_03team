@@ -23,11 +23,16 @@ public class TentacleIdle : IMonsterState
         _time = 0f;
         _owner.IsSearch = false;
         _owner.IsAttach = false;
+        _owner.Attack = false;
+        
         _owner.Target = null;
+        _owner.UpdateSegmentLength(_owner.PrevSegmentLength);
+        _owner.segmentDistance = 0.5f;
+
         // 촉수가 Root 근처로 회수된 상태로 대기하도록 초기 목표 설정
         _owner.IkTargetPosition = _owner.tentacleRoot.position;
-        _rayDistance = _owner.TentacleLength + 1f;
-        Debug.Log("TentacleIdle: 탐색 시작 (회수 완료)");
+        _rayDistance = _owner.TentacleLength;
+        Debug.Log("TentacleIdle");
     }
 
     public void Update()

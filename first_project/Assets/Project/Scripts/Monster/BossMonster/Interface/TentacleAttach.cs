@@ -35,7 +35,7 @@ public class TentacleAttach : IMonsterState
             }
         }
 
-        Debug.Log("TentacleAttach: 잡았다! 몸통으로 끌어오기 시작");
+        //Debug.Log("TentacleAttach: 잡았다! 몸통으로 끌어오기 시작");
     }
 
     public void Update()
@@ -59,6 +59,9 @@ public class TentacleAttach : IMonsterState
             _owner.IsSearch = false;
             _owner.IsAttach = false;
             _owner.Target = null;
+
+            _owner.PrevSegmentLength += 1;
+
         }
     }
 
@@ -69,5 +72,11 @@ public class TentacleAttach : IMonsterState
         {
             _targetRb.bodyType = _originalBodyType;
         }
+
+        if (_owner.IsAttackTentacle) 
+        {
+            _owner.IsAttackTentacle = false;
+        }
+
     }
 }

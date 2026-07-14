@@ -15,6 +15,7 @@ public class BodyController : MonoBehaviour
     [Header("Boss")]
     public BossController Boss;
     public float ReleaseDistance = 3f;
+    
 
     private bool _isDead = false;
 
@@ -23,11 +24,18 @@ public class BodyController : MonoBehaviour
     private Transform _ownerTransform;
     private SpriteRenderer _sprite;
 
+    
+
     public BossController GetBoss { get { return Boss; } }
 
     public bool Move { get; set; }
     public bool Chase { get { return Boss.Chase; } }
+
+    public bool Create { get; set; }
+
     public float MoveSpeed { get; private set; }
+
+    public float YCenter { get; private set;  }
 
     void Start()
     {
@@ -38,9 +46,11 @@ public class BodyController : MonoBehaviour
         _sprite = GetComponent<SpriteRenderer>();
 
         MoveSpeed = Boss.MoveSpeed;
-
+        YCenter = _ownerTransform.position.y;
         //Move = false;
         Move = true;
+        Create = false;
+        //Create = true;
     }
 
     void Update()

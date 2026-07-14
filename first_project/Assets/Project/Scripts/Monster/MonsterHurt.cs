@@ -32,7 +32,7 @@ public class MonsterHurt : IMonsterState
 
         _timer += Time.deltaTime;
         // 반투명한 빨간색
-        _spriteRenderer.color = new Color(1f, 0f, 0f, 1f);
+        _spriteRenderer.color = new Color(1f, 0f, 0f, 0.5f);
         if (_timer >= _attackDuration)
         {
 

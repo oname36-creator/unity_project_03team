@@ -236,7 +236,6 @@ public class MonsterController : MonoBehaviour
         _renderer.flipX = onFlip;
 
 
-        Debug.Log("1");
         _playerTransform = Player.GetComponent<Transform>();
         _playerRadius = Player.GetComponent<CapsuleCollider2D>().size.y / 2;
         _monsterTransform = this.GetComponent<Transform>();
@@ -254,7 +253,6 @@ public class MonsterController : MonoBehaviour
         {
             return;
         }
-        Debug.Log("2");
         CaculateMonsterToPlayerVector();
         _monsterMachine.Update();
 

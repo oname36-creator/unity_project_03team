@@ -11,7 +11,8 @@ public class BossController : MonoBehaviour
     [Header("Monster Data")] // 인스펙터에 제목 표시
     public BaseMonsterData MonsterData;
 
-
+    [Header("Player")]
+    public GameObject Player;
  
  
 
@@ -79,7 +80,7 @@ public class BossController : MonoBehaviour
         get { return _speed; }
     }
 
-
+    public bool IsAttackTentacle { get; set; }
 
     public Vector3 Front 
     {
@@ -106,6 +107,7 @@ public class BossController : MonoBehaviour
 
         _frontVector = Vector3.right;
 
+        IsAttackTentacle = false;
         _isDead = false;
         _isChase = true;
         _isGround = true;

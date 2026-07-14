@@ -28,6 +28,9 @@ public class BodyIdle : IMonsterState
         float hoverVelocity = Mathf.Cos(_timeCounter * _owner.HoverFrequency) * _owner.HoverAmplitude;
 
         _rigidbody2D.linearVelocity = _ownerTransform.up * hoverVelocity;
+
+        
+
     }
 
     public void Exit()

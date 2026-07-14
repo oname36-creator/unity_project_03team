@@ -7,6 +7,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Player")]
     public GameObject Player;
 
+    [Header("Boss")]
+    public GameObject Boss;
+
 
     [Header("Monster Bullet Prefab")]
     [SerializeField] private GameObject _monsterBulletPrefab;
@@ -14,6 +17,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Monster Prefab")]
     [SerializeField] private GameObject _monsterBirdPrefab;
     [SerializeField] private GameObject _monsterBasePrefab;
+
+    [Header("Tentacle Prefab")]
+    [SerializeField] private GameObject _tentaclePrefab;
 
 
 
@@ -28,6 +34,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _monsterBulletPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBirdPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBasePool = new Queue<GameObject>();
+    private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -58,7 +65,15 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.SetActive(false); // 비활성화 상태로 대기
             _monsterBirdPool.Enqueue(obj); // 리스트에 추가
         }
-
+        // Tentacle 생성
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(_tentaclePrefab, this.transform);
+            obj.GetComponent<TentacleController>().Boss = Boss.GetComponent<BossController>();
+            obj.GetComponent<TentacleController>().Body = Boss.GetComponent<BodyController>();
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _tentaclePool.Enqueue(obj); // 리스트에 추가
+        }
     }
 
 
@@ -130,6 +145,25 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     }
 
 
+    // 풀에서 가져오는 함수
+    public GameObject TentaclePop()
+    {
+        if (_tentaclePool.Count > 0)
+        {
+            GameObject obj = _tentaclePool.Dequeue();
+            return obj;
+        }
+
+        return null;
+    }
+
+    // 다시 풀에 반환하는 함수
+    public void TentaclePush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _tentaclePool.Enqueue(obj);
+    }
 
 
     // 게임 시작 시 풀을 미리 채워둡니다.

@@ -306,9 +306,13 @@ public class MonsterAiBrain
 
         IMonsterState idle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
+        IMonsterState create = new BodyCreateTentacle(owner);
+
         // 보스룸 상태 추가할 예정
 
         initialState = idle;
+
+        // Todo : Boss가 원하면 촉수 무한 생성 
 
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
@@ -330,9 +334,26 @@ public class MonsterAiBrain
                         return !owner.Move;
                     },
                     targetState:idle
+                    ),
+                new Transition(
+                    condition : () =>
+                    {
+                        return owner.Create;
+                    },
+                    targetState: create
                     )
             };
 
+        transitionMap[create] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.Create;
+                    },
+                    targetState:move
+                    )
+            };
 
         initialState.Enter();
         return new MonsterStateMachine(initialState, transitionMap);
@@ -349,12 +370,22 @@ public class MonsterAiBrain
         IMonsterState idle = new TentacleIdle(owner);
         IMonsterState stretch = new TentacleStretch(owner);
         IMonsterState attach = new TentacleAttach(owner);
+        IMonsterState up = new TentacleUp(owner);
+        IMonsterState attack = new TentacleAttack(owner);
 
         initialState = idle;
 
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
             {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsAttackTentacle;
+                    },
+                    targetState:up
+                    ),
+
                 new Transition(
                     condition: () =>
                     {
@@ -394,6 +425,28 @@ public class MonsterAiBrain
                     )
             };
 
+        transitionMap[up] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Attack;;
+                    },
+                    targetState:attack
+                    )
+            };
+
+
+        transitionMap[attack] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.Attack;
+                    },
+                    targetState:attach
+                    )
+            };
 
 
 

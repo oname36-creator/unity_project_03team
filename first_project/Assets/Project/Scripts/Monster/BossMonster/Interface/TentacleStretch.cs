@@ -64,7 +64,7 @@ public class TentacleStretch : IMonsterState
         if (distanceToFinalTarget < _reachThreshold)
         {
 
-            Debug.Log("TentacleStretch: 뻗었지만 아무것도 닿지 않음... 회수 시작");
+            //Debug.Log("TentacleStretch: 뻗었지만 아무것도 닿지 않음... 회수 시작");
 
             _owner.Boss.RemoveTarget(_owner.Target); // 명부에서 삭제
             _owner.IsSearch = false;

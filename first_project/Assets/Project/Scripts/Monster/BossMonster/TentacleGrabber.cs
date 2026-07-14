@@ -12,13 +12,22 @@ public class TentacleGrabber : MonoBehaviour
         _bossController = Tentacle.Boss;
     }
 
+    // 자신의 Trigger에 닿았을 때 호출
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 땅(Ground) 로직 제거. 플레이어(Player) 또는 몬스터(Monster)만 판정
+        TryGrab(other);
+    }
+
+    // 외부(EdgeCollider 등)에서도 호출할 수 있도록 분리한 잡기 로직
+    public void TryGrab(Collider2D other)
+    {
+        // 플레이어(Player) 또는 몬스터(Monster)만 판정
         if (other.CompareTag("Player") || other.CompareTag("Monster"))
         {
             // 이미 무언가를 잡고 끌고 오는 중(IsAttach == true)이라면 중복 충돌 무시
+            // (자신의 Trigger와 EdgeCollider에 동시에 닿아도 여기서 안전하게 걸러집니다)
             if (Tentacle.IsAttach) return;
+
             GameObject hitObj = other.gameObject;
 
             // 1. 내가 찜한 애가 맞다면 정상적으로 잡기 성공
@@ -41,7 +50,7 @@ public class TentacleGrabber : MonoBehaviour
                 Tentacle.IsAttach = true;
                 Debug.Log($"TentacleGrabber: 지나가다 {hitObj.name} 낚아챔!");
             }
-            // 3. 남이 찜한 애를 건드렸다면 무시하고 통과 (아무 처리 안 함)
+            // 3. 남이 찜한 애를 건드렸다면 무시하고 통과
         }
     }
 }

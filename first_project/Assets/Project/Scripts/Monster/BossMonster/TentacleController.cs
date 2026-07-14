@@ -21,6 +21,9 @@ public class TentacleController : MonoBehaviour
     public Transform tentacleRoot;        // 촉수가 시작되는 위치 (보스 몸통 등)
     public Transform grabberHead;         // 물건을 잡을 트리거가 있는 실제 오브젝트
 
+    [Header("Effects")]
+    public SpriteRenderer warningEffectRenderer;
+
     private LineRenderer _lineRend;
     private EdgeCollider2D _edgeCollider;
 
@@ -49,6 +52,8 @@ public class TentacleController : MonoBehaviour
         get { return  grabberHead; }
     }
 
+    public int PrevSegmentLength { get; set; }
+
     public float TentacleLength 
     {
         get { return segmentLength * segmentDistance; }
@@ -66,35 +71,59 @@ public class TentacleController : MonoBehaviour
         set { _isSearch = value; }
     }
 
+    public bool IsDead 
+    {
+        get { return _isDead; }
+        set { _isDead = value; }
+    }
+
+    public bool IsAttackTentacle { get; set; }
+
+    public bool Attack { get; set; }
 
     public GameObject Target { get; set; } 
 
 
     void Start()
     {
+        Debug.Log("Tentacle Start");
         _lineRend = GetComponent<LineRenderer>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
         _lineRend.positionCount = segmentLength;
         _segmentPos = new Vector2[segmentLength];
         _segmentVelocity = new Vector2[segmentLength];
+        PrevSegmentLength = segmentLength;
 
-        // 초기 위치 세팅
-        for (int i = 0; i < segmentLength; i++)
+        IsAttackTentacle = false;
+        Attack = false;
+
+        tentacleRoot = Boss.transform;
+        if (tentacleRoot != null)
         {
-            _segmentPos[i] = tentacleRoot.position;
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = tentacleRoot.position;
+            }
+            IkTargetPosition = tentacleRoot.position;
         }
-        IkTargetPosition = tentacleRoot.position;
-
-
-
-
         _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
     void Update()
     {
         if (_isDead) return;
+        if(tentacleRoot == null) 
+        {
+            tentacleRoot = Boss.transform;
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = tentacleRoot.position;
+            }
+            IkTargetPosition = tentacleRoot.position;
+        }
         _monsterMachine.Update();
     }
 
@@ -105,7 +134,7 @@ public class TentacleController : MonoBehaviour
         UpdateColliders();
     }
 
-private void UpdateIK()
+    private void UpdateIK()
     {
 
         Vector2 targetPos = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
@@ -172,6 +201,42 @@ private void UpdateIK()
         _edgeCollider.SetPoints(colliderPoints);
     }
 
+    public void UpdateSegmentLength(int newLength)
+    {
+        if (segmentLength == newLength) return;
+
+        int oldLength = segmentLength;
+        segmentLength = newLength;
+
+        // 라인 렌더러 점 개수 업데이트
+        if (_lineRend != null)
+        {
+            _lineRend.positionCount = segmentLength;
+        }
+
+        // 새 길이의 배열 생성
+        Vector2[] newPos = new Vector2[segmentLength];
+        Vector2[] newVel = new Vector2[segmentLength];
+
+        for (int i = 0; i < segmentLength; i++)
+        {
+            if (i < oldLength && _segmentPos != null)
+            {
+                // 기존 위치 데이터가 있으면 그대로 복사
+                newPos[i] = _segmentPos[i];
+                newVel[i] = _segmentVelocity[i];
+            }
+            else
+            {
+                // 새로 늘어난 마디들은 루트 위치로 초기화
+                newPos[i] = tentacleRoot != null ? (Vector2)tentacleRoot.position : Vector2.zero;
+            }
+        }
+
+        // 기존 배열을 새 배열로 덮어쓰기
+        _segmentPos = newPos;
+        _segmentVelocity = newVel;
+    }
 
 
 

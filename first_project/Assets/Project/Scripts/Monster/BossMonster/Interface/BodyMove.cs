@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class BodyMove : IMonsterState
 {
@@ -6,45 +7,61 @@ public class BodyMove : IMonsterState
     private Transform _ownerTransform;
     private Rigidbody2D _rigidbody2D;
     private float _timeCounter = 0f;
+    private float _prevCounter = 0f;
+    private Coroutine _movingCoroutine;
 
     public BodyMove(BodyController owner)
     {
         this._owner = owner;
+        _movingCoroutine = null;
         _ownerTransform = _owner.GetComponent<Transform>();
         _rigidbody2D = _owner.GetComponent<Rigidbody2D>();
     }
 
     public void Enter()
     {
-        _timeCounter = 0f;
-        Debug.Log("BodyMove");
+
+        Debug.Log("BodyMove 진입");
+
+        if (_movingCoroutine == null)
+        {
+            _timeCounter = 0f;
+            _movingCoroutine = _owner.StartCoroutine(Move());
+        }
     }
 
     public void Update()
     {
-
-        _timeCounter += Time.deltaTime;
-
-        // 1. Front 방향 
-        Vector2 forwardDir = _owner.Boss.Front;
-
-        // 2. 수직 방향 벡터 (정면 벡터의 90도 회전: (-y, x))
-        Vector2 perpDir = new Vector2(-forwardDir.y, forwardDir.x);
-
-        // 3. 속도 벡터 계산
-        // 위치를 A * sin(wt)로 만들기 위해 속도에는 미분값인 A * w * cos(wt)를 적용
-        Vector2 forwardVelocity = forwardDir * _owner.MoveSpeed;
-        float sineSpeed = Mathf.Cos(_timeCounter * _owner.SineFrequency) * _owner.SineAmplitude * _owner.SineFrequency;
-        Vector2 sineVelocity = perpDir * sineSpeed;
-
-        // 4. 리지드바디에 합성된 속도 적용
-        _rigidbody2D.linearVelocity = forwardVelocity + sineVelocity;
-
-
+       
     }
 
     public void Exit()
     {
-        _rigidbody2D.linearVelocity = Vector2.zero;
+
+    }
+
+    IEnumerator Move()
+    {
+        while (true)
+        {
+            _timeCounter += Time.deltaTime;
+
+            Vector2 forwardDir = _owner.Boss.Front;
+            Vector2 perpDir = new Vector2(-forwardDir.y, forwardDir.x);
+
+            Vector2 forwardVelocity = forwardDir * _owner.MoveSpeed;
+            float sineSpeed = Mathf.Cos(_timeCounter * _owner.SineFrequency) * _owner.SineAmplitude * _owner.SineFrequency;
+            Vector2 sineVelocity = perpDir * sineSpeed;
+
+            _rigidbody2D.linearVelocity = forwardVelocity + sineVelocity;
+
+            if (_timeCounter > 5f + _prevCounter)
+            {
+                _owner.Create = true;
+                _prevCounter = _timeCounter;
+            }
+
+            yield return null; 
+        }
     }
 }
