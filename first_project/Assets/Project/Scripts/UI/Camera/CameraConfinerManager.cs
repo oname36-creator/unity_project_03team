@@ -20,6 +20,9 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
     // 현재 카메라를 화면 출력용 메인으로 쓰고 있는지 기록(NextCamera와 교차 활성화하기 위함)
     private bool _isUsingCameraA = true;
+
+    // 현재 설정된 바운더리 콜라이더를 캐싱하여 중복 처리를 방지합니다.
+    private Collider2D _currentBoundary;
     #endregion
     public override void Awake()
     {
@@ -45,7 +48,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
             positionComposerA = virtualCameraA.GetComponent<CinemachinePositionComposer>();
         }
 
-        if(virtualCameraA != null)
+        if(virtualCameraB != null)
         {
             confinerB = virtualCameraB.GetComponent<CinemachineConfiner2D>();
             positionComposerB = virtualCameraB.GetComponent<CinemachinePositionComposer>();
@@ -70,6 +73,16 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
             return;
         }
 
+        // 중복 호출 방지: 이미 적용된 바운더리와 같다면 처리를 무시합니다.
+        if (newBoundary == _currentBoundary)
+        {
+            return;
+        }
+
+        _currentBoundary = newBoundary;
+
+        Debug.Log($"[UpdateBoundary] 호출됨. 새로운 바운더리: {newBoundary.gameObject.name}, 현재 사용중인 카메라: {(_isUsingCameraA ? "Camera A" : "Camera B")}");
+
         if(_isUsingCameraA)
         {
             if(confinerB != null && virtualCameraB != null && virtualCameraA != null)
@@ -83,6 +96,11 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 virtualCameraB.Priority = 15;
 
                 _isUsingCameraA = false;
+                Debug.Log($"[UpdateBoundary] Camera A -> Camera B로 전환 시도. A Priority: {virtualCameraA.Priority}, B Priority: {virtualCameraB.Priority}");
+            }
+            else
+            {
+                Debug.LogError($"[UpdateBoundary] Camera A -> B 전환 실패. confinerB: {confinerB}, virtualCameraB: {virtualCameraB}, virtualCameraA: {virtualCameraA}");
             }
         }
         else
@@ -98,6 +116,11 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 virtualCameraB.Priority = 10;
 
                 _isUsingCameraA = true;
+                Debug.Log($"[UpdateBoundary] Camera B -> Camera A로 전환 시도. A Priority: {virtualCameraA.Priority}, B Priority: {virtualCameraB.Priority}");
+            }
+            else
+            {
+                Debug.LogError($"[UpdateBoundary] Camera B -> A 전환 실패. confinerA: {confinerA}, virtualCameraA: {virtualCameraA}, virtualCameraB: {virtualCameraB}");
             }
         }
     }
