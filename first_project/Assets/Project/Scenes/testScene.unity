@@ -1877,29 +1877,17 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 500162553}
-    - target: {fileID: 5350817344919298364, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: m_SortingLayer
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5350817344919298364, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -92720793
-      objectReference: {fileID: 0}
     - target: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_Name
       value: Bird
       objectReference: {fileID: 0}
-    - target: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8951697291475702414, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.2
+      value: 4.74
       objectReference: {fileID: 0}
     - target: {fileID: 8951697291475702414, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.44
+      value: 1.44
       objectReference: {fileID: 0}
     - target: {fileID: 8951697291475702414, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_LocalPosition.z
