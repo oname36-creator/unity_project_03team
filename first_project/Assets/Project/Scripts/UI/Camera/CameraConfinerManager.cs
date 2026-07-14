@@ -95,6 +95,13 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 virtualCameraA.Priority = 10;
                 virtualCameraB.Priority = 15;
 
+                // 우선순위가 낮은 카메라의 바운더리를 해제
+                if (confinerA != null)
+                {
+                    confinerA.BoundingShape2D = null;
+                    confinerA.InvalidateBoundingShapeCache();
+                }
+
                 _isUsingCameraA = false;
                 Debug.Log($"[UpdateBoundary] Camera A -> Camera B로 전환 시도. A Priority: {virtualCameraA.Priority}, B Priority: {virtualCameraB.Priority}");
             }
@@ -115,6 +122,12 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 virtualCameraA.Priority = 15;
                 virtualCameraB.Priority = 10;
 
+                // 우선순위가 낮은 카메라의 바운더리를 해제
+                if (confinerB != null)
+                {
+                    confinerB.BoundingShape2D = null;
+                    confinerB.InvalidateBoundingShapeCache();
+                }
                 _isUsingCameraA = true;
                 Debug.Log($"[UpdateBoundary] Camera B -> Camera A로 전환 시도. A Priority: {virtualCameraA.Priority}, B Priority: {virtualCameraB.Priority}");
             }
