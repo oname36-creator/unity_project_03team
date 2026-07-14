@@ -24,6 +24,7 @@ public class Parallax : MonoBehaviour
 
     void Start()
     {
+        #region throw
         if (cam == null)
         {
             if (Camera.main != null)
@@ -46,7 +47,9 @@ public class Parallax : MonoBehaviour
                 }
             }
         }
+        #endregion
 
+        #region Init
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null && spriteRenderer.sprite != null)
         {
@@ -61,6 +64,7 @@ public class Parallax : MonoBehaviour
         mapManager = FindAnyObjectByType<MapManager>();
         startPos = transform.position;
         startCamPos = cam.position;
+        #endregion
     }
 
     private void LateUpdate()

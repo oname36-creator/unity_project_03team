@@ -154,10 +154,10 @@ MonoBehaviour:
     timeThreshold: 20
     phasePalette: {fileID: 11400000, guid: f2e306c2110c9dc4b80a9fe4555f2f86, type: 2}
   - phaseName: "\uD398\uC774\uC9882"
-    timeThreshold: 20
+    timeThreshold: 30
     phasePalette: {fileID: 11400000, guid: 2268e6ef58fbcae4fbbc5c0699017663, type: 2}
   - phaseName: "\uD398\uC774\uC9883"
-    timeThreshold: 20
+    timeThreshold: 30
     phasePalette: {fileID: 11400000, guid: 47f0a91a0259f8340935a085e7fb28f9, type: 2}
   currentLogicalPhase: 0
 --- !u!4 &245405373

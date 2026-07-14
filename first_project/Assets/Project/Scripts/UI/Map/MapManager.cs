@@ -15,6 +15,7 @@ public struct PhaseData
 }
 public class MapManager : MonoBehaviour
 {
+    #region DataAttribute
     [Header("시작 설정")]
     public GameObject safeZonePrefab;
 
@@ -40,6 +41,7 @@ public class MapManager : MonoBehaviour
 
     private Vector3 nextSpawnPosition = Vector3.zero;
     #endregion
+    #endregion
 
     #region Event
     private void OnEnable()
@@ -52,6 +54,8 @@ public class MapManager : MonoBehaviour
         MapEvent.onPlayerHitSpawnTrigger -= HandleMapSpawnEvent;
     }
     #endregion
+
+    #region Start
     void Start()
     {
         InitializationPools();
@@ -65,8 +69,12 @@ public class MapManager : MonoBehaviour
         // 1페이즈 맵들로 셔플 백 채우기
         StartCoroutine(CoPhaseTimerRoutine());
     }
+    #endregion
+
+    #region HandleMapSpawnEvent
     private void HandleMapSpawnEvent()
     {
+        Debug.Log("맵 생성됨");
         // 1. 다음 맵 스폰
         GameObject nextPrefab = GetNextPrefabFromShuffleBag();
         nextSpawnPosition = SpawnMap(nextPrefab, nextSpawnPosition);
@@ -77,6 +85,9 @@ public class MapManager : MonoBehaviour
             RecycleOldMap();
         }
     }
+    #endregion
+
+    #region RecycleOldMap
     private void RecycleOldMap()
     {
         if (activeMaps.Count == 0) return;
@@ -90,20 +101,23 @@ public class MapManager : MonoBehaviour
             mapPools[safeZonePrefab].Enqueue(oldMap);
             return;
         }
-        foreach(var phase in phases)
+
+        // 전체 풀의 Key를 순회하며 이름이 같은 풀을 찾아 반환
+        foreach(var prefabKey in mapPools.Keys)
         {
-            // 자신이 있던 pool의 위치 찾아서 다시 돌아감
-            foreach (var prefab in phases[currentPhaseIndex].phasePalette.chunkPrefabs)
+            if(oldMap.name == prefabKey.name)
             {
-                if (oldMap.name == prefab.name)
-                {
-                    mapPools[prefab].Enqueue(oldMap);
-                    break;
-                }
+                mapPools[prefabKey].Enqueue(oldMap);
+                return;
             }
         }
+
+        // 안전장치
+        Debug.LogWarning($"[MapManager] {oldMap.name}에 해당하는 오브젝트 풀을 찾지 못해 파괴합니다.");
+        Destroy(oldMap);
        
     }
+    #endregion
 
     #region InitPool
     private void InitializationPools()
@@ -176,6 +190,7 @@ public class MapManager : MonoBehaviour
     }
     #endregion
 
+    #region SuffleBag
     private void UpdateShuffleBagForCurrentPhase()
     {
         // 이전 페이즈 맵 정리 후 현재 페이즈 맵으로 교체
@@ -201,6 +216,8 @@ public class MapManager : MonoBehaviour
 
         return pickedPrefab;
     }
+    #endregion
+
     #region Find
     // Find 리펙토링 함수
     private Vector3 GetEndPosition(GameObject map, Vector3 fallbackPos)
