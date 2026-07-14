@@ -836,6 +836,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1950431511812280446}
   - component: {fileID: 1742701389641099399}
+  - component: {fileID: 2551282640189415250}
   m_Layer: 0
   m_Name: EntranceTrigger
   m_TagString: Untagged
@@ -904,6 +905,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 16.948223}
   m_EdgeRadius: 0
+--- !u!114 &2551282640189415250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8585882326846243836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2381290cda6817449b4ac842724282d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapChunkBoundaryTrigger
 --- !u!1 &8916473074194248325
 GameObject:
   m_ObjectHideFlags: 0
