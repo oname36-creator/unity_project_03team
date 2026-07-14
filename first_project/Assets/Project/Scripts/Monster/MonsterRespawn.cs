@@ -3,9 +3,7 @@ using UnityEngine;
 public class MonsterRespawn : MonoBehaviour
 {
 
-    [Header("Player")]
-    public GameObject Player;
-    
+
     
     
     public void Respawn(string name, Vector3 pos) 
@@ -20,9 +18,13 @@ public class MonsterRespawn : MonoBehaviour
             monster = ObjectPoolManager.Instance.MonsterBirdPop();
         }
         if(monster == null) { return; }
-
-        monster.GetComponent<MonsterController>().Player = Player;
+        MonsterController monsterController = monster.GetComponent<MonsterController>();
+        
         monster.transform.position = pos;
+        
+        monsterController.IsDead = false;
+
+        monster.SetActive(true);
 
     } 
 

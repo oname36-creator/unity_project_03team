@@ -1,8 +1,13 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ObjectPoolManager : Singleton<ObjectPoolManager>
 {
+    [Header("Player")]
+    public GameObject Player;
+
+
     [Header("Monster Bullet Prefab")]
     [SerializeField] private GameObject _monsterBulletPrefab;
 
@@ -41,6 +46,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         for (int i = 0; i < 20; i++)
         {
             GameObject obj = Instantiate(_monsterBasePrefab, this.transform);
+            obj.GetComponent<MonsterController>().Player = Player;
             obj.SetActive(false); // 비활성화 상태로 대기
             _monsterBasePool.Enqueue(obj); // 리스트에 추가
         }
@@ -48,6 +54,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         for (int i = 0; i < 20; i++)
         {
             GameObject obj = Instantiate(_monsterBirdPrefab, this.transform);
+            obj.GetComponent<MonsterController>().Player = Player;
             obj.SetActive(false); // 비활성화 상태로 대기
             _monsterBirdPool.Enqueue(obj); // 리스트에 추가
         }
@@ -86,21 +93,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (_monsterBasePool.Count > 0)
         {
             GameObject obj = _monsterBasePool.Dequeue();
-            obj.SetActive(true);
             return obj;
         }
 
         return null;
-    }
-
-    // Base 몬스터를 다시 풀에 반환하는 함수
-    public void MonsterBasePush(GameObject obj)
-    {
-        if (obj == null) return;
-
-        obj.SetActive(false);
-        _monsterBasePool.Enqueue(obj);
-
     }
 
     // 풀에서 Bird 몬스터 가져오는 함수
@@ -110,20 +106,26 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (_monsterBirdPool.Count > 0)
         {
             GameObject obj = _monsterBirdPool.Dequeue();
-            obj.SetActive(true);
             return obj;
         }
 
         return null;
     }
 
-    // Base 몬스터를 다시 풀에 반환하는 함수
-    public void MonsterBirdPush(GameObject obj)
+    // 몬스터를 다시 풀에 반환하는 함수
+    public void MonsterPush(GameObject obj)
     {
         if (obj == null) return;
-
         obj.SetActive(false);
-        _monsterBirdPool.Enqueue(obj);
+
+        if (obj.GetComponent<MonsterController>().Name == "Base")
+        {
+            _monsterBasePool.Enqueue(obj);
+        }
+        else
+        {
+            _monsterBirdPool.Enqueue(obj);
+        }
 
     }
 

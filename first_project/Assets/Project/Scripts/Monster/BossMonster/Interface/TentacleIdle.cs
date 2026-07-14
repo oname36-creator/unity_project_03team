@@ -4,7 +4,7 @@ using UnityEngine;
 public class TentacleIdle : IMonsterState
 {
     private TentacleController _owner;
-    private float _rayDistance = 10f;
+    private float _rayDistance;
     private LayerMask _targetLayer;
 
     private float _sweepAngle = 45f;
@@ -26,6 +26,7 @@ public class TentacleIdle : IMonsterState
         _owner.Target = null;
         // 촉수가 Root 근처로 회수된 상태로 대기하도록 초기 목표 설정
         _owner.IkTargetPosition = _owner.tentacleRoot.position;
+        _rayDistance = _owner.TentacleLength + 1f;
         Debug.Log("TentacleIdle: 탐색 시작 (회수 완료)");
     }
 
