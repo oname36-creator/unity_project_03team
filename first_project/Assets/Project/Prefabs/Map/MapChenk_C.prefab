@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 3888876747680805658}
   m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -765,7 +765,7 @@ GameObject:
   - component: {fileID: 2576380119195231791}
   - component: {fileID: 9198755425228712893}
   - component: {fileID: 8428815529486151324}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: MapChenk_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}

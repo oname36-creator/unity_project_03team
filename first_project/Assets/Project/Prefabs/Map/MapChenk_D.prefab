@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6611533373619480074}
   m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -440,7 +440,7 @@ GameObject:
   - component: {fileID: 8704448868664121369}
   - component: {fileID: 7148901630841227901}
   - component: {fileID: 4893195698825185968}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: MapChenk_D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -707,7 +707,7 @@ GameObject:
   - component: {fileID: 7732082871832740338}
   m_Layer: 3
   m_Name: Platform
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
