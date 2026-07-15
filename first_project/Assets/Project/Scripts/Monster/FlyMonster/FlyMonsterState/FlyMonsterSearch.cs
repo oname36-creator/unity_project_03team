@@ -24,6 +24,8 @@ public class FlyMonsterSearch : IMonsterState
     }
     public void Enter()
     {
+        _owner.SetExclamationMark(false);
+        _owner.SetQuestionMark(true);
         Debug.Log("Bird : serch");
         Vector2 startCenterPos = _ownerTransform.position;
         _owner.Stop();

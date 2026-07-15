@@ -1,80 +1,82 @@
-﻿using System.Collections;
+﻿using Unity.VisualScripting;
 using UnityEngine;
 
 public class TentacleIdle : IMonsterState
 {
     private TentacleController _owner;
-    private Transform _ownerTransform;
-
-    private float _rayDistance = 10f;
+    private float _rayDistance;
     private LayerMask _targetLayer;
 
-    // 탐색 범위 및 속도 변수
-   
-    private GameObject _anchorPoint;
-    private float _sweepAngle = 45f; // 위아래 탐색 각도
+    private float _sweepAngle = 45f;
     private float _sweepSpeed = 2f;
     private float _time = 0f;
     private float _fixedLength = 5f;
 
     public TentacleIdle(TentacleController owner)
     {
-        this._owner = owner;
-        _ownerTransform = owner.GetComponent<Transform>();
-
-        _targetLayer = LayerMask.GetMask("Player", "Ground");
+        _owner = owner;
+        _targetLayer = LayerMask.GetMask("Player", "Monster");
     }
 
     public void Enter()
     {
         _time = 0f;
-        _owner.IsSearch = false; 
+        _owner.IsSearch = false;
+        _owner.IsAttach = false;
+        _owner.Attack = false;
+        
+        _owner.Target = null;
+        _owner.UpdateSegmentLength(_owner.PrevSegmentLength);
+        _owner.segmentDistance = 0.5f;
+
+        // 촉수가 Root 근처로 회수된 상태로 대기하도록 초기 목표 설정
+        _owner.IkTargetPosition = _owner.tentacleRoot.position;
+        _rayDistance = _owner.TentacleLength;
         Debug.Log("TentacleIdle");
     }
 
     public void Update()
     {
-        // 1. Ray로 지정 범위를 위에서 아래로 훑기 위한 각도 계산 (Sin을 이용한 왕복)
         _time += Time.deltaTime * _sweepSpeed;
         float currentAngle = Mathf.Sin(_time) * _sweepAngle;
 
-        // 기준 방향(오른쪽)에서 currentAngle만큼 회전한 방향 벡터
         Vector2 rayDirection = Quaternion.Euler(0, 0, currentAngle) * Vector2.right;
         Vector2 rayOrigin = _owner.tentacleRoot.position;
 
-        // 2. 촉수의 끝 방향을 Ray의 방향으로 고정 (길이는 _fixedLength)
-        _owner.IkTargetPosition = rayOrigin + rayDirection * _fixedLength;
+        // 대기 상태일 때는 촉수가 탐색 방향으로 부드럽게 뻗어 있게 합니다. (회수 중일 땐 Root로 가고, 회수되면 흔들림)
+        float distanceToRoot = Vector2.Distance(_owner.GetGrabber.position, rayOrigin);
+        if (distanceToRoot > _fixedLength + 1f) // 아직 회수 중
+        {
+            _owner.IkTargetPosition = rayOrigin;
+        }
+        else // 회수 완료, 탐색 흔들림 시작
+        {
+            _owner.IkTargetPosition = rayOrigin + rayDirection * _fixedLength;
+        }
+
         Debug.DrawRay(rayOrigin, rayDirection * _rayDistance, Color.red);
 
-        // 3. 타겟 탐색
         RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection, _rayDistance, _targetLayer);
 
         if (hit.collider != null)
         {
-            if (hit.collider.CompareTag("Ground"))
-            {
-                // 땅일 경우: 맞은 표면에 임시 닻(Anchor)을 만들고 타겟으로 설정
-                if (_anchorPoint == null)
-                {
-                    _anchorPoint = new GameObject("TentacleAnchor");
-                }
-                _anchorPoint.transform.position = hit.point; // Ray가 맞은 정확한 표면 좌표
-                _anchorPoint.transform.SetParent(hit.collider.transform); // 땅이 움직일 경우를 대비해 자식으로 설정
 
-                _owner.Boss.Target = _anchorPoint.transform;
-            }
-            else
+            _owner.IsSearch = true; // StateMachine에서 Shot으로 넘어가도록 유도
+            GameObject hitObj = hit.collider.gameObject;
+
+
+            if (!_owner.Boss.IsTargeted(hitObj))
             {
-                // 플레이어일 경우: 기존대로 플레이어 자체를 타겟
-                _owner.Boss.Target = hit.transform;
+                _owner.Boss.AddTarget(hitObj); // 보스에 타겟 등록
+                _owner.Target = hitObj;        // 내 전용 타겟으로 할당
+
+                _owner.IsSearch = true; 
             }
 
-            _owner.IsSearch = true;
         }
     }
 
     public void Exit()
     {
-        
     }
 }
