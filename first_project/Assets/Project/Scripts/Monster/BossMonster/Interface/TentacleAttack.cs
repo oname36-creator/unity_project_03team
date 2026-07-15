@@ -9,6 +9,8 @@ public class TentacleAttack : IMonsterState
     // 5초 타이머를 위한 변수
     private float _timer;
     private float _duration = 0.25f;
+    private float _playerRadius;
+
 
     private Vector3 _targetPos;
 
@@ -20,11 +22,13 @@ public class TentacleAttack : IMonsterState
         _owner = owner;
         _bossTransform = owner.Boss.transform;
         _playerTransform = owner.Boss.Player.transform;
+        _playerRadius = _owner.Boss.Player.GetComponent<CapsuleCollider2D>().size.y / 2;
     }
     public void Enter()
     {
         _owner.UpdateSegmentLength(_owner.PrevSegmentLength + 5);
         _targetPos = _playerTransform.position;
+        _targetPos.y -= _playerRadius;
 
         _owner.segmentDistance = (_targetPos - _bossTransform.position).magnitude / 20f;
 

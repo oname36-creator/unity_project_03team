@@ -29,7 +29,15 @@ public class MonsterRespawn : MonoBehaviour
     } 
 
 
+    public void RespawnTrap (Vector2 rootPos)
+    {
+        GameObject obj = ObjectPoolManager.Instance.TentaclePop();
+        TentacleController tentacleController = obj.GetComponent<TentacleController>();
+        tentacleController.isTrap = true;
+        tentacleController.RootPos = rootPos;
 
+        obj.SetActive(true);
 
+    }
     
 }

@@ -20,6 +20,9 @@ public class FlyMonsterAttack : IMonsterState
     {
         if (_owner.IsAttack) return;
 
+        _owner.SetExclamationMark(true);
+        _owner.SetQuestionMark(false);
+
         _owner.IsAttack = true;
         _owner.Stop();
 

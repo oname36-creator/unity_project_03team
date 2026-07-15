@@ -19,6 +19,13 @@ public class MonsterController : MonoBehaviour
     [Header("Obstacle Layer")]
     public LayerMask _obstacleLayer;
 
+    [Header("Mark Object")]
+    public GameObject QuestionMark;
+    public GameObject ExclamationMark;
+
+
+
+
     #endregion
 
 
@@ -243,6 +250,9 @@ public class MonsterController : MonoBehaviour
         _monsterMachine = MonsterAiBrain.MakeMachine(_name, this);
 
 
+        SetExclamationMark(false);
+        SetQuestionMark(true);
+
     }
 
     void Update()
@@ -373,4 +383,18 @@ public class MonsterController : MonoBehaviour
 
         return false;
     }
+
+    public void SetQuestionMark(bool active)
+    {
+        QuestionMark.SetActive(active);
+    }
+
+    public void SetExclamationMark(bool active)
+    {
+        ExclamationMark.SetActive(active);
+    }
+
+
+
+
 }

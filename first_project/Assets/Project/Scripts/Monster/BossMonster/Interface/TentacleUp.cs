@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class TentacleUp : IMonsterState
 {
@@ -9,6 +10,8 @@ public class TentacleUp : IMonsterState
     // 5초 타이머를 위한 변수
     private float _timer;
     private float _duration = 5f;
+
+    private float _playerRadius;
 
     // 움직임 보간을 위한 위치 변수
     private Vector2 _startOffset;
@@ -25,6 +28,7 @@ public class TentacleUp : IMonsterState
     {
         _owner = owner;
         _playerTransform = _owner.Boss.Player.transform;
+        _playerRadius = _owner.Boss.Player.GetComponent<CapsuleCollider2D>().size.y/2;
     }
 
     public void Enter()
@@ -72,6 +76,9 @@ public class TentacleUp : IMonsterState
         _targetPos = (Vector2)_owner.tentacleRoot.position + targetOffset;
 
         Vector2 currentLerpOffset = Vector2.Lerp(_startOffset, targetOffset, easeOutT);
+
+        currentLerpOffset.y -= _playerRadius;
+
         _owner.IkTargetPosition = (Vector2)_owner.tentacleRoot.position + currentLerpOffset;
 
         // 4. 이펙트 위치 및 페이드인(알파값) 동시 갱신
@@ -90,6 +97,7 @@ public class TentacleUp : IMonsterState
             _owner.warningEffectRenderer.color = color;
 
             _prevPlayerPos = _playerTransform.position;
+            _prevPlayerPos.y -= _playerRadius;
         }
 
         // 5초가 경과하면 Attack 상태를 true로 전환

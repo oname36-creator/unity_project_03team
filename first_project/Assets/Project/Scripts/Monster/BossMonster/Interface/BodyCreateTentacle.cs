@@ -26,10 +26,11 @@ public class BodyCreateTentacle : IMonsterState
 
     public void Update()
     {
-
-        _tentacleController.IsAttackTentacle = _owner.Boss.IsAttackTentacle;
-        _owner.Create = false;
-        
+        if (!_tentacleController.IsAttackTentacle)
+        {
+            _tentacleController.IsAttackTentacle = true;
+            _owner.Create = false;
+        }
     }
 
     public void Exit()

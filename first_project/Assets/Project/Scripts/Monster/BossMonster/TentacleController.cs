@@ -24,6 +24,10 @@ public class TentacleController : MonoBehaviour
     [Header("Effects")]
     public SpriteRenderer warningEffectRenderer;
 
+    [Header("Trap")]
+    public bool isTrap = false;
+
+
     private LineRenderer _lineRend;
     private EdgeCollider2D _edgeCollider;
 
@@ -81,11 +85,19 @@ public class TentacleController : MonoBehaviour
 
     public bool Attack { get; set; }
 
+    public bool IsReturn { get; set; } = false;
+
+    public bool Set { get; set; } = true;
+    public Vector2 RootPos {  get; set; } = Vector2.zero;
+
     public GameObject Target { get; set; } 
+
 
 
     void Start()
     {
+        Set = false;
+
         Debug.Log("Tentacle Start");
         _lineRend = GetComponent<LineRenderer>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
@@ -98,8 +110,10 @@ public class TentacleController : MonoBehaviour
         IsAttackTentacle = false;
         Attack = false;
 
+
+
         tentacleRoot = Boss.transform;
-        if (tentacleRoot != null)
+        if (tentacleRoot != null && !Target)
         {
             // 초기 위치 세팅
             for (int i = 0; i < segmentLength; i++)
@@ -108,13 +122,29 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
+        else if (RootPos != Vector2.zero && Target)
+        {
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = RootPos;
+            }
+            IkTargetPosition = RootPos;
+        }
         _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
-    void Update()
+    private void OnEnable()
     {
-        if (_isDead) return;
-        if(tentacleRoot == null) 
+        if (Set) 
+        {
+            return;
+        }
+        
+        IsAttackTentacle = false;
+        Attack = false;
+
+        if (tentacleRoot == null && !Target)
         {
             tentacleRoot = Boss.transform;
             // 초기 위치 세팅
@@ -124,6 +154,22 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
+        else if (RootPos != Vector2.zero && Target)
+        {
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = RootPos;
+            }
+            IkTargetPosition = RootPos;
+        }
+
+
+    }
+
+    void Update()
+    {
+        if (_isDead) return;
         _monsterMachine.Update();
     }
 

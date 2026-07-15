@@ -13,8 +13,10 @@ public class BossController : MonoBehaviour
 
     [Header("Player")]
     public GameObject Player;
- 
- 
+
+    [Header("Monster Respawn")]
+    public GameObject MonsterRespawner;
+
 
     #endregion
 

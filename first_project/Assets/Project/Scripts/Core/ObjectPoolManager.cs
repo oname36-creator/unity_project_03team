@@ -146,11 +146,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
 
     // 풀에서 가져오는 함수
-    public GameObject TentaclePop()
+    public GameObject TentaclePop(bool trap = false)
     {
         if (_tentaclePool.Count > 0)
         {
             GameObject obj = _tentaclePool.Dequeue();
+            obj.GetComponent<TentacleController>().isTrap = trap;
             return obj;
         }
 
