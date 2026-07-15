@@ -15,12 +15,16 @@ public struct PhaseData
 }
 public class MapManager : MonoBehaviour
 {
+    #region DataAttribute
     [Header("시작 설정")]
     public GameObject safeZonePrefab;
 
     [Header("난이도 페이즈 설정")]
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
+
+    [SerializeField] private int currentLogicalPhase = 0;
+    public int CurrentLogicalPhase => currentLogicalPhase;
 
     public int CurrentPhaseIndex => currentPhaseIndex;
     private float gameTimer = 0f;
@@ -37,6 +41,7 @@ public class MapManager : MonoBehaviour
 
     private Vector3 nextSpawnPosition = Vector3.zero;
     #endregion
+    #endregion
 
     #region Event
     private void OnEnable()
@@ -49,6 +54,8 @@ public class MapManager : MonoBehaviour
         MapEvent.onPlayerHitSpawnTrigger -= HandleMapSpawnEvent;
     }
     #endregion
+
+    #region Start
     void Start()
     {
         InitializationPools();
@@ -62,8 +69,12 @@ public class MapManager : MonoBehaviour
         // 1페이즈 맵들로 셔플 백 채우기
         StartCoroutine(CoPhaseTimerRoutine());
     }
+    #endregion
+
+    #region HandleMapSpawnEvent
     private void HandleMapSpawnEvent()
     {
+        Debug.Log("맵 생성됨");
         // 1. 다음 맵 스폰
         GameObject nextPrefab = GetNextPrefabFromShuffleBag();
         nextSpawnPosition = SpawnMap(nextPrefab, nextSpawnPosition);
@@ -74,6 +85,9 @@ public class MapManager : MonoBehaviour
             RecycleOldMap();
         }
     }
+    #endregion
+
+    #region RecycleOldMap
     private void RecycleOldMap()
     {
         if (activeMaps.Count == 0) return;
@@ -87,20 +101,23 @@ public class MapManager : MonoBehaviour
             mapPools[safeZonePrefab].Enqueue(oldMap);
             return;
         }
-        foreach(var phase in phases)
+
+        // 전체 풀의 Key를 순회하며 이름이 같은 풀을 찾아 반환
+        foreach(var prefabKey in mapPools.Keys)
         {
-            // 자신이 있던 pool의 위치 찾아서 다시 돌아감
-            foreach (var prefab in phases[currentPhaseIndex].phasePalette.chunkPrefabs)
+            if(oldMap.name == prefabKey.name)
             {
-                if (oldMap.name == prefab.name)
-                {
-                    mapPools[prefab].Enqueue(oldMap);
-                    break;
-                }
+                mapPools[prefabKey].Enqueue(oldMap);
+                return;
             }
         }
+
+        // 안전장치
+        Debug.LogWarning($"[MapManager] {oldMap.name}에 해당하는 오브젝트 풀을 찾지 못해 파괴합니다.");
+        Destroy(oldMap);
        
     }
+    #endregion
 
     #region InitPool
     private void InitializationPools()
@@ -173,6 +190,7 @@ public class MapManager : MonoBehaviour
     }
     #endregion
 
+    #region SuffleBag
     private void UpdateShuffleBagForCurrentPhase()
     {
         // 이전 페이즈 맵 정리 후 현재 페이즈 맵으로 교체
@@ -198,6 +216,8 @@ public class MapManager : MonoBehaviour
 
         return pickedPrefab;
     }
+    #endregion
+
     #region Find
     // Find 리펙토링 함수
     private Vector3 GetEndPosition(GameObject map, Vector3 fallbackPos)
@@ -216,18 +236,39 @@ public class MapManager : MonoBehaviour
     #region CoRoutine
     private IEnumerator CoPhaseTimerRoutine()
     {
+        // 누적 시간을 트래킹하기 위한 로컬 변수
+        float cumulativeTime = 0f;
+
         for(currentPhaseIndex = 0; currentPhaseIndex < phases.Count; currentPhaseIndex++)
         {
             PhaseData currentPhase = phases[currentPhaseIndex];
 
+            // 누적 시간에 따라 논리적 이즈 설정(기준 : 1분)
+            if(cumulativeTime < 60f)
+            {
+                currentLogicalPhase = 0;    // 1페이즈(Y축 고정)
+            }
+            else if(cumulativeTime < 120f)
+            {
+                currentLogicalPhase = 1; // 2페이즈(Y축 추적)
+            }
+            else
+            {
+                currentLogicalPhase = 2;    // 3페이즈
+            }
+
             // 테스트용 디버깅
-            Debug.Log($"[{currentPhase.phaseName}] 돌입!, 맵 세팅 변경됨");
+            Debug.Log($"[{currentPhase.phaseName}] 돌입! " +
+                $"누적 시작 시간: {cumulativeTime}초, 논리적 페이즈: {currentLogicalPhase}");
 
             // 페이즈 변경 시점에 맞춰 카메라의 Y축 추적 모드를 변경
-            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentPhaseIndex);
+            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentLogicalPhase);
            
             // 현재 페이즈의 맵들로 셔플 백 갈아끼우기
             UpdateShuffleBagForCurrentPhase();
+
+            // 현재 페이즈의 대기시간 누적
+            cumulativeTime += currentPhase.timeThreshold;
 
             // 마지막 페이즈 -> 무한 대기(영원히 지속됨)
             if(currentPhaseIndex < phases.Count-1)

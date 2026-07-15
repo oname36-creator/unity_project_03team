@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerStatus : MonoBehaviour
 {
     [Header("Base Status")]
-    public float baseDamage = 10f;       // 기본 공격력
+    public float baseDamage = 50f;       // 기본 공격력
     public float baseAttackRange = 1.5f; // 기본 공격 범위
 
     [Header("Player Stats")]
