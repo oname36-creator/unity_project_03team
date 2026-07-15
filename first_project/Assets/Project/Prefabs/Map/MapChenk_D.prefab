@@ -874,6 +874,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LRMovePlatformer
       objectReference: {fileID: 0}
+    - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -940,6 +948,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LRMovePlatformer
       objectReference: {fileID: 0}
+    - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1002,6 +1018,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LRMovePlatformer
       objectReference: {fileID: 0}
+    - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1059,10 +1083,6 @@ PrefabInstance:
     - target: {fileID: 984604953044427423, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2926996684056065664, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
-      propertyPath: speed
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
       propertyPath: m_Name
