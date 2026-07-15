@@ -24,6 +24,7 @@ public class Parallax : MonoBehaviour
 
     void Start()
     {
+        #region throw
         if (cam == null)
         {
             if (Camera.main != null)
@@ -46,7 +47,9 @@ public class Parallax : MonoBehaviour
                 }
             }
         }
+        #endregion
 
+        #region Init
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null && spriteRenderer.sprite != null)
         {
@@ -61,12 +64,13 @@ public class Parallax : MonoBehaviour
         mapManager = FindAnyObjectByType<MapManager>();
         startPos = transform.position;
         startCamPos = cam.position;
+        #endregion
     }
 
     private void LateUpdate()
     {
         Vector3 camMoveDistance = cam.position - startCamPos;
-        bool isYParallaxActive = mapManager != null && mapManager.CurrentPhaseIndex >= 1;
+        bool isYParallaxActive = mapManager != null && mapManager.CurrentLogicalPhase >= 1;
 
         // 원근감 최종 오프셋 계산
         float distX = camMoveDistance.x * (1 - parallaxEffectX);
