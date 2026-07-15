@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,6 +18,13 @@ public class MonsterController : MonoBehaviour
 
     [Header("Obstacle Layer")]
     public LayerMask _obstacleLayer;
+
+    [Header("Mark Object")]
+    public GameObject QuestionMark;
+    public GameObject ExclamationMark;
+
+
+
 
     #endregion
 
@@ -46,6 +54,8 @@ public class MonsterController : MonoBehaviour
     // 뒤집기 bool
     private bool onFlip;
 
+    private string _name;
+
     private Vector2 _frontVector;  // 앞 방향 저장 // (1,0)이면 오른쪽 (-1,0)이면 왼쪽
     private Vector2 _mToPlayer;
     private Vector2 _mToPlayerDistance; // 거리
@@ -66,6 +76,10 @@ public class MonsterController : MonoBehaviour
 
     #region Properties
 
+    public string Name 
+    {
+        get { return _name; }
+    }
     public float Speed
     {
         get { return _speed; }
@@ -99,7 +113,14 @@ public class MonsterController : MonoBehaviour
     public bool IsDead
     {
         get { return isDead; }
-        set { isDead = value; }
+        set 
+        { 
+            isDead = value;
+            if (isDead) 
+            {
+                ObjectPoolManager.Instance.MonsterPush(gameObject);
+            }
+        }
     }
 
     public bool IsHurt
@@ -140,7 +161,7 @@ public class MonsterController : MonoBehaviour
     {
         get
         {
-            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue /*&& !CheckForObstacles()*/);
+            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
         }
     }
 
@@ -205,6 +226,7 @@ public class MonsterController : MonoBehaviour
         _speed = MonsterData.Speed;
         _maxSpeed = MonsterData.MaxSpeed;
         _force = MonsterData.Force;
+        _name = MonsterData.Name;
 
         isDead = false;
         //isFounded = false;
@@ -221,11 +243,15 @@ public class MonsterController : MonoBehaviour
         _renderer.flipX = onFlip;
 
 
-        _monsterMachine = MonsterAiBrain.MakeMachine(MonsterData.Name, this);
-
         _playerTransform = Player.GetComponent<Transform>();
         _playerRadius = Player.GetComponent<CapsuleCollider2D>().size.y/2;
         _monsterTransform = this.GetComponent<Transform>();
+
+        _monsterMachine = MonsterAiBrain.MakeMachine(_name, this);
+
+
+        SetExclamationMark(false);
+        SetQuestionMark(true);
 
     }
 
@@ -237,7 +263,6 @@ public class MonsterController : MonoBehaviour
         {
             return;
         }
-
         CaculateMonsterToPlayerVector();
         _monsterMachine.Update();
 
@@ -287,7 +312,7 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "PlayerAttack")
+        if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
         {
             isHurt = true;
             // 일단 float -> int로 
@@ -298,11 +323,17 @@ public class MonsterController : MonoBehaviour
 
             if (_hp <= 0)
             {
-                isDead = true;
+                IsDead = true;
             }
 
 
         }
+
+        if (collision.CompareTag("Boss")) 
+        {
+            IsDead = true;
+        }
+
     }
 
     //private void OnCollisionEnter2D(Collision2D collision)
@@ -342,7 +373,7 @@ public class MonsterController : MonoBehaviour
 
         if (hit.collider != null)
         {
-            if (hit.collider.CompareTag("Untagged"))
+            if (hit.collider.CompareTag("Ground"))
             {
 
                 return true;
@@ -352,4 +383,18 @@ public class MonsterController : MonoBehaviour
 
         return false;
     }
+
+    public void SetQuestionMark(bool active)
+    {
+        QuestionMark.SetActive(active);
+    }
+
+    public void SetExclamationMark(bool active)
+    {
+        ExclamationMark.SetActive(active);
+    }
+
+
+
+
 }

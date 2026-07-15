@@ -535,7 +535,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.5431938, y: 0}
+  m_Offset: {x: -0.5431938, y: 1.3202567}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -545,7 +545,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.7814407, y: 0.73316765}
+  m_Size: {x: 1.7814407, y: 3.7317152}
   m_EdgeRadius: 0
 --- !u!114 &6768912978302454173
 MonoBehaviour:
@@ -788,9 +788,9 @@ GameObject:
   - component: {fileID: 7511406161714308295}
   - component: {fileID: 7490724380618690103}
   - component: {fileID: 3452967155236221581}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: MapChenk_A
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -865,7 +865,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 15.135885, y: -1.9607234}
+  m_Offset: {x: 13.660208, y: -0.38627863}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -875,7 +875,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 47.417545, y: 6.63708}
+  m_Size: {x: 61.800365, y: 12.607369}
   m_EdgeRadius: 0
 --- !u!1001 &60824186324269026
 PrefabInstance:

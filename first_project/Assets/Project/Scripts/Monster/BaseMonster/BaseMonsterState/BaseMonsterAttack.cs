@@ -57,8 +57,9 @@ public class BaseMonsterAttack : IMonsterState
 
             Vector2 myPos = _ownerTransform.position;
 
-             Vector2 fireDir = _owner.GetMToP;
+            Vector2 fireDir = _owner.GetMToP;
 
+            myPos.y += 0.5f;
     
             // 총알 발사 (시작위치, 발사방향, 속도 8f)
             bullet.Launch(myPos, fireDir, 8f);
