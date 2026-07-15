@@ -1,13 +1,27 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ObjectPoolManager : Singleton<ObjectPoolManager>
 {
+    [Header("Player")]
+    public GameObject Player;
+
+    [Header("Boss")]
+    public GameObject Boss;
+
+
     [Header("Monster Bullet Prefab")]
     [SerializeField] private GameObject _monsterBulletPrefab;
 
+    [Header("Monster Prefab")]
+    [SerializeField] private GameObject _monsterBirdPrefab;
+    [SerializeField] private GameObject _monsterBasePrefab;
 
-    private List<GameObject> _monsterBulletPool = new List<GameObject>();
+    [Header("Tentacle Prefab")]
+    [SerializeField] private GameObject _tentaclePrefab;
+
+
 
 
     [Header("총알 설정")]
@@ -16,16 +30,49 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
     private Queue<GameObject> bulletPool = new Queue<GameObject>();
     
+
+    private Queue<GameObject> _monsterBulletPool = new Queue<GameObject>();
+    private Queue<GameObject> _monsterBirdPool = new Queue<GameObject>();
+    private Queue<GameObject> _monsterBasePool = new Queue<GameObject>();
+    private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         InitializePool();
         
+        // 몬스터 총알 생성
         for (int i = 0; i < 20; i++)
         {
             GameObject obj = Instantiate(_monsterBulletPrefab, this.transform);
             obj.SetActive(false); // 비활성화 상태로 대기
-            _monsterBulletPool.Add(obj); // 리스트에 추가
+            _monsterBulletPool.Enqueue(obj); // 리스트에 추가
+        }
+        // Base 몬스터 생성
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(_monsterBasePrefab, this.transform);
+            obj.GetComponent<MonsterController>().Player = Player;
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _monsterBasePool.Enqueue(obj); // 리스트에 추가
+        }
+        // Bird 몬스터 생성
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(_monsterBirdPrefab, this.transform);
+            obj.GetComponent<MonsterController>().Player = Player;
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _monsterBirdPool.Enqueue(obj); // 리스트에 추가
+        }
+        // Tentacle 생성
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(_tentaclePrefab, this.transform);
+            obj.GetComponent<TentacleController>().Boss = Boss.GetComponent<BossController>();
+            obj.GetComponent<TentacleController>().Body = Boss.GetComponent<BodyController>();
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _tentaclePool.Enqueue(obj); // 리스트에 추가
         }
     }
 
@@ -33,14 +80,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     // 풀에서 총알 가져오는 함수
     public GameObject MonsterBulletPop()
     {
-        for (int i = 0; i < _monsterBulletPool.Count; i++)
+
+        if (_monsterBulletPool.Count > 0) 
         {
-            // 꺼져있는(놀고있는) 총알을 발견하면
-            if (_monsterBulletPool[i].activeSelf == false)
-            {
-                _monsterBulletPool[i].SetActive(true); // 켜서
-                return _monsterBulletPool[i];          // 내보내기
-            }
+            GameObject obj = _monsterBulletPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
         }
 
         return null;
@@ -51,8 +96,76 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         if (obj == null) return;
 
-        obj.SetActive(false); // 꺼서 다시 재사용 대기 상태로 만들기
+        obj.SetActive(false);
+        _monsterBulletPool.Enqueue(obj);
+
     }
+
+    // 풀에서 Base 몬스터 가져오는 함수
+    public GameObject MonsterBasePop()
+    {
+
+        if (_monsterBasePool.Count > 0)
+        {
+            GameObject obj = _monsterBasePool.Dequeue();
+            return obj;
+        }
+
+        return null;
+    }
+
+    // 풀에서 Bird 몬스터 가져오는 함수
+    public GameObject MonsterBirdPop()
+    {
+
+        if (_monsterBirdPool.Count > 0)
+        {
+            GameObject obj = _monsterBirdPool.Dequeue();
+            return obj;
+        }
+
+        return null;
+    }
+
+    // 몬스터를 다시 풀에 반환하는 함수
+    public void MonsterPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+
+        if (obj.GetComponent<MonsterController>().Name == "Base")
+        {
+            _monsterBasePool.Enqueue(obj);
+        }
+        else
+        {
+            _monsterBirdPool.Enqueue(obj);
+        }
+
+    }
+
+
+    // 풀에서 가져오는 함수
+    public GameObject TentaclePop(bool trap = false)
+    {
+        if (_tentaclePool.Count > 0)
+        {
+            GameObject obj = _tentaclePool.Dequeue();
+            obj.GetComponent<TentacleController>().isTrap = trap;
+            return obj;
+        }
+
+        return null;
+    }
+
+    // 다시 풀에 반환하는 함수
+    public void TentaclePush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _tentaclePool.Enqueue(obj);
+    }
+
 
     // 게임 시작 시 풀을 미리 채워둡니다.
     private void InitializePool()

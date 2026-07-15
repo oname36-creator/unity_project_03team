@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.U2D.IK;
 
 [RequireComponent(typeof(LineRenderer), typeof(EdgeCollider2D))]
 public class TentacleController : MonoBehaviour
@@ -11,13 +12,21 @@ public class TentacleController : MonoBehaviour
     [Header("Tentacle IK Setting")]
     public int segmentLength = 15;        // 촉수 마디 개수
     public float segmentDistance = 0.5f;  // 마디 사이의 간격
-    public float smoothSpeed = 0.05f;     // 끝단이 목표로 이동하는 속도
-
+    public float smoothSpeed = 0.05f;     // 끝단이 목표로 이동하
+    // FABRIK 연산 반복 횟수 (보통 2~3회면 충분히 자연스럽게 수렴)
+    public int iterations = 3;
 
 
     [Header("Components")]
     public Transform tentacleRoot;        // 촉수가 시작되는 위치 (보스 몸통 등)
     public Transform grabberHead;         // 물건을 잡을 트리거가 있는 실제 오브젝트
+
+    [Header("Effects")]
+    public SpriteRenderer warningEffectRenderer;
+
+    [Header("Trap")]
+    public bool isTrap = false;
+
 
     private LineRenderer _lineRend;
     private EdgeCollider2D _edgeCollider;
@@ -47,6 +56,12 @@ public class TentacleController : MonoBehaviour
         get { return  grabberHead; }
     }
 
+    public int PrevSegmentLength { get; set; }
+
+    public float TentacleLength 
+    {
+        get { return segmentLength * segmentDistance; }
+    }
 
     public bool IsAttach
     {
@@ -60,29 +75,96 @@ public class TentacleController : MonoBehaviour
         set { _isSearch = value; }
     }
 
+    public bool IsDead 
+    {
+        get { return _isDead; }
+        set { _isDead = value; }
+    }
+
+    public bool IsAttackTentacle { get; set; }
+
+    public bool Attack { get; set; }
+
+    public bool IsReturn { get; set; } = false;
+
+    public bool Set { get; set; } = true;
+    public Vector2 RootPos {  get; set; } = Vector2.zero;
+
+    public GameObject Target { get; set; } 
 
 
 
     void Start()
     {
+        Set = false;
+
+        Debug.Log("Tentacle Start");
         _lineRend = GetComponent<LineRenderer>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
         _lineRend.positionCount = segmentLength;
         _segmentPos = new Vector2[segmentLength];
         _segmentVelocity = new Vector2[segmentLength];
+        PrevSegmentLength = segmentLength;
 
-        // 초기 위치 세팅
-        for (int i = 0; i < segmentLength; i++)
+        IsAttackTentacle = false;
+        Attack = false;
+
+
+
+        tentacleRoot = Boss.transform;
+        if (tentacleRoot != null && !Target)
         {
-            _segmentPos[i] = tentacleRoot.position;
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = tentacleRoot.position;
+            }
+            IkTargetPosition = tentacleRoot.position;
         }
-        IkTargetPosition = tentacleRoot.position;
-
-
-
-
+        else if (RootPos != Vector2.zero && Target)
+        {
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = RootPos;
+            }
+            IkTargetPosition = RootPos;
+        }
         _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
+    }
+
+    private void OnEnable()
+    {
+        if (Set) 
+        {
+            return;
+        }
+        
+        IsAttackTentacle = false;
+        Attack = false;
+
+        if (tentacleRoot == null && !Target)
+        {
+            tentacleRoot = Boss.transform;
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = tentacleRoot.position;
+            }
+            IkTargetPosition = tentacleRoot.position;
+        }
+        else if (RootPos != Vector2.zero && Target)
+        {
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = RootPos;
+            }
+            IkTargetPosition = RootPos;
+        }
+
+
     }
 
     void Update()
@@ -100,27 +182,53 @@ public class TentacleController : MonoBehaviour
 
     private void UpdateIK()
     {
-        // 1. 끝단(Head)은 목표 위치(IkTargetPosition)를 향해 부드럽게 이동
-        _segmentPos[0] = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
 
-        // 2. 나머지 마디들은 앞의 마디를 일정 간격을 두고 따라감
-        for (int i = 1; i < segmentLength; i++)
+        Vector2 targetPos = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
+
+        for (int iter = 0; iter < iterations; iter++)
         {
-            Vector2 targetPos = _segmentPos[i - 1] + (_segmentPos[i] - _segmentPos[i - 1]).normalized * segmentDistance;
-            _segmentPos[i] = Vector2.SmoothDamp(_segmentPos[i], targetPos, ref _segmentVelocity[i], smoothSpeed);
+            // ==========================================
+            // [Phase 1] Backward Reaching (끝단 -> 루트 방향)
+            // ==========================================
+
+            // 끝단(0번 인덱스)을 목표 위치(targetPos)에 강제로 맞춥니다.
+            _segmentPos[0] = targetPos;
+
+            for (int i = 1; i < segmentLength; i++)
+            {
+                // 현재 마디가 앞 마디(목표 쪽)를 향하는 방향 벡터
+                Vector2 dir = (_segmentPos[i] - _segmentPos[i - 1]).normalized;
+
+                // 앞 마디에서 지정된 간격(segmentDistance)만큼 떨어진 곳으로 현재 마디 이동
+                _segmentPos[i] = _segmentPos[i - 1] + dir * segmentDistance;
+            }
+
+            // ==========================================
+            // [Phase 2] Forward Reaching (루트 -> 끝단 방향)
+            // ==========================================
+
+            // Phase 1을 거치면 마지막 마디(루트)가 원래 있어야 할 위치(tentacleRoot)에서 벗어납니다.
+            // 따라서 마지막 마디를 다시 텐타클의 진짜 루트 위치에 강제로 맞춥니다.
+            _segmentPos[segmentLength - 1] = tentacleRoot.position;
+
+            // 역방향으로 다시 간격을 맞춰줍니다.
+            for (int i = segmentLength - 2; i >= 0; i--)
+            {
+                // 현재 마디가 뒤 마디(루트 쪽)를 향하는 방향 벡터
+                Vector2 dir = (_segmentPos[i] - _segmentPos[i + 1]).normalized;
+
+                // 뒤 마디에서 지정된 간격(segmentDistance)만큼 떨어진 곳으로 현재 마디 이동
+                _segmentPos[i] = _segmentPos[i + 1] + dir * segmentDistance;
+            }
         }
 
-        // 3. (선택) 시작점을 보스 몸통(Root)에 고정하고 싶다면 FABRIK 알고리즘처럼 역순으로 다시 맞춰야 하지만,
-        // 단순하고 자연스러운 움직임을 위해 마지막 마디를 Root에 강제 고정
-        _segmentPos[segmentLength - 1] = tentacleRoot.position;
-
-        // 렌더러 업데이트
+        // 2. 렌더러 업데이트
         for (int i = 0; i < segmentLength; i++)
         {
             _lineRend.SetPosition(i, _segmentPos[i]);
         }
 
-        // Grabber 오브젝트(끝단) 위치 동기화
+        // 3. Grabber 오브젝트(끝단) 위치 동기화
         if (grabberHead != null)
         {
             grabberHead.position = _segmentPos[0];
@@ -139,6 +247,42 @@ public class TentacleController : MonoBehaviour
         _edgeCollider.SetPoints(colliderPoints);
     }
 
+    public void UpdateSegmentLength(int newLength)
+    {
+        if (segmentLength == newLength) return;
+
+        int oldLength = segmentLength;
+        segmentLength = newLength;
+
+        // 라인 렌더러 점 개수 업데이트
+        if (_lineRend != null)
+        {
+            _lineRend.positionCount = segmentLength;
+        }
+
+        // 새 길이의 배열 생성
+        Vector2[] newPos = new Vector2[segmentLength];
+        Vector2[] newVel = new Vector2[segmentLength];
+
+        for (int i = 0; i < segmentLength; i++)
+        {
+            if (i < oldLength && _segmentPos != null)
+            {
+                // 기존 위치 데이터가 있으면 그대로 복사
+                newPos[i] = _segmentPos[i];
+                newVel[i] = _segmentVelocity[i];
+            }
+            else
+            {
+                // 새로 늘어난 마디들은 루트 위치로 초기화
+                newPos[i] = tentacleRoot != null ? (Vector2)tentacleRoot.position : Vector2.zero;
+            }
+        }
+
+        // 기존 배열을 새 배열로 덮어쓰기
+        _segmentPos = newPos;
+        _segmentVelocity = newVel;
+    }
 
 
 

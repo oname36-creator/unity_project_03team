@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 7148901630841227901}
   m_Layer: 3
   m_Name: MapChenk_D
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -480,6 +480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapChunk
   startPosition: {fileID: 6763402707723167686}
   endPosition: {fileID: 472916033784187126}
+  cameraBoundaryCollider: {fileID: 0}
 --- !u!1 &4329006572359026784
 GameObject:
   m_ObjectHideFlags: 0

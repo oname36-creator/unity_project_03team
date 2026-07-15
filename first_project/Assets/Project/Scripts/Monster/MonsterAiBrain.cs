@@ -306,9 +306,13 @@ public class MonsterAiBrain
 
         IMonsterState idle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
+        IMonsterState create = new BodyCreateTentacle(owner);
+
         // 보스룸 상태 추가할 예정
 
         initialState = idle;
+
+        // Todo : Boss가 원하면 촉수 무한 생성 
 
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
@@ -316,7 +320,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.Boss.Attached;
+                        return owner.Move;
                     },
                     targetState:move
                     )
@@ -330,9 +334,26 @@ public class MonsterAiBrain
                         return !owner.Move;
                     },
                     targetState:idle
+                    ),
+                new Transition(
+                    condition : () =>
+                    {
+                        return owner.Create;
+                    },
+                    targetState: create
                     )
             };
 
+        transitionMap[create] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.Create;
+                    },
+                    targetState:move
+                    )
+            };
 
         initialState.Enter();
         return new MonsterStateMachine(initialState, transitionMap);
@@ -349,24 +370,37 @@ public class MonsterAiBrain
         IMonsterState idle = new TentacleIdle(owner);
         IMonsterState stretch = new TentacleStretch(owner);
         IMonsterState attach = new TentacleAttach(owner);
+        IMonsterState up = new TentacleUp(owner);
+        IMonsterState attack = new TentacleAttack(owner);
+        IMonsterState trapIdle = new TentacleTrap(owner);
+        IMonsterState trapAction = new TentacleTrapAction(owner);
+        IMonsterState re = new TentacleReturn(owner);
 
         initialState = idle;
 
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
             {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.isTrap;
+                    },
+                    targetState:trapIdle
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsAttackTentacle;
+                    },
+                    targetState:up
+                    ),
+
                 new Transition(
                     condition: () =>
                     {
                         return owner.IsSearch;
-                    },
-                    targetState:stretch
-                    ),
-                
-                new Transition(
-                    condition: () =>
-                    {
-                        return owner.Boss.Attached;
                     },
                     targetState:stretch
                     )
@@ -396,13 +430,74 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return !owner.IsAttach;;
+                        return !owner.IsAttach;
                     },
                     targetState:idle
                     )
             };
 
+        transitionMap[up] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Attack;;
+                    },
+                    targetState:attack
+                    )
+            };
 
+
+        transitionMap[attack] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.Attack;
+                    },
+                    targetState:attach
+                    )
+            };
+        transitionMap[trapIdle] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Attack;
+                    },
+                    targetState:trapAction
+                    )
+            };
+
+        transitionMap[trapAction] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsAttach;
+                    },
+                    targetState:attach
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.Attack;
+                    },
+                    targetState:re
+                    )
+
+            };
+        transitionMap[re] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.isTrap;
+                    },
+                    targetState:idle
+                    )
+            };
 
 
         initialState.Enter();
