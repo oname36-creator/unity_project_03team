@@ -239,11 +239,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         {
             if (status == null || status.isDead) return;
 
-            // 💡 [새로운 스텝] 공격하기 전에, 내가 바라보는 방향(facingDirectionX)에 맞춰 
-            // 두 히트박스의 X축 위치(localPosition)를 정방향 혹은 반대방향으로 꺾어줍니다.
-           /* FlipHitboxPosition(attackHitboxObj);
-            FlipHitboxPosition(swordAttackHitboxObj);*/
-
             // 1. 총을 들고 있고, 총알이 남아있는가?
             if (status.hasGun)
             {
@@ -343,13 +338,21 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        // 💡 [수정] Boss 레이어이거나 Boss 태그를 가진 오브젝트와 충돌 시 즉시 사망 처리
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.CompareTag("Boss"))
         {
-            Debug.Log("💀 [즉사] Boss 레이어 오브젝트와 충돌하여 즉시 사망합니다.");
-            status.ChangeHp(-status.maxHp); // 체력을 최대 체력만큼 통째로 깎아 Die() 호출 유도
+            Debug.Log("💀 [즉사] Boss 오브젝트(레이어/태그)와 충돌하여 즉시 사망합니다.");
 
+            // 1. 데이터 매니저의 HP 값을 즉시 0으로 만듭니다.
+            if (DataManager.Instance != null)
+            {
+                DataManager.Instance.PlayerHp = 0;
+            }
+            status.ChangeHp(-status.currentHp);
+
+            // 3. 만약 발판에 타 있었다면 부모 관계 해제
             if (transform.parent != null) transform.SetParent(null);
-            return; 
+            return;
         }
 
         if (status.isInvincible) return;
@@ -357,13 +360,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                                     (swordAttackHitboxObj != null && swordAttackHitboxObj.activeSelf);
         if (isCurrentlyAttacking) return;
 
-        // 💡 오직 순수하게 "Monster" 레이어를 가진 무언가가 내 몸통 트리거에 들어왔을 때만 피격!
+        // 오직 순수하게 "Monster" 레이어를 가진 무언가가 내 몸통 트리거에 들어왔을 때만 피격!
         if (collision.gameObject.layer == LayerMask.NameToLayer("Monster") && collision.CompareTag(enemyTag))
         {
             status.ChangeHp(-10f);
             if (DataManager.Instance != null) DataManager.Instance.PlayerHp = (int)status.currentHp;
 
-            Debug.Log($"💥 [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
+            Debug.Log($" [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
 
             if (!status.isDead)
             {
@@ -384,8 +387,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         _currentPlatformTransform = null;
 
-        // 💡 [최종 치트키] 1초 무적 동안 내 몸통의 Collider를 잠시 껐다 켭니다!
-        // 이렇게 하면 내 몸에 물리적으로 비벼지며 겹쳐있던 모든 중복 충돌 신호가 "강제로 증발"합니다.
         Collider2D myCollider = GetComponent<Collider2D>();
         if (myCollider != null)
         {
@@ -401,8 +402,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.4f, JumpForce * 0.2f), ForceMode2D.Impulse);
         }
 
-        // 💡 넉백 힘이 다 들어갈 수 있도록 물리적으로 아주 잠깐만 대기 후, 콜라이더를 다시 안전하게 켭니다.
-        // 이때는 이미 'IgnoreLayerCollision'이나 무적 상태가 작동하므로 안전합니다.
         yield return new WaitForFixedUpdate();
 
         if (myCollider != null)
@@ -489,23 +488,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             false
         );
     }
-    private void FlipHitboxPosition(GameObject hitboxObj)
-    {
-        if (hitboxObj == null) return;
-
-        // 현재 자식 히트박스의 상대적 위치(localPosition)를 가져옵니다.
-        Vector3 currentPos = hitboxObj.transform.localPosition;
-
-        // 무조건 원래 가있어야 할 절대적인 거리 값(절댓값)을 구합니다.
-        float baseDistance = Mathf.Abs(currentPos.x);
-
-        // 바라보는 방향(1 또는 -1)을 곱해서 왼쪽/오른쪽 위치를 정해줍니다.
-        // 만약 원래 위치가 0이라면 플레이어 중심에 있는 것이므로 굳이 안 움직여도 됩니다.
-        if (baseDistance > 0.01f)
-        {
-            currentPos.x = baseDistance * facingDirectionX;
-            hitboxObj.transform.localPosition = currentPos;
-        }
-    }
+   
 
 }
