@@ -87,25 +87,29 @@ public class TentacleController : MonoBehaviour
 
     public bool IsReturn { get; set; } = false;
 
-    public bool Set { get; set; } = true;
     public Vector2 RootPos {  get; set; } = Vector2.zero;
 
-    public GameObject Target { get; set; } 
+    public GameObject Target { get; set; }
 
 
-
-    void Start()
+    void Awake()
     {
-        Set = false;
-
-        Debug.Log("Tentacle Start");
         _lineRend = GetComponent<LineRenderer>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
-        _lineRend.positionCount = segmentLength;
+        // 외부(Boss)에서 SetRootPos 등을 호출하기 전에 배열이 무조건 준비되어 있도록 여기서 생성!
         _segmentPos = new Vector2[segmentLength];
         _segmentVelocity = new Vector2[segmentLength];
         PrevSegmentLength = segmentLength;
+    }
+
+    void Start()
+    {
+
+        Debug.Log("Tentacle Start");
+
+        _lineRend.positionCount = segmentLength;
+
 
         IsAttackTentacle = false;
         Attack = false;
@@ -122,27 +126,14 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
-        else if (RootPos != Vector2.zero && Target)
-        {
-            // 초기 위치 세팅
-            for (int i = 0; i < segmentLength; i++)
-            {
-                _segmentPos[i] = RootPos;
-            }
-            IkTargetPosition = RootPos;
-        }
+
+        
         _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
-    private void OnEnable()
+    void Update()
     {
-        if (Set) 
-        {
-            return;
-        }
-        
-        IsAttackTentacle = false;
-        Attack = false;
+        if (_isDead) return;
 
         if (tentacleRoot == null && !Target)
         {
@@ -154,22 +145,7 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
-        else if (RootPos != Vector2.zero && Target)
-        {
-            // 초기 위치 세팅
-            for (int i = 0; i < segmentLength; i++)
-            {
-                _segmentPos[i] = RootPos;
-            }
-            IkTargetPosition = RootPos;
-        }
 
-
-    }
-
-    void Update()
-    {
-        if (_isDead) return;
         _monsterMachine.Update();
     }
 
@@ -179,6 +155,26 @@ public class TentacleController : MonoBehaviour
         UpdateIK();
         UpdateColliders();
     }
+
+
+    public void SetRootPos(Vector3 pos)
+    {
+        if (isTrap)
+        {
+            Debug.Log("Tentacle SetRootPos");
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = pos;
+            }
+            IkTargetPosition = pos;
+
+            RootPos = pos;
+        }
+    }
+
+
+
 
     private void UpdateIK()
     {
@@ -206,10 +202,11 @@ public class TentacleController : MonoBehaviour
             // ==========================================
             // [Phase 2] Forward Reaching (루트 -> 끝단 방향)
             // ==========================================
+            Vector2 basePosition = isTrap ? RootPos : (Vector2)tentacleRoot.position;
 
             // Phase 1을 거치면 마지막 마디(루트)가 원래 있어야 할 위치(tentacleRoot)에서 벗어납니다.
             // 따라서 마지막 마디를 다시 텐타클의 진짜 루트 위치에 강제로 맞춥니다.
-            _segmentPos[segmentLength - 1] = tentacleRoot.position;
+            _segmentPos[segmentLength - 1] = basePosition;
 
             // 역방향으로 다시 간격을 맞춰줍니다.
             for (int i = segmentLength - 2; i >= 0; i--)

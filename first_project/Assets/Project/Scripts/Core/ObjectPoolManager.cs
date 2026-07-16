@@ -148,6 +148,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     // 풀에서 가져오는 함수
     public GameObject TentaclePop(bool trap = false)
     {
+        Debug.Log($"[풀 확인] 현재 남은 촉수 갯수: {_tentaclePool.Count}"); // 이 로그를 추가!
         if (_tentaclePool.Count > 0)
         {
             GameObject obj = _tentaclePool.Dequeue();

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3871306136817381185}
   - component: {fileID: 8888647828897842266}
   - component: {fileID: 1217820103569145571}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Tentacle_1
-  m_TagString: Boss
+  m_TagString: Tentacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -219,6 +219,7 @@ MonoBehaviour:
   tentacleRoot: {fileID: 0}
   grabberHead: {fileID: 3134757436429879636}
   warningEffectRenderer: {fileID: 3648393652919115768}
+  isTrap: 0
 --- !u!114 &1217820103569145571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,9 +245,9 @@ GameObject:
   - component: {fileID: 6088672967716364389}
   - component: {fileID: 5986897576048584658}
   - component: {fileID: 3959148784336028580}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Grabber
-  m_TagString: Boss
+  m_TagString: Tentacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -397,6 +398,10 @@ PrefabInstance:
     - target: {fileID: 8207907280779474896, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
       propertyPath: m_Name
       value: WarringEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8207907280779474896, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8207907280779474896, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
       propertyPath: m_IsActive

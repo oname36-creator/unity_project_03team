@@ -16,8 +16,8 @@ public class TentacleTrap : IMonsterState
     // 설정 가능한 연출 변수들
     private float _moveSmoothTime = 0.3f;   // Y축 이동 속도 (기존 _moveSpeedTime 대체)
     private float _scaleSmoothTime = 0.3f;  // Y축 크기 증가 속도 (새로 추가)
-    private float _targetYOffset = 2.0f;    // 위로 얼마나 이동할지 (+y offset)
-    private float _targetYScale = 5.0f;     // Y축으로 최대 얼마나 길어질지
+    private float _targetYOffset = 10f;    // 위로 얼마나 이동할지 (+y offset)
+    private float _targetYScale = 15.0f;     // Y축으로 최대 얼마나 길어질지
 
     private float _currentYScale = 1.0f;    // 현재 실시간 Y축 크기 저장용 변수 추가
 
@@ -34,9 +34,17 @@ public class TentacleTrap : IMonsterState
 
     public void Enter()
     {
+        Debug.Log("TentacleTrap Enter");
         _owner.IsReturn = false;
+        _owner.Attack = false;
+        _owner.IsAttach = false;
+
         _rootPos = _owner.RootPos;
         _time = 0f; // 상태 진입 시 타이머 초기화
+
+        _owner.UpdateSegmentLength(1);
+        _owner.segmentDistance = 0.1f;
+
 
         if (_owner.warningEffectRenderer != null)
         {

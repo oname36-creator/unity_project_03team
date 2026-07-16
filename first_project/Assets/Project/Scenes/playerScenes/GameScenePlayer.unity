@@ -220,7 +220,7 @@ Transform:
   m_GameObject: {fileID: 254258346}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 1.34, z: -10}
+  m_LocalPosition: {x: 5.36, y: 1.34, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -255,7 +255,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98eee7c6bc40cb44b2de217c6c5d793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
+  Player: {fileID: 0}
+  Boss: {fileID: 0}
   _monsterBulletPrefab: {fileID: 345861578278468913, guid: d2d71bb5923757d40bc40464e05f6a47, type: 3}
+  _monsterBirdPrefab: {fileID: 0}
+  _monsterBasePrefab: {fileID: 0}
+  _tentaclePrefab: {fileID: 0}
   bulletPrefab: {fileID: 3659256970342430975, guid: 264cbe8faece70542868e1963988aefb, type: 3}
   poolSize: 20
 --- !u!4 &284106635
@@ -1025,7 +1030,7 @@ Transform:
   m_GameObject: {fileID: 1376986656}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 1.34, z: -10}
+  m_LocalPosition: {x: 5.36, y: 1.34, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2139,10 +2144,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4403008497184822657, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
-      propertyPath: baseDamage
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 4602153000674934412, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2170,3 +2171,4 @@ SceneRoots:
   - {fileID: 1719398702}
   - {fileID: 1511833965}
   - {fileID: 1278116539}
+  - {fileID: 2054929525}
