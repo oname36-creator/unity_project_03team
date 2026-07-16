@@ -39,10 +39,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private ItemEffectApplicator itemApplicator;
     private Rigidbody2D rb;
 
+    // ★ [애니메이션 추가] 애니메이터 컴포넌트를 저장할 변수 선언
+    private Animator animator;
+
     private PlayerAction controls;
     private Vector2 moveInput;
 
-    private System.Collections.Generic.List<MovingPlatform> _activePlatforms = new System.Collections.Generic.List<MovingPlatform>(); // 리스트로 변경
+    private System.Collections.Generic.List<MovingPlatform> _activePlatforms = new System.Collections.Generic.List<MovingPlatform>();
     private Transform _currentPlatformTransform = null;
 
     private float facingDirectionX = 1f;
@@ -63,6 +66,9 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         status = GetComponent<PlayerStatus>();
         itemApplicator = GetComponent<ItemEffectApplicator>();
         rb = GetComponent<Rigidbody2D>();
+
+        // ★ [애니메이션 추가] 플레이어 오브젝트의 Animator 컴포넌트를 가져옵니다.
+        animator = GetComponent<Animator>();
     }
 
     void OnEnable()
@@ -97,13 +103,24 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.isAerial = !status.isGrounded;
 
-  
+        float myTargetScale = 0.5f;
+
         if (moveInput.x != 0f)
         {
             facingDirectionX = Mathf.Sign(moveInput.x); // 오른쪽이면 1, 왼쪽이면 -1
 
-           
-            transform.localScale = new Vector3(facingDirectionX, 1f, 1f);
+            // ★ X축에는 방향과 크기 비율을 곱해주고, Y축에도 크기 비율을 넣어줍니다.
+            transform.localScale = new Vector3(facingDirectionX * myTargetScale, myTargetScale, 1f);
+        }
+
+        // ★ [애니메이션 추가] 애니메이터 파라미터 업데이트
+        if (animator != null)
+        {
+            // moveInput.x의 절대값을 구합니다. (왼쪽이든 오른쪽이든 움직이면 양수값이 나옵니다)
+            float inputSpeed = Mathf.Abs(moveInput.x);
+
+            // 앞서 유니티 에디터에서 만든 "Speed" 파라미터에 값을 전달합니다.
+            animator.SetFloat("Speed", inputSpeed);
         }
 
         if (playerPosData != null)
@@ -160,7 +177,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         float platformXVelocity = 0f;
 
-        // 만약 내가 누군가의 자식(즉, 발판 위)에 있다면, 부모 발판의 속도를 가로챕니다.
         if (transform.parent != null)
         {
             if (transform.parent.TryGetComponent<MovingPlatform>(out var platform))
@@ -169,14 +185,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
 
-        // 최종 속도 적용: 내 순수 이동 속도에 발판 속도를 명확하게 더해줍니다!
         rb.linearVelocity = new Vector2(currentMoveX + platformXVelocity, currentVelocityY);
     }
 
     public void SetActivePlatform(MovingPlatform platform)
     {
-      
-        //  새 코드: 발판 코드를 건들지 않고, 전달받은 platform 오브젝트를 부모로 삼습니다.
         if (platform != null)
         {
             _currentPlatformTransform = platform.transform;
@@ -186,8 +199,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     public void ClearActivePlatform(MovingPlatform platform)
     {
-        
-        //  새 코드: 내가 밟고 있던 부모 발판이 맞다면 자식 관계를 안전하게 해제합니다.
         if (platform != null && _currentPlatformTransform == platform.transform)
         {
             if (transform.parent == _currentPlatformTransform)
@@ -197,7 +208,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             _currentPlatformTransform = null;
         }
     }
-
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -239,7 +249,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         {
             if (status == null || status.isDead) return;
 
-            // 1. 총을 들고 있고, 총알이 남아있는가?
             if (status.hasGun)
             {
                 Debug.Log("총기 발사!");
@@ -256,7 +265,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 return;
             }
 
-            // 2. 검 장착 상태 체크
             if (status.hasSword)
             {
                 Debug.Log("검 공격 발동! (검 히트박스 활성화)");
@@ -265,7 +273,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 return;
             }
 
-            // 3. 둘 다 없다면 확실하게 맨손 공격
             Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
             StartCoroutine(AttackHitboxRoutine());
             status.OnAttackExecute();
@@ -338,19 +345,16 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
-        // 💡 [수정] Boss 레이어이거나 Boss 태그를 가진 오브젝트와 충돌 시 즉시 사망 처리
         if (collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.CompareTag("Boss"))
         {
             Debug.Log("💀 [즉사] Boss 오브젝트(레이어/태그)와 충돌하여 즉시 사망합니다.");
 
-            // 1. 데이터 매니저의 HP 값을 즉시 0으로 만듭니다.
             if (DataManager.Instance != null)
             {
                 DataManager.Instance.PlayerHp = 0;
             }
             status.ChangeHp(-status.currentHp);
 
-            // 3. 만약 발판에 타 있었다면 부모 관계 해제
             if (transform.parent != null) transform.SetParent(null);
             return;
         }
@@ -360,7 +364,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                                     (swordAttackHitboxObj != null && swordAttackHitboxObj.activeSelf);
         if (isCurrentlyAttacking) return;
 
-        // 오직 순수하게 "Monster" 레이어를 가진 무언가가 내 몸통 트리거에 들어왔을 때만 피격!
         if (collision.gameObject.layer == LayerMask.NameToLayer("Monster") && collision.CompareTag(enemyTag))
         {
             status.ChangeHp(-10f);
@@ -375,7 +378,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
     }
 
-    // ★ [개선] 넉백 힘 강화 및 무적 시간 동안 몬스터 완전 통과 처리
     private System.Collections.IEnumerator KnockbackAndInvincibleRoutine(Vector3 enemyPosition)
     {
         status.isHurt = true;
@@ -398,7 +400,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
 
-            // 찰진 넉백을 위해 힘 조절 (플레이 시 인스펙터에서 편하게 튜닝하세요)
             rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.4f, JumpForce * 0.2f), ForceMode2D.Impulse);
         }
 
@@ -450,7 +451,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             true
         );
 
-        
         if (attackHitboxObj != null) attackHitboxObj.SetActive(true);
 
         yield return new WaitForSeconds(0.3f);
@@ -467,27 +467,21 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private System.Collections.IEnumerator SwordAttackHitboxRoutine()
     {
         Physics2D.IgnoreLayerCollision(
-        LayerMask.NameToLayer("Player"),
-        LayerMask.NameToLayer("Monster"),
-        true
-    );
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            true
+        );
 
-        // 공격 히트박스 활성화 (기존 코드)
         if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(true);
 
-        // 애니메이션이나 공격 판정 지속 시간 동안 대기 (예시로 0.3초, 기존 대기 시간 유지)
         yield return new WaitForSeconds(0.3f);
 
-        // 공격 히트박스 비활성화 (기존 코드)
         if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(false);
 
-        // 💡 [원상 복구] 공격 판정이 완전히 끝났으므로, 다시 플레이어와 몬스터가 부딪힐 수 있게 켭니다.
         Physics2D.IgnoreLayerCollision(
             LayerMask.NameToLayer("Player"),
             LayerMask.NameToLayer("Monster"),
             false
         );
     }
-   
-
 }

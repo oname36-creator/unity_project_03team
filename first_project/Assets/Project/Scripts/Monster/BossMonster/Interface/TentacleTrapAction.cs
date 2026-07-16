@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class TentacleTrapAction : IMonsterState
@@ -8,8 +9,12 @@ public class TentacleTrapAction : IMonsterState
 
     private Vector2 _rootPos;
     private Vector2 _targetPos;
+    private Vector2 _currentIkPos;
 
+
+    private float _riseSpeed = 50f;
     private float _reachThreshold = 0.5f;
+
 
     public TentacleTrapAction(TentacleController owner)
     {
@@ -18,13 +23,19 @@ public class TentacleTrapAction : IMonsterState
 
     public void Enter()
     {
+        Debug.Log("TentacleTrap Action");
         _rootPos = _owner.RootPos;
         _targetPos = _rootPos;
         _targetPos.y += 20f;
 
         _owner.UpdateSegmentLength(20);
         _owner.segmentDistance = 1f;
-        _owner.IkTargetPosition = _targetPos; 
+
+        _currentIkPos = _rootPos;
+        _owner.IkTargetPosition = _currentIkPos;
+
+        _owner.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+
     }
 
     public void Update()
@@ -34,14 +45,14 @@ public class TentacleTrapAction : IMonsterState
             return;
         }
 
-        // 3. 아직 못 잡은 상태라면, 촉수 끝이 랜덤 공격 위치에 도달했는지 확인
-        float distanceToFinalTarget = Vector2.Distance(_rootPos, _targetPos);
+        _currentIkPos = Vector2.MoveTowards(_currentIkPos, _targetPos, _riseSpeed * Time.deltaTime);
+        _owner.IkTargetPosition = _currentIkPos;
 
+        _owner.SlashAnimation(true);
+
+        float distanceToFinalTarget = Vector2.Distance(_currentIkPos, _targetPos);
         if (distanceToFinalTarget < _reachThreshold)
         {
-
-
-            _owner.Boss.RemoveTarget(_owner.Target); // 명부에서 삭제
             _owner.Attack = false;
         }
 
@@ -49,6 +60,6 @@ public class TentacleTrapAction : IMonsterState
 
     public void Exit()
     {
-
+ 
     }
 }

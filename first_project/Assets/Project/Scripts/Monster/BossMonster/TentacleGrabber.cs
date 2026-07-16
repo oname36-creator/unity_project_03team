@@ -16,6 +16,7 @@ public class TentacleGrabber : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         TryGrab(other);
+
     }
 
     // 외부(EdgeCollider 등)에서도 호출할 수 있도록 분리한 잡기 로직
@@ -51,6 +52,17 @@ public class TentacleGrabber : MonoBehaviour
                 Debug.Log($"TentacleGrabber: 지나가다 {hitObj.name} 낚아챔!");
             }
             // 3. 남이 찜한 애를 건드렸다면 무시하고 통과
+        }
+
+        if (other.CompareTag("Ground"))
+        {
+            // 1. 가장 가까운 표면 좌표 계산
+            Vector2 hitPoint = other.ClosestPoint(transform.position);
+
+            // 2. 이펙트 생성 및 위치 설정
+            GameObject obj = ObjectPoolManager.Instance.DustEffectPop();
+            obj.transform.position = hitPoint;
+
         }
     }
 }
