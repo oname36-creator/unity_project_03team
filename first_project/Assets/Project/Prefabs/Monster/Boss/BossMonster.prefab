@@ -184,6 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossController
   MonsterData: {fileID: 11400000, guid: bd24f3aa5be70a546bd3afd0d3fca85f, type: 2}
   Player: {fileID: 0}
+  MonsterRespawner: {fileID: 0}
 --- !u!114 &2281844050526658213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,6 +328,10 @@ PrefabInstance:
     - target: {fileID: 397495312301300401, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
       propertyPath: m_Name
       value: Tentacle_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 397495312301300401, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4061126300298583429, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
       propertyPath: m_LocalPosition.x

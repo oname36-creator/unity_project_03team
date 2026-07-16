@@ -87,25 +87,30 @@ public class TentacleController : MonoBehaviour
 
     public bool IsReturn { get; set; } = false;
 
-    public bool Set { get; set; } = true;
     public Vector2 RootPos {  get; set; } = Vector2.zero;
 
-    public GameObject Target { get; set; } 
+    public GameObject Target { get; set; }
 
 
-
-    void Start()
+    void Awake()
     {
-        Set = false;
-
-        Debug.Log("Tentacle Start");
         _lineRend = GetComponent<LineRenderer>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
-        _lineRend.positionCount = segmentLength;
+        // 외부(Boss)에서 SetRootPos 등을 호출하기 전에 배열이 무조건 준비되어 있도록 여기서 생성!
         _segmentPos = new Vector2[segmentLength];
         _segmentVelocity = new Vector2[segmentLength];
         PrevSegmentLength = segmentLength;
+        Debug.Log("생성");
+    }
+
+    void Start()
+    {
+
+        Debug.Log("Tentacle Start");
+
+        _lineRend.positionCount = segmentLength;
+
 
         IsAttackTentacle = false;
         Attack = false;
@@ -122,27 +127,14 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
-        else if (RootPos != Vector2.zero && Target)
-        {
-            // 초기 위치 세팅
-            for (int i = 0; i < segmentLength; i++)
-            {
-                _segmentPos[i] = RootPos;
-            }
-            IkTargetPosition = RootPos;
-        }
+
+        
         _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
-    private void OnEnable()
+    void Update()
     {
-        if (Set) 
-        {
-            return;
-        }
-        
-        IsAttackTentacle = false;
-        Attack = false;
+        if (_isDead) return;
 
         if (tentacleRoot == null && !Target)
         {
@@ -154,22 +146,7 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
-        else if (RootPos != Vector2.zero && Target)
-        {
-            // 초기 위치 세팅
-            for (int i = 0; i < segmentLength; i++)
-            {
-                _segmentPos[i] = RootPos;
-            }
-            IkTargetPosition = RootPos;
-        }
 
-
-    }
-
-    void Update()
-    {
-        if (_isDead) return;
         _monsterMachine.Update();
     }
 
@@ -180,10 +157,31 @@ public class TentacleController : MonoBehaviour
         UpdateColliders();
     }
 
+
+    public void SetRootPos(Vector2 pos)
+    {
+        if (isTrap)
+        {
+            Debug.Log("Tentacle SetRootPos");
+            // 초기 위치 세팅
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _segmentPos[i] = pos;
+            }
+            IkTargetPosition = pos;
+
+            RootPos = pos;
+        }
+    }
+
+
+
+
     private void UpdateIK()
     {
 
         Vector2 targetPos = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
+
 
         for (int iter = 0; iter < iterations; iter++)
         {
@@ -201,15 +199,16 @@ public class TentacleController : MonoBehaviour
 
                 // 앞 마디에서 지정된 간격(segmentDistance)만큼 떨어진 곳으로 현재 마디 이동
                 _segmentPos[i] = _segmentPos[i - 1] + dir * segmentDistance;
-            }
 
+            }
             // ==========================================
             // [Phase 2] Forward Reaching (루트 -> 끝단 방향)
             // ==========================================
+            Vector2 basePosition = isTrap ? RootPos : (Vector2)tentacleRoot.position;
 
             // Phase 1을 거치면 마지막 마디(루트)가 원래 있어야 할 위치(tentacleRoot)에서 벗어납니다.
             // 따라서 마지막 마디를 다시 텐타클의 진짜 루트 위치에 강제로 맞춥니다.
-            _segmentPos[segmentLength - 1] = tentacleRoot.position;
+            _segmentPos[segmentLength - 1] = basePosition;
 
             // 역방향으로 다시 간격을 맞춰줍니다.
             for (int i = segmentLength - 2; i >= 0; i--)
@@ -284,6 +283,24 @@ public class TentacleController : MonoBehaviour
         _segmentVelocity = newVel;
     }
 
+    public void SlashAnimation(bool up = false) 
+    {
+        int count = 0;
+        for(int i = 0; i < segmentLength; i++)
+        {
+            ++count;
+            if(count%3 == 0)
+            {
+                GameObject obj = ObjectPoolManager.Instance.SlashEffectPop();
+                obj.transform.position = _segmentPos[i];
+                if (up) 
+                {
+                    obj.transform.rotation = Quaternion.Euler(0, 0, 90);
+                }
+            }
+        }
 
+
+    }
 
 }

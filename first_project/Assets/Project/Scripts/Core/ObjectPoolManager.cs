@@ -21,7 +21,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Tentacle Prefab")]
     [SerializeField] private GameObject _tentaclePrefab;
 
-
+    [Header("Effect Prefab")]
+    [SerializeField] private GameObject _dustEffectPrefab;
+    [SerializeField] private GameObject _slashEffectPrefab;
 
 
     [Header("총알 설정")]
@@ -35,6 +37,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _monsterBirdPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBasePool = new Queue<GameObject>();
     private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
+
+    private Queue<GameObject> _dustEffectPool = new Queue<GameObject>();
+    private Queue<GameObject> _slashEffectPool = new Queue<GameObject>();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -74,6 +79,21 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.SetActive(false); // 비활성화 상태로 대기
             _tentaclePool.Enqueue(obj); // 리스트에 추가
         }
+        // Dust Effect 생성
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(_dustEffectPrefab, this.transform);
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _dustEffectPool.Enqueue(obj); // 리스트에 추가
+        }
+        // slash Effect 생성
+        for (int i = 0; i < 100; i++)
+        {
+            GameObject obj = Instantiate(_slashEffectPrefab, this.transform);
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _slashEffectPool.Enqueue(obj); // 리스트에 추가
+        }
+
     }
 
 
@@ -165,6 +185,43 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         obj.SetActive(false);
         _tentaclePool.Enqueue(obj);
     }
+
+    public GameObject DustEffectPop()
+    {
+        if (_dustEffectPool.Count > 0)
+        {
+            GameObject obj = _dustEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+
+    public void DustEffectPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _dustEffectPool.Enqueue(obj);
+    }
+
+    public GameObject SlashEffectPop()
+    {
+        if (_slashEffectPool.Count > 0)
+        {
+            GameObject obj = _slashEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+
+    public void SlashEffectPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _slashEffectPool.Enqueue(obj);
+    }
+
 
 
     // 게임 시작 시 풀을 미리 채워둡니다.
