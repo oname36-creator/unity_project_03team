@@ -19,6 +19,7 @@ public class BodyIdle : IMonsterState
         _timeCounter = 0f;
         _rigidbody2D.linearVelocity = Vector2.zero;
         Debug.Log("BodyIdle");
+
     }
 
     public void Update()

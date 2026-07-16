@@ -61,6 +61,9 @@ public class BossController : MonoBehaviour
         get { return _isChase; }
         set { _isChase = value; }
     }
+
+    public bool Attack { get; set; } = false;
+
     public bool IsDead
     {
         get { return _isDead; }
@@ -160,6 +163,29 @@ public class BossController : MonoBehaviour
         }
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (Chase) { return; }
+
+        if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
+        {
+            //isHurt = true;
+            // 일단 float -> int로 
+
+
+            _hp -= collision.GetComponent<PlayerAttack>().Damage;
+            Debug.Log("Damage : " + collision.GetComponent<PlayerAttack>().Damage + " hp : " + _hp);
+
+            if (_hp <= 0)
+            {
+                IsDead = true;
+            }
+
+
+        }
+
+    }
 
 
 

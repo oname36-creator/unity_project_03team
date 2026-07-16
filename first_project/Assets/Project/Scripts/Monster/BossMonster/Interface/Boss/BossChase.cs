@@ -4,6 +4,7 @@ using UnityEngine;
 public class BossChase : IMonsterState
 {
     private BossController _owner;
+
     private Transform _ownerTransform;
     private Transform _playerTransform;
 
@@ -31,6 +32,11 @@ public class BossChase : IMonsterState
     public void Enter()
     {
         _time = 0f;
+
+        _owner.Attack = false;
+        _owner.gameObject.tag = "Boss";
+        _owner.gameObject.layer = LayerMask.NameToLayer("Boss");
+
     }
 
     public void Update()
@@ -52,6 +58,11 @@ public class BossChase : IMonsterState
 
     public void Exit()
     {
+        if (_chaseCoroutine != null)
+        {
+            _owner.StopCoroutine(_chaseCoroutine);
+            _chaseCoroutine = null; // 참조 초기화
+        }
 
     }
 
@@ -59,15 +70,9 @@ public class BossChase : IMonsterState
 
     IEnumerator Chase() 
     {
-
-
         //_owner.SetTarget();
 
         yield return new WaitForSeconds(2.0f);
     }
-
-
-
-
 
 }

@@ -37,7 +37,11 @@ public class BodyMove : IMonsterState
 
     public void Exit()
     {
-
+        if (_movingCoroutine != null)
+        {
+            _owner.StopCoroutine(_movingCoroutine);
+            _movingCoroutine = null; // 참조 초기화
+        }
     }
 
     IEnumerator Move()
