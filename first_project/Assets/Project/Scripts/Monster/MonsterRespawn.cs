@@ -1,12 +1,28 @@
 using UnityEngine;
-
+using System;
 public class MonsterRespawn : MonoBehaviour
 {
+    #region Event
+    private void OnEnable()
+    {
+        MapEvent.onRequestMonsterSpawn += HandleSpawnRequest;
+    }
+    private void OnDisable()
+    {
+        MapEvent.onRequestMonsterSpawn -= HandleSpawnRequest;
+    }
+    #endregion
 
+    #region HandleSpawnRequest
+    private void HandleSpawnRequest(string name, Vector3 pos, Action<GameObject> onSpawned)
+    {
+        GameObject monster = Respawn(name, pos);
+        onSpawned?.Invoke(monster);
+    }
+    #endregion
 
-    
-    
-    public void Respawn(string name, Vector3 pos) 
+    // void -> GameObject로 변경
+    public GameObject Respawn(string name, Vector3 pos) 
     {
         GameObject monster = null;
         if (name == "Base")
@@ -17,7 +33,7 @@ public class MonsterRespawn : MonoBehaviour
         {
             monster = ObjectPoolManager.Instance.MonsterBirdPop();
         }
-        if(monster == null) { return; }
+        if(monster == null) { return null; }
         MonsterController monsterController = monster.GetComponent<MonsterController>();
         
         monster.transform.position = pos;
@@ -25,18 +41,18 @@ public class MonsterRespawn : MonoBehaviour
         monsterController.IsDead = false;
 
         monster.SetActive(true);
-
+        return monster;
     } 
 
 
     public void RespawnTrap (Vector2 rootPos)
     {
-        GameObject obj = ObjectPoolManager.Instance.TentaclePop();
+        Debug.Log("Respawn Tentacle Trap");
+        GameObject obj = ObjectPoolManager.Instance.TentaclePop(true);
         TentacleController tentacleController = obj.GetComponent<TentacleController>();
-        tentacleController.isTrap = true;
-        tentacleController.RootPos = rootPos;
-
         obj.SetActive(true);
+        tentacleController.SetRootPos(rootPos);
+
 
     }
     
