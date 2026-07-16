@@ -73,3 +73,24 @@ MonoBehaviour:
   - gimmickType: 0
     position: {x: 13.62216, y: -9.00758, z: 0}
     prefabIndex: 0
+  - gimmickType: 5
+    position: {x: -4.995419, y: -3.47822, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: -0.39541912, y: -3.47822, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 12.904575, y: -3.47822, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 16.50459, y: -3.47822, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 20.504604, y: -3.47822, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 24.50462, y: -3.47822, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 28.104633, y: -3.47822, z: 0}
+    prefabIndex: 0
