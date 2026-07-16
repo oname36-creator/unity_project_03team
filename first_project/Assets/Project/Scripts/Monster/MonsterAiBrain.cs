@@ -335,6 +335,7 @@ public class MonsterAiBrain
                     },
                     targetState:idle
                     ),
+
                 new Transition(
                     condition : () =>
                     {
@@ -493,9 +494,17 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.isTrap;
+                        return !owner.isTrap;
                     },
                     targetState:idle
+                    ),
+
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsAttach;
+                    },
+                    targetState:attach
                     )
             };
 

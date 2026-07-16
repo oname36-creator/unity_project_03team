@@ -22,7 +22,7 @@ public class TentacleUp : IMonsterState
     private Vector2 _velocity = Vector2.zero; // SmoothDamp의 내부 속도 계산용
     private float _followSmoothTime = 0.15f;  // 따라가는 딜레이 (값이 클수록 무겁게/느리게 따라감)
 
-    private float _targetAlpha = 0.75f;
+    private float _targetAlpha = 0.5f;
 
     public TentacleUp(TentacleController owner)
     {

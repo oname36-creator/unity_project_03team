@@ -46,10 +46,14 @@ public class TentacleAttach : IMonsterState
             return;
         }
 
-        _owner.IkTargetPosition = _owner.tentacleRoot.position;
+
+        Vector2 root = _owner.isTrap ? _owner.RootPos : _owner.tentacleRoot.position;
+
+        _owner.IkTargetPosition = root;
         _targetTransform.position = _grabberTransform.position;
 
-        float distanceToRoot = Vector2.Distance(_grabberTransform.position, _owner.tentacleRoot.position);
+
+        float distanceToRoot = Vector2.Distance(_grabberTransform.position, root);
         if (distanceToRoot < 1.0f)
         {
             Debug.Log("몸통까지 끌고 오기 완료! 데미지 처리 등 실행");

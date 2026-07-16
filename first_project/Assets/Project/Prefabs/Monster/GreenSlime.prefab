@@ -346,7 +346,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   _obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   QuestionMark: {fileID: 6069669257076461440}
   ExclamationMark: {fileID: 3169123706465840078}
 --- !u!1 &6069669257076461440

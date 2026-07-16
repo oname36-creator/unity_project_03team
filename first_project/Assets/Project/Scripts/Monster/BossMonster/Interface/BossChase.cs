@@ -37,10 +37,13 @@ public class BossChase : IMonsterState
     {
         _time += Time.deltaTime;
 
-        if(_time > 5f) 
+        if(_time > 6f) 
         {
+
             Vector2 pos = _playerTransform.position;
             pos.x += 10f;
+            pos.y -= 10f;
+            Debug.Log("Boss Respawn Tentacle Trap");
             _monsterRespawn.RespawnTrap(pos);
             _time = 0f;
         }
