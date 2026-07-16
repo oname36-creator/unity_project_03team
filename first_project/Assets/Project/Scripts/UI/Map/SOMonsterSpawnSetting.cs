@@ -4,7 +4,7 @@ using UnityEngine;
 public class SOMonsterSpawnSetting : ScriptableObject
 {
     [Header("타일맵 설정")]
-    public string groundTilemapName = "Ground";
+    public string groundTilemapName = "Tilemap";
 
     [Header("스폰 몬스터 설정")]
     public MonsterType[] spawnableMonsterTypes = new MonsterType[] { MonsterType.Base, MonsterType.Bird };

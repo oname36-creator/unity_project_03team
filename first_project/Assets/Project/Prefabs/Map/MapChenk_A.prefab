@@ -31,51 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7511406161714308295}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &610585521744316751
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2374651801220342495}
-  - component: {fileID: 1558297492082890714}
-  m_Layer: 0
-  m_Name: MonsterSpawnPoint_Bird
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2374651801220342495
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 610585521744316751}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.429999, y: 3.9475799, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7511406161714308295}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1558297492082890714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 610585521744316751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72f095af463052a46b8adee7eb4296ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawnPoint
-  _monsterType: 1
 --- !u!1 &1594255205179363109
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,51 +686,6 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!1 &7957162706256477625
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2480838687643819216}
-  - component: {fileID: 8127590872850522499}
-  m_Layer: 0
-  m_Name: MonsterSpawnPoint_Base
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2480838687643819216
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7957162706256477625}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.619999, y: -1.5124202, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7511406161714308295}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8127590872850522499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7957162706256477625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72f095af463052a46b8adee7eb4296ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawnPoint
-  _monsterType: 0
 --- !u!1 &8306651210749919685
 GameObject:
   m_ObjectHideFlags: 0
@@ -904,8 +814,6 @@ Transform:
   - {fileID: 8683055501579242374}
   - {fileID: 7680975444880005425}
   - {fileID: 7889109306323045409}
-  - {fileID: 2480838687643819216}
-  - {fileID: 2374651801220342495}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7490724380618690103
@@ -923,6 +831,7 @@ MonoBehaviour:
   startPosition: {fileID: 7680975444880005425}
   endPosition: {fileID: 1433845599762570884}
   cameraBoundaryCollider: {fileID: 3452967155236221581}
+  spawnSetting: {fileID: 11400000, guid: 50680bfa16239c74981b70b3166b1c93, type: 2}
 --- !u!61 &3452967155236221581
 BoxCollider2D:
   m_ObjectHideFlags: 0

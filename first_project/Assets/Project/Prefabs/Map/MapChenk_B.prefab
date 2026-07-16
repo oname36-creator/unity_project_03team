@@ -972,6 +972,9 @@ MonoBehaviour:
   startPosition: {fileID: 7073038307474420182}
   endPosition: {fileID: 1398808308320012327}
   cameraBoundaryCollider: {fileID: 3786097781232641900}
+  spawnSetting: {fileID: 11400000, guid: c1aba61b04e9a654e97673d69e88ba7c, type: 2}
+  minPlayerDistance: 4
+  margin: 2
 --- !u!61 &3786097781232641900
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEditor.Rendering;
 
 public class MapChunk : MonoBehaviour
 {
+    #region DataAttribute
     [Header("시작/끝 앵커")]
     public Transform startPosition;
     public Transform endPosition;
@@ -15,8 +16,15 @@ public class MapChunk : MonoBehaviour
     [Header("몬스터 자동 스폰 설정")]
     [SerializeField] private SOMonsterSpawnSetting spawnSetting;
 
+    [Header("플레이어 안전 스폰 거리")]
+    [SerializeField] private float minPlayerDistance = 4f;
+
+    [Header("진입 영역 마진")]
+    public float margin = 2f;
+
     // 해당 청크에서 스폰되어 추적 중인 몬스터 목록
     private List<GameObject> spawnedMonsters = new List<GameObject>();
+    #endregion
 
     #region Event
     private void OnEnable()
@@ -53,6 +61,11 @@ public class MapChunk : MonoBehaviour
             }
         }
 
+        // Overlap 판정 작동하도록 강제 동기화
+        Physics2D.SyncTransforms();
+
+        Debug.Log($"[MapChunk] 수집된 금지 구역 콜라이더 개수 : {prohibitedColliders.Count}개");
+
         // 2. Ground 역할을 할 Tilemap 탐색
         UnityEngine.Tilemaps.Tilemap tilemap = null;
         foreach(Transform child in transform)
@@ -80,6 +93,15 @@ public class MapChunk : MonoBehaviour
         BoundsInt bounds = tilemap.cellBounds;
         List<Vector3> validSpawnPositions = new List<Vector3>();
 
+        // startPos 기준으로 스폰 금지 영역 설정
+        Vector3 startAnchorPos = startPosition != null ? startPosition.position : transform.position;
+        MapSpawnTrigger spawnTrigger = GetComponentInChildren<MapSpawnTrigger>();
+        Collider2D triggerCollider = spawnTrigger != null ? spawnTrigger.GetComponent<Collider2D>() : null;
+        
+        Debug.Log($"[MapChunk Debug] StartAnchor: {startAnchorPos}, isStartPositionNull: {startPosition == null}");
+
+        int entryExcludingCount = 0;
+
         for(int x = bounds.xMin; x < bounds.xMax; x++)
         {
             for(int y = bounds.yMin; y < bounds.yMax; y++)
@@ -87,18 +109,46 @@ public class MapChunk : MonoBehaviour
                 Vector3Int pos = new Vector3Int(x, y, 0);
 
                 // 현재 셀에 바닥 타일이 있고, 그 바로 윗칸은 비어있는지 확인
-                if(tilemap.HasTile(pos))
+                if(tilemap.HasTile(pos) && !tilemap.HasTile(pos + Vector3Int.up))
                 {
                     // 타일 셀의 월드 좌표 중심점 계산
-                    Vector3 worldPos = tilemap.CellToWorld(pos); + new Vector3(0.5f, 1.0f, 0f);
+                    Vector3 CellPos = tilemap.CellToWorld(pos);
+                    //index=0 : 실제 스폰 위치    index = 1 : 오버랩 정밀 검사를 위한 임시 좌표
+                    Vector3[] worldPos = { CellPos + new Vector3(0.5f, 1f, 0f), CellPos + new Vector3(0.5f, 0.2f, 0f) }; ;
 
+                    // 플레이어가 진입할 입구 2.5f 범위 이내의 타일은 스폰에서 제외
+                    if(triggerCollider != null)
+                    {
+                        Bounds triggerBounds = triggerCollider.bounds;
+                        float minX = triggerBounds.min.x - margin;
+                        float maxX = triggerBounds.max.x + margin;
+                        float minY = triggerBounds.min.y - margin;
+                        float maxY = triggerBounds.max.y + margin;
+
+                        if (worldPos[0].x >= minX && worldPos[0].x <= maxX &&
+                            worldPos[0].y >= minY && worldPos[0].y <= maxY)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        // Fallback: 트리거가 없을 시 startPosition 기준 2.5f 범위 제외
+                        Vector2 startAnchor2D = new Vector2(startAnchorPos.x, startAnchorPos.y);
+                        Vector2 worldPos2D = new Vector2(worldPos[0].x, worldPos[0].y);
+                        if (Vector2.Distance(startAnchor2D, worldPos2D) < 2.5f)
+                        {
+                            continue;
+                        }
+                    }
                     // 금지 구역 콜라이더 바운즈 내부에 포함되는지 체크
                     bool isProhibited = false;
                     foreach (var col in prohibitedColliders)
                     {
-                        if (col != null && col.bounds.Contains(spawnPoint.transform.position))
+                        if (col != null && col.OverlapPoint(worldPos[1]))
                         {
                             isProhibited = true;
+                            Debug.Log($"[MapChunk] 함정 감지되어 제외됨 위치: {worldPos}, 함정 오브젝트: {col.gameObject.name}");
                             break;
                         }
                     }
@@ -108,9 +158,15 @@ public class MapChunk : MonoBehaviour
                     {
                         continue;
                     }
+
+                    // 금지 구역이 아닌 경우 스폰 후보지 리스트에 추가
+                    validSpawnPositions.Add(worldPos[0]);
                 }
             }
         }
+
+        Debug.Log($"[MapChunk Debug] 입구제외: {entryExcludingCount}개");
+        Debug.Log($"[MapChunk Debug] 최종 유효 스폰 후보지 수: {validSpawnPositions.Count}개");
 
         if (validSpawnPositions.Count == 0) return;
 
@@ -129,10 +185,10 @@ public class MapChunk : MonoBehaviour
 
         foreach(Vector3 candidatePos in validSpawnPositions)
         {
-            if (spawnedCount >= spawnSetting.spawnChance) continue;
+            if (spawnedCount >= spawnSetting.maxMonsterCount) continue;
 
             // 스폰 확률 검사
-            if (UnityEngine.Random.value > spawnSetting.spawnChance) return;
+            if (UnityEngine.Random.value > spawnSetting.spawnChance) continue;
 
             // 최소 거리 검사
             bool tooClose = false;
@@ -141,10 +197,10 @@ public class MapChunk : MonoBehaviour
                 if(Vector3.Distance(spawnedPos, candidatePos) < spawnSetting.minSpawnInterval)
                 {
                     tooClose = true;
-                    return;
+                    break;
                 }
             }
-            if (tooClose) return;
+            if (tooClose) continue;
 
             // 스폰 타입 목록 예외처리
             if (spawnSetting.spawnableMonsterTypes == null || spawnSetting.spawnableMonsterTypes.Length == 0)
@@ -167,6 +223,10 @@ public class MapChunk : MonoBehaviour
                 if (monster != null)
                 {
                     spawnedMonsters.Add(monster);
+
+                    // 스폰 성공 시 생성 수 증가 및 실제 스폰 좌표 기록
+                    spawnedCount++;
+                    actualSpawnedPositions.Add(spawnPos);
                 }
             });
         }
