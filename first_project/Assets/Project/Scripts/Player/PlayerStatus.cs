@@ -118,7 +118,7 @@ public class PlayerStatus : MonoBehaviour
             if (gunAttackCount <= 0)
             {
                 hasGun = false;
-                Debug.LogWarning("⚠️ [알림] 총알을 모두 소모하여 기본 상태로 돌아갑니다.");
+                Debug.LogWarning(" [알림] 총알을 모두 소모하여 기본 상태로 돌아갑니다.");
 
                 Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
             }

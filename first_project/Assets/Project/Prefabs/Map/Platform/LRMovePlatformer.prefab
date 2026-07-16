@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3079424176910391659}
   - component: {fileID: 8552306574110330757}
   - component: {fileID: 2926996684056065664}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LRMovePlatformer
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,5 +180,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: 4, y: 0}
-  speed: 1.5
+  speed: 3
   waitTime: 0.05

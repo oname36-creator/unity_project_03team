@@ -143,47 +143,48 @@ public class MapManager : MonoBehaviour
     // 특정 맵 강제 스폰
     private void SpawnSpecificMap(GameObject prefab)
     {
-        GameObject mapToSpawn = GetOrCreateMap(prefab);
         Vector3 startOffset = Vector3.zero;
-        if(mapToSpawn.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
+        if(prefab.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
         {
             startOffset = chunk.startPosition.localPosition;
         }
-
-        mapToSpawn.transform.position = nextSpawnPosition - startOffset;
+        Vector3 targetPosition = nextSpawnPosition - startOffset;
+        GameObject mapToSpawn = GetOrCreateMap(prefab, targetPosition);
         activeMaps.Enqueue(mapToSpawn);
 
         // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
-        nextSpawnPosition = GetEndPosition(mapToSpawn, mapToSpawn.transform.position);
+        nextSpawnPosition = GetEndPosition(mapToSpawn, targetPosition);
     }
     // 스폰하고 나서 다음 스폰 위치를 반환하는 함수
     private Vector3 SpawnMap(GameObject prefab, Vector3 spawnPos)
     {
-        GameObject map = GetOrCreateMap(prefab);
         Vector3 startOffset = Vector3.zero;
-        if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
+        if (prefab.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.startPosition != null)
         {
             startOffset = chunk.startPosition.localPosition;
         }
-
-        map.transform.position = nextSpawnPosition - startOffset;
+        Vector3 targetPosition = nextSpawnPosition - startOffset;
+        GameObject map = GetOrCreateMap(prefab, targetPosition);
         activeMaps.Enqueue(map);
 
         // 보정되어 실제 배치된 값 기준으로 EndPosition을 누적 연산.
         return GetEndPosition(map, map.transform.position);
     }
 
-    private GameObject GetOrCreateMap(GameObject prefab)
+    private GameObject GetOrCreateMap(GameObject prefab, Vector3 targetPosition)
     {
         GameObject map;
         if (mapPools.ContainsKey(prefab) && mapPools[prefab].Count > 0)
         {
             map = mapPools[prefab].Dequeue();
+            // 활성화 전에 목표 위치로 먼저 이동
+            map.transform.position = targetPosition;
             map.SetActive(true);
         }
         else
         {
-            map = Instantiate(prefab);
+            // 인스턴스화할 때도 처음부터 목표 위치로 생성 --> OnEnable 시점의 위치문제 방지
+            map = Instantiate(prefab, targetPosition, Quaternion.identity);
             map.name = prefab.name; // 클론 방지
         }
         return map;
