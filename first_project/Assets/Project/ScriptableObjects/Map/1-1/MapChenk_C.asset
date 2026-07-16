@@ -139,3 +139,9 @@ MonoBehaviour:
   - gimmickType: 1
     position: {x: 3.17344, y: -1.03879, z: 0}
     prefabIndex: 0
+  - gimmickType: 5
+    position: {x: -5.2400007, y: -1.5699999, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 1.9599986, y: -1.5699999, z: 0}
+    prefabIndex: 0
