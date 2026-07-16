@@ -34,10 +34,8 @@ public class MonsterRespawn : MonoBehaviour
         Debug.Log("Respawn Tentacle Trap");
         GameObject obj = ObjectPoolManager.Instance.TentaclePop(true);
         TentacleController tentacleController = obj.GetComponent<TentacleController>();
-        tentacleController.SetRootPos(rootPos);
-
         obj.SetActive(true);
-
+        tentacleController.SetRootPos(rootPos);
 
 
     }

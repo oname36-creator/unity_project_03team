@@ -101,6 +101,7 @@ public class TentacleController : MonoBehaviour
         _segmentPos = new Vector2[segmentLength];
         _segmentVelocity = new Vector2[segmentLength];
         PrevSegmentLength = segmentLength;
+        Debug.Log("생성");
     }
 
     void Start()
@@ -157,7 +158,7 @@ public class TentacleController : MonoBehaviour
     }
 
 
-    public void SetRootPos(Vector3 pos)
+    public void SetRootPos(Vector2 pos)
     {
         if (isTrap)
         {
@@ -181,6 +182,7 @@ public class TentacleController : MonoBehaviour
 
         Vector2 targetPos = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
 
+
         for (int iter = 0; iter < iterations; iter++)
         {
             // ==========================================
@@ -197,8 +199,8 @@ public class TentacleController : MonoBehaviour
 
                 // 앞 마디에서 지정된 간격(segmentDistance)만큼 떨어진 곳으로 현재 마디 이동
                 _segmentPos[i] = _segmentPos[i - 1] + dir * segmentDistance;
-            }
 
+            }
             // ==========================================
             // [Phase 2] Forward Reaching (루트 -> 끝단 방향)
             // ==========================================
@@ -281,6 +283,24 @@ public class TentacleController : MonoBehaviour
         _segmentVelocity = newVel;
     }
 
+    public void SlashAnimation(bool up = false) 
+    {
+        int count = 0;
+        for(int i = 0; i < segmentLength; i++)
+        {
+            ++count;
+            if(count%3 == 0)
+            {
+                GameObject obj = ObjectPoolManager.Instance.SlashEffectPop();
+                obj.transform.position = _segmentPos[i];
+                if (up) 
+                {
+                    obj.transform.rotation = Quaternion.Euler(0, 0, 90);
+                }
+            }
+        }
 
+
+    }
 
 }

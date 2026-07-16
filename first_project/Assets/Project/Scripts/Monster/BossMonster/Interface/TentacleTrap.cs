@@ -22,7 +22,7 @@ public class TentacleTrap : IMonsterState
     private float _currentYScale = 1.0f;    // 현재 실시간 Y축 크기 저장용 변수 추가
 
     private float _time = 0f;
-    private float _targetAlpha = 0.75f;
+    private float _targetAlpha = 0.5f;
     private float _fadeInDuration = 0.5f;   // 페이드인이 완료되는 데 걸리는 시간 (원하는 초 단위로 조절 가능)
 
     private int _duration = 3;

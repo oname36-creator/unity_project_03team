@@ -34,6 +34,7 @@ public class TentacleAttack : IMonsterState
 
         _owner.IkTargetPosition = _targetPos;
 
+        _owner.SlashAnimation();
     }
 
     public void Update()

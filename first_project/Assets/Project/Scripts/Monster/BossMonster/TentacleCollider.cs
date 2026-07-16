@@ -11,5 +11,9 @@ public class TentacleCollider : MonoBehaviour
         {
             MainGrabber.TryGrab(other);
         }
+
+
+
+
     }
 }

@@ -44,6 +44,8 @@ public class TentacleTrapAction : IMonsterState
         _currentIkPos = Vector2.MoveTowards(_currentIkPos, _targetPos, _riseSpeed * Time.deltaTime);
         _owner.IkTargetPosition = _currentIkPos;
 
+        _owner.SlashAnimation(true);
+
         float distanceToFinalTarget = Vector2.Distance(_currentIkPos, _targetPos);
         if (distanceToFinalTarget < _reachThreshold)
         {
