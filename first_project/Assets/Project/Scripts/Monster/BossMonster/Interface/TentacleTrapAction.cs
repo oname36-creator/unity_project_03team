@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class TentacleTrapAction : IMonsterState
@@ -31,7 +32,10 @@ public class TentacleTrapAction : IMonsterState
         _owner.segmentDistance = 1f;
 
         _currentIkPos = _rootPos;
-        _owner.IkTargetPosition = _currentIkPos; 
+        _owner.IkTargetPosition = _currentIkPos;
+
+        _owner.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+
     }
 
     public void Update()
@@ -56,6 +60,6 @@ public class TentacleTrapAction : IMonsterState
 
     public void Exit()
     {
-
+ 
     }
 }

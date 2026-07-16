@@ -33,8 +33,6 @@ public class TentacleAttack : IMonsterState
         _owner.segmentDistance = (_targetPos - _bossTransform.position).magnitude / 20f;
 
         _owner.IkTargetPosition = _targetPos;
-
-        _owner.SlashAnimation();
     }
 
     public void Update()
