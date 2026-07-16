@@ -831,6 +831,7 @@ MonoBehaviour:
   startPosition: {fileID: 7680975444880005425}
   endPosition: {fileID: 1433845599762570884}
   cameraBoundaryCollider: {fileID: 3452967155236221581}
+  spawnSetting: {fileID: 11400000, guid: 50680bfa16239c74981b70b3166b1c93, type: 2}
 --- !u!61 &3452967155236221581
 BoxCollider2D:
   m_ObjectHideFlags: 0
