@@ -70,6 +70,8 @@ public class BossController : MonoBehaviour
         set { _isDead = value; }
     }
 
+    public bool IsHurt { get; set; } = false;
+
     public bool Attached
     {
         get { return _isAttached; }
@@ -170,7 +172,7 @@ public class BossController : MonoBehaviour
 
         if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
         {
-            //isHurt = true;
+            IsHurt = true;
             // 일단 float -> int로 
 
 

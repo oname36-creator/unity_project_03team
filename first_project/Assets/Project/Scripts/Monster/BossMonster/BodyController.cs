@@ -64,4 +64,10 @@ public class BodyController : MonoBehaviour
         _sprite.flipY = flip;
     }
 
+    public void Stop() 
+    {
+        _rigidbody2D.linearVelocity = Vector3.zero;
+    }
+
+
 }

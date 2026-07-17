@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 89437252}
   - component: {fileID: 89437251}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,12 +181,12 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -92720793
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3584906, g: 0.1538804, b: 0.17267112, a: 1}
+  m_Sprite: {fileID: 2937831384049548367, guid: e1be04b875798a5439a74712ab58dc5e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -205,7 +205,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 1}
+  m_LocalScale: {x: 0.96, y: 0.44, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -393,6 +393,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StartSceneUIBinder
   gameStartButton: {fileID: 1645537693}
   gameExitButton: {fileID: 1996550324}
+--- !u!1 &1470890990
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1470890991}
+  - component: {fileID: 1470890992}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1470890991
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470890990}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 892.8663, y: 488.12457, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1470890992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470890990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db722735c8cba94ba1175d002409c2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  _startSceneBGM: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
+  _gameSceneBGM: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
+  _endingSceneBGM: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
+  masterBgmVolume: 1
+  masterSfxVolume: 1
 --- !u!1 &1629266051
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,21 +608,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2677842235818126395, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
-      propertyPath: m_Name
-      value: GameExitButton
-      objectReference: {fileID: 0}
     - target: {fileID: 4564192686252193581, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
       propertyPath: m_Name
-      value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7022420850041664301, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7022420850041664301, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitGame
+      value: StartSceneUI
       objectReference: {fileID: 0}
     - target: {fileID: 8350360671928269836, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
       propertyPath: m_Pivot.x
@@ -670,3 +707,4 @@ SceneRoots:
   - {fileID: 1629266054}
   - {fileID: 949833422544356884}
   - {fileID: 727516583}
+  - {fileID: 1470890991}
