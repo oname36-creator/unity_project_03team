@@ -765,6 +765,7 @@ GameObject:
   - component: {fileID: 2576380119195231791}
   - component: {fileID: 9198755425228712893}
   - component: {fileID: 8428815529486151324}
+  - component: {fileID: 4529810722258849054}
   m_Layer: 0
   m_Name: MapChenk_C
   m_TagString: Ground
@@ -859,6 +860,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 27.222713, y: 35}
   m_EdgeRadius: 0
+--- !u!114 &4529810722258849054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4609161205030642019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce35990c9091d2f4a80330983d9ec9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
+  mapData: {fileID: 11400000, guid: 28b02c546c29f2f49949b3a250bb1e50, type: 2}
+  _monsterRespawn: {fileID: 8936806820121352438, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
 --- !u!1 &5678572895258049636
 GameObject:
   m_ObjectHideFlags: 0

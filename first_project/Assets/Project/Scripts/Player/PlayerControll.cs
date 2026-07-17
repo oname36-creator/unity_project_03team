@@ -50,11 +50,15 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float facingDirectionX = 1f;
 
+    // ★ [수정 및 추가] 시작할 때 인스펙터에 적어둔 플레이어의 원래 크기(Scale)를 저장할 변수
+    private float originalScaleX;
+    private float originalScaleY;
+
     void Start()
     {
         if (SceneManagerEx.Instance != null)
         {
-            SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuCanvas");
+           // SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuPanel");
 
             if (SceneManagerEx.Instance.pauseMenuUI != null)
                 SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
@@ -67,8 +71,12 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         itemApplicator = GetComponent<ItemEffectApplicator>();
         rb = GetComponent<Rigidbody2D>();
 
-        // ★ [애니메이션 추가] 플레이어 오브젝트의 Animator 컴포넌트를 가져옵니다.
-        animator = GetComponent<Animator>();
+        
+        animator = GetComponentInChildren<Animator>();
+
+       
+        originalScaleX = transform.localScale.x;
+        originalScaleY = transform.localScale.y;
     }
 
     void OnEnable()
@@ -103,30 +111,54 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.isAerial = !status.isGrounded;
 
-        float myTargetScale = 0.5f;
-
+        //이 부분의 고정된 myTargetScale(0.5f 등) 로직을 제거하고 아래의 유연한 뒤집기 코드로 교체했습니다.
         if (moveInput.x != 0f)
         {
             facingDirectionX = Mathf.Sign(moveInput.x); // 오른쪽이면 1, 왼쪽이면 -1
 
-            // ★ X축에는 방향과 크기 비율을 곱해주고, Y축에도 크기 비율을 넣어줍니다.
-            transform.localScale = new Vector3(facingDirectionX * myTargetScale, myTargetScale, 1f);
+           
+            transform.localScale = new Vector3(facingDirectionX * originalScaleX, originalScaleY, 1f);
         }
 
-        // ★ [애니메이션 추가] 애니메이터 파라미터 업데이트
         if (animator != null)
         {
-            // moveInput.x의 절대값을 구합니다. (왼쪽이든 오른쪽이든 움직이면 양수값이 나옵니다)
             float inputSpeed = Mathf.Abs(moveInput.x);
+            float finalAnimSpeed = inputSpeed;
 
-            // 앞서 유니티 에디터에서 만든 "Speed" 파라미터에 값을 전달합니다.
-            animator.SetFloat("Speed", inputSpeed);
+            if (inputSpeed == 0f && Mathf.Abs(rb.linearVelocity.x) > 1.5f)
+            {
+                finalAnimSpeed = 1f;
+            }
+
+            
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            bool attacking = stateInfo.IsTag("Attacking");
+
+           
+            animator.SetBool("isAttacking", attacking);
+
+            
+            animator.SetBool("isGrounded", status.isGrounded);
+            animator.SetFloat("VelocityY", rb.linearVelocity.y);
+            animator.SetFloat("Speed", finalAnimSpeed);
         }
 
         if (playerPosData != null)
         {
             playerPosData.x = Mathf.RoundToInt(transform.position.x);
             playerPosData.y = Mathf.RoundToInt(transform.position.y);
+        }
+        if (animator != null)
+        {
+           
+            float inputSpeed = Mathf.Abs(moveInput.x);
+
+            
+            animator.SetFloat("Speed", inputSpeed);
+
+            
+            animator.SetFloat("VelocityY", rb.linearVelocity.y);
+            animator.SetBool("isGrounded", status.isGrounded);
         }
     }
 
@@ -271,6 +303,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 StartCoroutine(SwordAttackHitboxRoutine());
                 status.OnSwordAttackExecute();
                 return;
+            }
+            if (animator != null)
+            {
+                animator.SetTrigger("OnAttack");
             }
 
             Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
