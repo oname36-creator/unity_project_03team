@@ -17,7 +17,7 @@ public class PlayerAttack : MonoBehaviour
             }
 
             // 만약 부모 컴포넌트를 못 찾았다면 기본값 10 반환 (안전장치)
-            return 10;
+            return 100;
         }
     }
 
