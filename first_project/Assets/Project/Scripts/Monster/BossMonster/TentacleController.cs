@@ -315,6 +315,7 @@ public class TentacleController : MonoBehaviour
             if(count%3 == 0)
             {
                 GameObject obj = ObjectPoolManager.Instance.SlashEffectPop();
+                if(obj == null) { return; }
                 obj.transform.position = _segmentPos[i];
                 if (up) 
                 {

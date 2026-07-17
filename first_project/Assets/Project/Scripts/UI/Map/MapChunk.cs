@@ -22,6 +22,9 @@ public class MapChunk : MonoBehaviour
     [Header("플레이어 안전 스폰 거리")]
     [SerializeField] private float minPlayerDistance = 4f;
 
+    [Header("몬스터 리스포너")]
+    [SerializeField] private MonsterRespawn monsterRespawner;
+
     [Header("진입 영역 마진")]
     public float margin = 2f;
 
