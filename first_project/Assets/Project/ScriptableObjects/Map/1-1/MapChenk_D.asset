@@ -22,3 +22,18 @@ MonoBehaviour:
   - gimmickType: 3
     position: {x: -2.9741101, y: 1.9310701, z: 0}
     prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 2.4779892, y: -2.0918703, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 17.678047, y: -2.0918703, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 20.678055, y: -2.0918703, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 23.67807, y: -2.0918703, z: 0}
+    prefabIndex: 0
+  - gimmickType: 5
+    position: {x: 26.678078, y: -2.0918703, z: 0}
+    prefabIndex: 0

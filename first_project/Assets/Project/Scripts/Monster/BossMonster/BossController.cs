@@ -17,6 +17,14 @@ public class BossController : MonoBehaviour
     [Header("Monster Respawn")]
     public GameObject MonsterRespawner;
 
+    [Header("Sound Clips")]
+    [SerializeField] private AudioClip _bossSound;
+    [SerializeField] private AudioClip _bossScreechSound;
+    [SerializeField] private AudioClip _bossTrapAttackSound;
+    [SerializeField] private AudioClip _bossAttack;
+
+
+
 
     #endregion
 
@@ -61,11 +69,16 @@ public class BossController : MonoBehaviour
         get { return _isChase; }
         set { _isChase = value; }
     }
+
+    public bool Attack { get; set; } = false;
+
     public bool IsDead
     {
         get { return _isDead; }
         set { _isDead = value; }
     }
+
+    public bool IsHurt { get; set; } = false;
 
     public bool Attached
     {
@@ -124,6 +137,12 @@ public class BossController : MonoBehaviour
     {
         Application.targetFrameRate = 120;
 
+        SoundManager.Instance.AddSfx("BossSound", _bossSound);
+        SoundManager.Instance.AddSfx("BossScreech", _bossScreechSound);
+        SoundManager.Instance.AddSfx("BossTrapAttack", _bossTrapAttackSound);
+        SoundManager.Instance.AddSfx("BossAttack", _bossAttack);
+
+
         _monsterMachine = MonsterAiBrain.MakeMachine("Boss", this);
     }
 
@@ -160,6 +179,29 @@ public class BossController : MonoBehaviour
         }
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (Chase) { return; }
+
+        if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
+        {
+            IsHurt = true;
+            // 일단 float -> int로 
+
+
+            _hp -= collision.GetComponent<PlayerAttack>().Damage;
+            Debug.Log("Damage : " + collision.GetComponent<PlayerAttack>().Damage + " hp : " + _hp);
+
+            if (_hp <= 0)
+            {
+                IsDead = true;
+            }
+
+
+        }
+
+    }
 
 
 

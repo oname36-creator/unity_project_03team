@@ -8,7 +8,8 @@ public enum EGimmickType
     Pad,
     JumpPad,
     Platform,
-    Breakable
+    Breakable,
+    HollowTrap
 }
 
 [System.Serializable]
