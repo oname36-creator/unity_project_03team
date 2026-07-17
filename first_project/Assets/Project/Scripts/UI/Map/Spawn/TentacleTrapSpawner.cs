@@ -3,12 +3,85 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+struct CliffTrapNode
+{
+    public Vector3 worldPosition;
+    public bool isEvaluted;
+    public bool isTriggered;
+}
+
 public class TentacleTrapSpawner : MonoBehaviour
 {
     [Header("데이터 에셋 연결")]
     [SerializeField] private SOMapData mapData;
 
+   
     private List<GameObject> spawnedTraps = new List<GameObject>();
+    private List<CliffTrapNode> activeCliffNodes = new List<CliffTrapNode>();
+    private float nextSpawnTime = 0f;
+    private bool[] _hasTrap;   
+
+    #region TentacleTrapSettings
+    [Header("함정 설정")]
+    [Range(0f, 1f)]
+    [SerializeField] private float trapSpawnChance = 0.6f;  // 발동 확률
+    [SerializeField] private float staggerDelay = 0.5f;     // 함정 간의 스폰 시간차
+    [SerializeField] private float cameraMargin = 1.0f;     // 화면 우측에서 얼마나 더 오른쪽인 위치에서 스폰시킬지
+    #endregion
+    private void Start()
+    {
+        _hasTrap = new bool[activeCliffNodes.Count];
+    
+    }
+    #region Update
+    private void Update()
+    {
+        #region Exception Handling
+        if (activeCliffNodes.Count == 0) return;
+        if (Camera.main == null) return;
+        #endregion
+
+        // 카메라 가로 반쪽 및 우측 경계선 계산(수학적으로)
+        float camHalfWidth = Camera.main.orthographicSize + Camera.main.aspect;
+        float camRightBound = Camera.main.transform.position.x + camHalfWidth + cameraMargin;
+        //Debug.Log("camRightBound : " + camRightBound);
+        // 대기 중인 모든 낭떠러지 노드 검사
+        for(int i= 0; i < activeCliffNodes.Count; i++)
+        {
+            var node = activeCliffNodes[i];
+            if (node.isEvaluted) continue;
+
+            // 플레이어(카메라)가 오른쪽으로 진행
+            // --> 낭떠러지 X좌표가 카메라 우측 감지 영역 내로 들어왔는지 판단
+            if(node.worldPosition.x <= camRightBound && !_hasTrap[i])
+            {
+                node.isEvaluted = true;
+             
+                // 확률 검사
+                float roll = UnityEngine.Random.value;
+                if(roll <= trapSpawnChance)
+                {
+                    node.isTriggered = true;
+
+                    // 중앙 통제형 시차 스케줄러 적용
+                    float scheduledTime = Mathf.Max(Time.time, nextSpawnTime);
+                    float delay = scheduledTime - Time.time;
+
+                    _hasTrap[i] = true;
+                    StartCoroutine(SpawnTrapWithDelay(node.worldPosition, delay));
+
+                    // 다음 스폰 예약 시간을 stagerDelay 만큼 미룸
+                    nextSpawnTime = scheduledTime + staggerDelay;
+                }
+                else
+                {
+                    Debug.Log($"[TentacleTrapSpawner] 낭떠러지 {node.worldPosition} 함정 발동 실패 (확률 탈락)");
+                }
+            }
+        }
+    }
+    #endregion
+
     #region Call RespawnTrap
     public void SpawnTraps()
     {
@@ -19,9 +92,10 @@ public class TentacleTrapSpawner : MonoBehaviour
         }
         #endregion
 
-        
+        activeCliffNodes.Clear();
+        nextSpawnTime = Time.time;
         // 2. 베이킹되어 저장된 상대 좌표들을 월드 좌표로 변환하여 RespawnTrap 호출
-        int spawnCount = 0;
+        int registerCount = 0;
         foreach(var gimmick in mapData.gimmicList)
         {
             if(gimmick.gimmickType == EGimmickType.HollowTrap)
@@ -29,19 +103,19 @@ public class TentacleTrapSpawner : MonoBehaviour
                 // 월드 좌표로 변환
                 Vector3 worldPos = transform.TransformPoint(gimmick.position);
 
-                MapEvent.onRequestTrapSpawn?.Invoke(worldPos, (trapObj) =>
+                activeCliffNodes.Add(new CliffTrapNode
                 {
-                    if (trapObj != null)
-                    {
-                        spawnedTraps.Add(trapObj);
-                    }
+                    worldPosition = worldPos,
+                    isEvaluted = false,
+                    isTriggered = false
                 });
-                spawnCount++;
+
+                registerCount++;
             }
         }
 
         // 확인용 디버깅
-        Debug.Log($"[TentacleTrapSpawner] {gameObject.name}의 낭떠러지 함정 {spawnCount}개 스폰 완료.");
+        Debug.Log($"[TentacleTrapSpawner] {gameObject.name}의 낭떠러지 함정 {registerCount}개 스폰 완료.");
         
     }
     #endregion
@@ -105,7 +179,7 @@ public class TentacleTrapSpawner : MonoBehaviour
 
         // 2. 낭떠러지(구멍) 구간 탐색 시작
         float step = 0.2f;                       // 0.2미터 간격으로 정밀 스캔
-        float checkY = -1.0f;                    // 캐릭터 기준 기본 Y 레벨 오프셋
+        float checkY = -10.0f;                    // 캐릭터 기준 기본 Y 레벨 오프셋
         float minGapWidth = 0.8f;                // 함정을 스폰할 최소 구멍 너비 (너무 좁은 틈새는 제외)
         List<Vector3> detectedCliffs = new List<Vector3>();
         bool inGap = false;
@@ -214,5 +288,24 @@ public class TentacleTrapSpawner : MonoBehaviour
         }
         return false;
     }
+    #endregion
+
+    #region Coroutine
+    private System.Collections.IEnumerator SpawnTrapWithDelay(Vector3 spawnPosition, float delay)
+    {
+        if(delay > 0f)
+        {
+            yield return new WaitForSeconds(delay);
+        }
+
+        MapEvent.onRequestTrapSpawn?.Invoke(spawnPosition, (trapObj) =>
+        {
+            if(trapObj != null)
+            {
+                spawnedTraps.Add(trapObj);
+            }
+        });
+    }
+
     #endregion
 }

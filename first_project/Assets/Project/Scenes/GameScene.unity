@@ -171,6 +171,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   safeZonePrefab: {fileID: 8274822112208100340, guid: 9b86a17bd642dfc4d907f591455885fb, type: 3}
+  backgroundGroup: {fileID: 985846392}
+  backgroundDelayTime: 3
   phases:
   - phaseName: "\uD398\uC774\uC9881"
     timeThreshold: 20
@@ -201,6 +203,11 @@ Transform:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2301059723337984058, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
   m_PrefabInstance: {fileID: 878958940}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &373986403 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9161382768393421321, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+  m_PrefabInstance: {fileID: 1935660993}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &436494359
 GameObject:
@@ -434,6 +441,10 @@ PrefabInstance:
     - target: {fileID: 2301059723337984058, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
       propertyPath: m_Name
       value: MonsterRespawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 2301059723337984058, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6541915006127053493, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1674,14 +1685,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3323620575638702164, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+      propertyPath: inGameUI
+      value: 
+      objectReference: {fileID: 373986403}
     - target: {fileID: 3450319248594610146, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 824551909}
-    - target: {fileID: 3450319248594610146, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Btn_Resume
-      objectReference: {fileID: 0}
     - target: {fileID: 3477607834259625562, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1718,26 +1729,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 824551909}
-    - target: {fileID: 4224840337854202274, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Btn_Restart
-      objectReference: {fileID: 0}
-    - target: {fileID: 4664659228250024481, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5888997173351220326, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6144150683051491202, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 824551909}
-    - target: {fileID: 6144150683051491202, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Btn_GoToMainMenu
-      objectReference: {fileID: 0}
     - target: {fileID: 6936971914862174533, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -1746,14 +1741,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 824551909}
-    - target: {fileID: 7049048096569661941, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Btn_GoToMainMenu
-      objectReference: {fileID: 0}
-    - target: {fileID: 7483343704621805468, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8026126389146484197, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1907,7 +1894,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 783070123909900463, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2774532474509234083, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
       propertyPath: m_LocalPosition.x
