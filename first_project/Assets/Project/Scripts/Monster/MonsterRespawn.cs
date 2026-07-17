@@ -62,8 +62,9 @@ public class MonsterRespawn : MonoBehaviour
         TentacleController tentacleController = obj.GetComponent<TentacleController>();
         obj.SetActive(true);
         tentacleController.SetRootPos(rootPos);
-
+        
         return obj;
+
     }
     
 }

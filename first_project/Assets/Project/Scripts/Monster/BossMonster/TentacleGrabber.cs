@@ -63,6 +63,7 @@ public class TentacleGrabber : MonoBehaviour
             GameObject obj = ObjectPoolManager.Instance.DustEffectPop();
             obj.transform.position = hitPoint;
 
+
         }
     }
 }

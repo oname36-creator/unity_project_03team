@@ -13,7 +13,7 @@ public class SlowPad : MonoBehaviour
         if(collision.CompareTag("Player") && playerStatus != null)
         {
             // 플레이어의 이동속도 감소
-            playerStatus.isSlow = true;
+            playerStatus.ApplySlow(3f);
         }
     }
 }

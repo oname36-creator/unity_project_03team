@@ -276,21 +276,22 @@ public class MonsterAiBrain
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
         IMonsterState chase = new BossChase(owner);
+        IMonsterState attack = new BossAttack(owner);
         // 보스룸 상태 추가할 예정
 
         initialState = chase;
 
         // 나중에 상태 추가
-        //transitionMap[chase] = new List<Transition>
-        //    {
-        //        new Transition(
-        //            condition: () =>
-        //            {
-        //                return !owner.Chase;
-        //            },
-        //            targetState:Attack
-        //            )
-        //    };
+        transitionMap[chase] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Attack;
+                    },
+                    targetState:attack
+                    )
+            };
 
 
         initialState.Enter();
@@ -305,6 +306,7 @@ public class MonsterAiBrain
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
         IMonsterState idle = new BodyIdle(owner);
+        IMonsterState attackIdle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
         IMonsterState create = new BodyCreateTentacle(owner);
 
@@ -317,6 +319,14 @@ public class MonsterAiBrain
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
             {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.Boss.Attack;
+                    },
+                    targetState:attackIdle
+                    ),
+
                 new Transition(
                     condition: () =>
                     {
@@ -354,6 +364,17 @@ public class MonsterAiBrain
                     },
                     targetState:move
                     )
+            };
+
+        transitionMap[attackIdle] = new List<Transition>
+            {
+            //new Transition(
+            //        condition: () =>
+            //        {
+            //            return owner.Boss.Attack;
+            //        },
+            //        targetState:attackIdle
+            //        )
             };
 
         initialState.Enter();
