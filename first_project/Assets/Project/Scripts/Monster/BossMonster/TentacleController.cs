@@ -92,6 +92,29 @@ public class TentacleController : MonoBehaviour
     public GameObject Target { get; set; }
 
 
+    private void OnEnable()
+    {
+        // 상태 플래그 초기화
+        _isDead = false;
+        _isAttach = false;
+        _isSearch = false;
+        IsAttackTentacle = false;
+        Attack = false;
+        IsReturn = false;
+
+        // 마디 좌표들 현재 소환된 RootPos로 순간 이동
+        if(isTrap)
+        {
+            for(int i=0; i<segmentLength; ++i)
+            {
+                if(_segmentPos != null && i < _segmentPos.Length)
+                {
+                    _segmentPos[i] = RootPos;
+                }
+            }
+            IkTargetPosition = RootPos;
+        }
+    }
     void Awake()
     {
         _lineRend = GetComponent<LineRenderer>();

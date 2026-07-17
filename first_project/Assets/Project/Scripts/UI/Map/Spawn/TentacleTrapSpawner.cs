@@ -8,24 +8,18 @@ public class TentacleTrapSpawner : MonoBehaviour
     [Header("데이터 에셋 연결")]
     [SerializeField] private SOMapData mapData;
 
-    [Header("MonsterRespawn 컴포넌트")]
-    [SerializeField] private MonsterRespawn _monsterRespawn;
-    void Start()
+    private List<GameObject> spawnedTraps = new List<GameObject>();
+    #region Call RespawnTrap
+    public void SpawnTraps()
     {
         #region Exception Handling
-        if (_monsterRespawn == null)
-        {
-            Debug.LogError("MonsterRespawn 컴포넌트가 없습니다.");
-            return;
-        }
-
        if(mapData == null)
         {
             Debug.LogError("SOMapData가 없습니다.");
         }
         #endregion
 
-        #region Call RespawnTrap
+        
         // 2. 베이킹되어 저장된 상대 좌표들을 월드 좌표로 변환하여 RespawnTrap 호출
         int spawnCount = 0;
         foreach(var gimmick in mapData.gimmicList)
@@ -35,15 +29,36 @@ public class TentacleTrapSpawner : MonoBehaviour
                 // 월드 좌표로 변환
                 Vector3 worldPos = transform.TransformPoint(gimmick.position);
 
-                _monsterRespawn.RespawnTrap(worldPos);
+                MapEvent.onRequestTrapSpawn?.Invoke(worldPos, (trapObj) =>
+                {
+                    if (trapObj != null)
+                    {
+                        spawnedTraps.Add(trapObj);
+                    }
+                });
                 spawnCount++;
             }
         }
 
         // 확인용 디버깅
         Debug.Log($"[TentacleTrapSpawner] {gameObject.name}의 낭떠러지 함정 {spawnCount}개 스폰 완료.");
-        #endregion
+        
     }
+    #endregion
+
+    #region Recycle
+    public void RecycleTraps()
+    {
+        foreach(var trap in spawnedTraps)
+        {
+            if(trap != null && trap.activeSelf)
+            {
+                ObjectPoolManager.Instance.TentaclePush(trap);
+            }
+        }
+        spawnedTraps.Clear();
+    }
+    #endregion
 
     #region Baking
 

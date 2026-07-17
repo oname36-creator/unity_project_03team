@@ -6,10 +6,12 @@ public class MonsterRespawn : MonoBehaviour
     private void OnEnable()
     {
         MapEvent.onRequestMonsterSpawn += HandleSpawnRequest;
+        MapEvent.onRequestTrapSpawn += HandleTrapSpawnRequest;
     }
     private void OnDisable()
     {
         MapEvent.onRequestMonsterSpawn -= HandleSpawnRequest;
+        MapEvent.onRequestTrapSpawn -= HandleTrapSpawnRequest;
     }
     #endregion
 
@@ -18,6 +20,14 @@ public class MonsterRespawn : MonoBehaviour
     {
         GameObject monster = Respawn(name, pos);
         onSpawned?.Invoke(monster);
+    }
+    #endregion
+
+    #region HandleTrapSpawnRequest
+    private void HandleTrapSpawnRequest(Vector2 rootPos, Action<GameObject> onSpawned)
+    {
+        GameObject trap = RespawnTrap(rootPos);
+        onSpawned?.Invoke(trap);
     }
     #endregion
 
@@ -52,6 +62,7 @@ public class MonsterRespawn : MonoBehaviour
         TentacleController tentacleController = obj.GetComponent<TentacleController>();
         obj.SetActive(true);
         tentacleController.SetRootPos(rootPos);
+        
         return obj;
 
     }
