@@ -255,7 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98eee7c6bc40cb44b2de217c6c5d793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
-  Player: {fileID: 0}
+  Player: {fileID: 1648584961}
   Boss: {fileID: 0}
   _monsterBulletPrefab: {fileID: 345861578278468913, guid: d2d71bb5923757d40bc40464e05f6a47, type: 3}
   _monsterBirdPrefab: {fileID: 0}
@@ -1432,6 +1432,11 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1648584961 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4602153000674934412, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
+  m_PrefabInstance: {fileID: 7779005767762868362}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1719398699
 GameObject:
   m_ObjectHideFlags: 0
