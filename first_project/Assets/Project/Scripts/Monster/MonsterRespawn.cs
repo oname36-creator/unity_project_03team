@@ -27,7 +27,7 @@ public class MonsterRespawn : MonoBehaviour
     private void HandleTrapSpawnRequest(Vector2 rootPos, Action<GameObject> onSpawned)
     {
         GameObject trap = RespawnTrap(rootPos);
-        onSpawned?.Invoke(trap);
+        //onSpawned?.Invoke(trap);
     }
     #endregion
 
