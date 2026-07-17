@@ -24,7 +24,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     [Tooltip("플레이어 발밑에 배치한 빈 오브젝트를 넣어주세요.")]
     public Transform groundCheckPoint;
     [Tooltip("바닥을 감지할 박스의 크기입니다.")]
-    public Vector2 groundCheckSize = new Vector2(0.6f, 0.1f);
+    public Vector2 groundCheckSize = new Vector2(0.6f, 0.15f); // 💡 점프 씹힘 방지를 위해 Y축 판정을 0.1에서 0.15로 살짝 늘렸습니다.
     [Tooltip("바닥으로 인식할 레이어(예: Ground)를 선택하세요.")]
     public LayerMask groundLayer;
 
@@ -39,7 +39,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private ItemEffectApplicator itemApplicator;
     private Rigidbody2D rb;
 
-    // ★ [애니메이션 추가] 애니메이터 컴포넌트를 저장할 변수 선언
     private Animator animator;
 
     private PlayerAction controls;
@@ -50,19 +49,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float facingDirectionX = 1f;
 
-    // ★ [수정 및 추가] 시작할 때 인스펙터에 적어둔 플레이어의 원래 크기(Scale)를 저장할 변수
     private float originalScaleX;
     private float originalScaleY;
 
     void Start()
     {
-        /*if (SceneManagerEx.Instance != null)
-        {
-           // SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuPanel");
-
-            if (SceneManagerEx.Instance.pauseMenuUI != null)
-                SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
-        }*/
     }
 
     void Awake()
@@ -71,10 +62,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         itemApplicator = GetComponent<ItemEffectApplicator>();
         rb = GetComponent<Rigidbody2D>();
 
-        
         animator = GetComponentInChildren<Animator>();
 
-       
         originalScaleX = transform.localScale.x;
         originalScaleY = transform.localScale.y;
     }
@@ -99,24 +88,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (Time.timeScale == 0f) return;
         if (status == null || status.isDead) return;
 
-        if (groundCheckPoint != null)
-        {
-            status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
-        }
+        // 💡 [수정] 점프 씹힘 방지: 물리 기반 바닥 체크(OverlapBox) 코드를 FixedUpdate로 이동시켰습니다.
 
-        if (status.isGrounded)
-        {
-            jumpCount = 0;
-        }
-
-        status.isAerial = !status.isGrounded;
-
-        //이 부분의 고정된 myTargetScale(0.5f 등) 로직을 제거하고 아래의 유연한 뒤집기 코드로 교체했습니다.
         if (moveInput.x != 0f)
         {
-            facingDirectionX = Mathf.Sign(moveInput.x); // 오른쪽이면 1, 왼쪽이면 -1
-
-           
+            facingDirectionX = Mathf.Sign(moveInput.x);
             transform.localScale = new Vector3(facingDirectionX * originalScaleX, originalScaleY, 1f);
         }
 
@@ -130,14 +106,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 finalAnimSpeed = 1f;
             }
 
-            
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             bool attacking = stateInfo.IsTag("Attacking");
 
-           
             animator.SetBool("isAttacking", attacking);
-
-            
             animator.SetBool("isGrounded", status.isGrounded);
             animator.SetFloat("VelocityY", rb.linearVelocity.y);
             animator.SetFloat("Speed", finalAnimSpeed);
@@ -148,23 +120,25 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             playerPosData.x = Mathf.RoundToInt(transform.position.x);
             playerPosData.y = Mathf.RoundToInt(transform.position.y);
         }
-        if (animator != null)
-        {
-           
-            float inputSpeed = Mathf.Abs(moveInput.x);
-
-            
-            animator.SetFloat("Speed", inputSpeed);
-
-            
-            animator.SetFloat("VelocityY", rb.linearVelocity.y);
-            animator.SetBool("isGrounded", status.isGrounded);
-        }
     }
 
     void FixedUpdate()
     {
         if (status == null || status.isDead) return;
+
+        // 💡 [추천 반영] 바닥 체크 연산을 물리 사이클(FixedUpdate) 맨 위로 옯겨 타이밍을 완벽히 동기화했습니다.
+        if (groundCheckPoint != null)
+        {
+            status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
+        }
+
+        if (status.isGrounded)
+        {
+            jumpCount = 0; // 프레임 누락 없이 안전하게 점프 카운트가 초기화됩니다.
+        }
+
+        status.isAerial = !status.isGrounded;
+
         if (status.isHurt) return;
 
         float currentMoveX = rb.linearVelocity.x;
@@ -303,6 +277,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             if (status.hasSword)
             {
+                if (animator != null)
+                {
+                    animator.SetTrigger("OnSwordAttack");
+                }
                 Debug.Log("검 공격 발동! (검 히트박스 활성화)");
                 StartCoroutine(SwordAttackHitboxRoutine());
                 status.OnSwordAttackExecute();
@@ -440,7 +418,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
 
-            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.4f, JumpForce * 0.2f), ForceMode2D.Impulse);
+            // 💡 [수정] 넉백 힘을 절반으로 줄였습니다. (0.4f -> 0.2f / 0.2f -> 0.1f) 
+            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.2f, JumpForce * 0.1f), ForceMode2D.Impulse);
         }
 
         yield return new WaitForFixedUpdate();
