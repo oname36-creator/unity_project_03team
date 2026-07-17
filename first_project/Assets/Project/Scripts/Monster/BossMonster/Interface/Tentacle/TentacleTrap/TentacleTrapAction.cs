@@ -6,6 +6,8 @@ public class TentacleTrapAction : IMonsterState
 
 
     private TentacleController _owner;
+    private CinemachineImpulseSource _cinemachine;
+
 
     private Vector2 _rootPos;
     private Vector2 _targetPos;
@@ -19,6 +21,7 @@ public class TentacleTrapAction : IMonsterState
     public TentacleTrapAction(TentacleController owner)
     {
         _owner = owner;
+        _cinemachine = _owner.GetComponent<CinemachineImpulseSource>();
     }
 
     public void Enter()
@@ -34,7 +37,7 @@ public class TentacleTrapAction : IMonsterState
         _currentIkPos = _rootPos;
         _owner.IkTargetPosition = _currentIkPos;
 
-        _owner.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+        _cinemachine.GenerateImpulse();
         SoundManager.Instance.PlaySFX("BossTrapAttack");
 
     }
