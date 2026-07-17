@@ -37,6 +37,7 @@ public class BossChase : IMonsterState
         _owner.gameObject.tag = "Boss";
         _owner.gameObject.layer = LayerMask.NameToLayer("Boss");
 
+        SoundManager.Instance.PlaySFX("BossSound");
     }
 
     public void Update()

@@ -659,7 +659,7 @@ Transform:
   m_GameObject: {fileID: 629934038}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 40.94, y: -4.42, z: 0}
+  m_LocalPosition: {x: 40.31, y: -4.69, z: 0}
   m_LocalScale: {x: 21.592049, y: 0.42673644, z: 1.2386}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -700,6 +700,62 @@ Transform:
   - {fileID: 836920353}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &756339014
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 756339015}
+  - component: {fileID: 756339016}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &756339015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756339014}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 892.8663, y: 488.12457, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &756339016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756339014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db722735c8cba94ba1175d002409c2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  _startSceneBGM: {fileID: 0}
+  _gameSceneBGM: {fileID: 0}
+  _gameSceneBGM1: {fileID: 0}
+  _gameSceneBGM2: {fileID: 0}
+  _gameSceneBGM3: {fileID: 0}
+  _gameSceneBGM4: {fileID: 0}
+  _gameSceneBGM5: {fileID: 0}
+  _gameSceneBGM6: {fileID: 0}
+  _endingSceneBGM: {fileID: 0}
+  _endingSceneBGM1: {fileID: 0}
+  masterBgmVolume: 1
+  masterSfxVolume: 1
 --- !u!1 &836920352
 GameObject:
   m_ObjectHideFlags: 0
@@ -2424,9 +2480,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1496036183}
     - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: _bossSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9c50a15e16a05b4459b24771528dc482, type: 3}
+    - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: _bossAttack
+      value: 
+      objectReference: {fileID: 8300000, guid: bb903115180b2ea4c916b9e90b2ea0ab, type: 3}
+    - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
       propertyPath: MonsterRespawner
       value: 
       objectReference: {fileID: 1166775691}
+    - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: _bossScrethSound
+      value: 
+      objectReference: {fileID: 8300000, guid: abb80f47ec2d05d43b4540add26871f4, type: 3}
+    - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: _bossScreechSound
+      value: 
+      objectReference: {fileID: 8300000, guid: abb80f47ec2d05d43b4540add26871f4, type: 3}
+    - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: _bossTrapAttackSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 030173f4d1749204db153c70da9dd792, type: 3}
+    - target: {fileID: 5153171314910747342, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: _bossGroundAttackSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 11882671eaec80a4bb1d30723bec8b26, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2763,3 +2843,4 @@ SceneRoots:
   - {fileID: 2029986681}
   - {fileID: 7923543930133705877}
   - {fileID: 1496036182}
+  - {fileID: 756339015}

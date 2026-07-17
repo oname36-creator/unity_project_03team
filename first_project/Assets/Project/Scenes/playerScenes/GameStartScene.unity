@@ -443,7 +443,7 @@ MonoBehaviour:
   _gameSceneBGM2: {fileID: 8300000, guid: 995a1206cf0b43f4da251466a4bba4ef, type: 3}
   _gameSceneBGM3: {fileID: 8300000, guid: 5d530302128ae1243b06cebbe5479c55, type: 3}
   _gameSceneBGM4: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
-  _gameSceneBGM5: {fileID: 0}
+  _gameSceneBGM5: {fileID: 8300000, guid: d33333f0ab3e2f448b1a45305bba951c, type: 3}
   _gameSceneBGM6: {fileID: 0}
   _endingSceneBGM: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
   _endingSceneBGM1: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}

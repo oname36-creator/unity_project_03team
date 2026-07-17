@@ -110,6 +110,7 @@ public class TentacleUp : IMonsterState
 
     public void Exit()
     {
+        SoundManager.Instance.PlaySFX("BossAttack");
         if (_owner.warningEffectRenderer != null)
         {
             _owner.warningEffectRenderer.gameObject.SetActive(false);

@@ -17,6 +17,14 @@ public class BossController : MonoBehaviour
     [Header("Monster Respawn")]
     public GameObject MonsterRespawner;
 
+    [Header("Sound Clips")]
+    [SerializeField] private AudioClip _bossSound;
+    [SerializeField] private AudioClip _bossScreechSound;
+    [SerializeField] private AudioClip _bossTrapAttackSound;
+    [SerializeField] private AudioClip _bossAttack;
+
+
+
 
     #endregion
 
@@ -128,6 +136,12 @@ public class BossController : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 120;
+
+        SoundManager.Instance.AddSfx("BossSound", _bossSound);
+        SoundManager.Instance.AddSfx("BossScreech", _bossScreechSound);
+        SoundManager.Instance.AddSfx("BossTrapAttack", _bossTrapAttackSound);
+        SoundManager.Instance.AddSfx("BossAttack", _bossAttack);
+
 
         _monsterMachine = MonsterAiBrain.MakeMachine("Boss", this);
     }

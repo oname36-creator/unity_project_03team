@@ -35,6 +35,7 @@ public class TentacleTrapAction : IMonsterState
         _owner.IkTargetPosition = _currentIkPos;
 
         _owner.GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+        SoundManager.Instance.PlaySFX("BossTrapAttack");
 
     }
 

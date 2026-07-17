@@ -18,6 +18,7 @@ public class BodyHurt : IMonsterState
     public void Enter()
     {
         _time = 0f;
+        SoundManager.Instance.PlaySFX("BossScreech");
     }
 
     public void Update()
