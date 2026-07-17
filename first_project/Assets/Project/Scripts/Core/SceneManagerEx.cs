@@ -50,7 +50,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         isPaused = false; // 일시정지 상태 변수도 거짓으로 초기화
 
         Debug.Log("게임 시작");
-        SceneManager.LoadScene("GameScenePlayer");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void QuitGame()
