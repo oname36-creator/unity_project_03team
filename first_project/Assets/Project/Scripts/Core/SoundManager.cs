@@ -21,12 +21,6 @@ public class SoundManager : Singleton<SoundManager>
     [Header("BGM")]
     [SerializeField] private AudioClip _startSceneBGM;
     [SerializeField] private AudioClip _gameSceneBGM;
-    [SerializeField] private AudioClip _gameSceneBGM1;
-    [SerializeField] private AudioClip _gameSceneBGM2;
-    [SerializeField] private AudioClip _gameSceneBGM3;
-    [SerializeField] private AudioClip _gameSceneBGM4;
-    [SerializeField] private AudioClip _gameSceneBGM5;
-    [SerializeField] private AudioClip _gameSceneBGM6;
     [SerializeField] private AudioClip _endingSceneBGM;
     [SerializeField] private AudioClip _endingSceneBGM1;
 
@@ -38,12 +32,6 @@ public class SoundManager : Singleton<SoundManager>
 
     public const string StartSceneBGM = "StartSceneBGM";
     public const string GameSceneBGM = "GameSceneBGM";
-    public const string GameSceneBGM1 = "GameSceneBGM1";
-    public const string GameSceneBGM2 = "GameSceneBGM2";
-    public const string GameSceneBGM3 = "GameSceneBGM3";
-    public const string GameSceneBGM4 = "GameSceneBGM4";
-    public const string GameSceneBGM5 = "GameSceneBGM5";
-    public const string GameSceneBGM6 = "GameSceneBGM6";
     public const string EndingSceneBGM = "EndingSceneBGM";
     public const string EndingSceneBGM1 = "EndingSceneBGM1";
 
@@ -53,6 +41,8 @@ public class SoundManager : Singleton<SoundManager>
 
     private AudioSource _bgmSource;
 
+    // playOneShot을 사용하면 적절히 알아서 믹싱이 됨
+    // 알아둘것
 
     private AudioSource[] _sfxAudioSources;
 
@@ -83,12 +73,6 @@ public class SoundManager : Singleton<SoundManager>
         {
             { StartSceneBGM, new SoundData(_startSceneBGM) },
             { GameSceneBGM, new SoundData(_gameSceneBGM) },
-            { GameSceneBGM1, new SoundData(_gameSceneBGM1) },
-            { GameSceneBGM2, new SoundData(_gameSceneBGM2) },
-            { GameSceneBGM3, new SoundData(_gameSceneBGM3) },
-            { GameSceneBGM4, new SoundData(_gameSceneBGM4) },
-            { GameSceneBGM5, new SoundData(_gameSceneBGM5) },
-            { GameSceneBGM6, new SoundData(_gameSceneBGM6) },
             { EndingSceneBGM, new SoundData(_endingSceneBGM) },
             { EndingSceneBGM1, new SoundData(_endingSceneBGM1) }
         };
