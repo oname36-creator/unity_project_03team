@@ -22,7 +22,8 @@ public class TentacleController : MonoBehaviour
     public Transform grabberHead;         // 물건을 잡을 트리거가 있는 실제 오브젝트
 
     [Header("Effects")]
-    public SpriteRenderer warningEffectRenderer;
+    public SpriteRenderer warningEffectRenderer_1;
+    public SpriteRenderer warningEffectRenderer_2;
 
     [Header("Trap")]
     public bool isTrap = false;
