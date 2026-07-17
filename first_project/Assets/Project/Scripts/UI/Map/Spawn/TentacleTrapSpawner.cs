@@ -105,7 +105,7 @@ public class TentacleTrapSpawner : MonoBehaviour
 
         // 2. 낭떠러지(구멍) 구간 탐색 시작
         float step = 0.2f;                       // 0.2미터 간격으로 정밀 스캔
-        float checkY = -1.0f;                    // 캐릭터 기준 기본 Y 레벨 오프셋
+        float checkY = -10.0f;                    // 캐릭터 기준 기본 Y 레벨 오프셋
         float minGapWidth = 0.8f;                // 함정을 스폰할 최소 구멍 너비 (너무 좁은 틈새는 제외)
         List<Vector3> detectedCliffs = new List<Vector3>();
         bool inGap = false;
