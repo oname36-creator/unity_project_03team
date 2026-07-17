@@ -185,6 +185,10 @@ MonoBehaviour:
   MonsterData: {fileID: 11400000, guid: bd24f3aa5be70a546bd3afd0d3fca85f, type: 2}
   Player: {fileID: 0}
   MonsterRespawner: {fileID: 0}
+  _bossSound: {fileID: 8300000, guid: 9c50a15e16a05b4459b24771528dc482, type: 3}
+  _bossScreechSound: {fileID: 8300000, guid: abb80f47ec2d05d43b4540add26871f4, type: 3}
+  _bossTrapAttackSound: {fileID: 8300000, guid: 030173f4d1749204db153c70da9dd792, type: 3}
+  _bossAttack: {fileID: 8300000, guid: bb903115180b2ea4c916b9e90b2ea0ab, type: 3}
 --- !u!114 &2281844050526658213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,12 +392,17 @@ PrefabInstance:
     - target: {fileID: 8888647828897842266, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
       propertyPath: warningEffectRenderer
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 507159615359587843}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
+--- !u!212 &507159615359587843 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3648393652919115768, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
+  m_PrefabInstance: {fileID: 3866472535812344315}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1005565589150569598 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4061126300298583429, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}

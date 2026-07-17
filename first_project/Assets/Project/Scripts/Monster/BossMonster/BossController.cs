@@ -142,7 +142,7 @@ public class BossController : MonoBehaviour
         SoundManager.Instance.AddSfx("BossTrapAttack", _bossTrapAttackSound);
         SoundManager.Instance.AddSfx("BossAttack", _bossAttack);
 
-
+        Debug.Log("BossController Start");
         _monsterMachine = MonsterAiBrain.MakeMachine("Boss", this);
     }
 
@@ -150,7 +150,7 @@ public class BossController : MonoBehaviour
     void Update()
     {
         if (_isDead) { return; }
-
+        //Debug.Log("BossController Update");
         _monsterMachine.Update();
 
     }

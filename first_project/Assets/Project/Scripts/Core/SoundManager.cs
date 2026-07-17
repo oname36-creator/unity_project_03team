@@ -58,7 +58,7 @@ public class SoundManager : Singleton<SoundManager>
 
 
 
-    private void Start()
+    private void Awake()
     {
         _bgmSource = gameObject.AddComponent<AudioSource>();
         _bgmSource.loop = true;
