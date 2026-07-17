@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // 💡 씬 전환을 위해 필수!
+using UnityEngine.SceneManagement; 
 
 public class InGameSceneManager : MonoBehaviour
 {
@@ -24,7 +24,7 @@ public class InGameSceneManager : MonoBehaviour
         }
     }
 
-    // 💡 버튼이 클릭되었을 때 실행될 함수 1 (Resume)
+    
     public void Btn_Resume()
     {
         if (SceneManagerEx.Instance != null)
@@ -37,7 +37,7 @@ public class InGameSceneManager : MonoBehaviour
     public void Btn_GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("GameStartScene"); // 본인의 첫 화면 씬 이름
+        SceneManager.LoadScene("GameStartScene");
         Debug.Log("첫 화면 씬으로 이동 완료!");
     }
 

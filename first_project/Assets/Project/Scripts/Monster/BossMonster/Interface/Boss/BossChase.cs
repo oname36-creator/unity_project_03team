@@ -50,8 +50,8 @@ public class BossChase : IMonsterState
             Vector2 pos = _playerTransform.position;
             pos.x += 10f;
             pos.y -= 10f;
+            //_monsterRespawn.RespawnTrap(pos);
             Debug.Log("Boss Respawn Tentacle Trap");
-            _monsterRespawn.RespawnTrap(pos);
             _time = 0f;
         }
 

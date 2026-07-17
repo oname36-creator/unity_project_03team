@@ -16,8 +16,14 @@ public class MapChunk : MonoBehaviour
     [Header("몬스터 자동 스폰 설정")]
     [SerializeField] private SOMonsterSpawnSetting spawnSetting;
 
+    
+    private TentacleTrapSpawner trapSpawner;
+
     [Header("플레이어 안전 스폰 거리")]
     [SerializeField] private float minPlayerDistance = 4f;
+
+    [Header("몬스터 리스포너")]
+    [SerializeField] private MonsterRespawn monsterRespawner;
 
     [Header("진입 영역 마진")]
     public float margin = 2f;
@@ -26,20 +32,33 @@ public class MapChunk : MonoBehaviour
     private List<GameObject> spawnedMonsters = new List<GameObject>();
     #endregion
 
+    private void Awake()
+    {
+        trapSpawner = GetComponentInChildren<TentacleTrapSpawner>();
+    }
     #region Event
     private void OnEnable()
     {
         // 맵 청크 활성화 시 스폰 처리
         SpawnMonstersInChunk();
+        if(trapSpawner != null)
+        {
+            trapSpawner.SpawnTraps();
+        }
     }
     private void OnDisable()
     {
         // 맵 청크 비활성화 시 스폰한 몬스터 일괄 풀 반환
         RecycleMonsters();
+        
+        if(trapSpawner != null)
+        {
+            trapSpawner.RecycleTraps();
+        }
     }
     #endregion
 
-    #region SpawnMonstersInChunk
+    #region MonstersInChunk
     private void SpawnMonstersInChunk()
     {
         // 예외 처리 : SO가 지정되지 않을 시 스폰 생략
@@ -248,4 +267,6 @@ public class MapChunk : MonoBehaviour
         spawnedMonsters.Clear();
     }
     #endregion
+
+
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -41,16 +42,41 @@ public class PlayerStatus : MonoBehaviour
             Debug.Log($"isSlow 상태 변경: {_isSlow} -> 현재 속도 배율: {speedMultiplier}");
         }
     }
-
+    private Coroutine slowCoroutine;
     void Awake()
     {
         ResetAttackStatus();
     }
 
-    // ★ 검 버프 활성화 (총 해제 로직 포함)
+    public void ApplySlow(float duration = 3f)
+    {
+        if (isDead) return;
+
+        
+        if (slowCoroutine != null)
+        {
+            StopCoroutine(slowCoroutine);
+        }
+
+        
+        slowCoroutine = StartCoroutine(SlowTimer(duration));
+    }
+
+    
+    private IEnumerator SlowTimer(float duration)
+    {
+        isSlow = true; // 슬로우 활성화
+
+        
+        yield return new WaitForSeconds(duration);
+
+        isSlow = false; // 슬로우 해제
+        slowCoroutine = null;
+        Debug.Log("슬로우 상태가 해제되어 원래 속도로 복구되었습니다.");
+    }
     public void EnableSwordBuff(float bonusDamage, float bonusRange, int count)
     {
-        // 새로운 무기를 들면 기존 무기 상태는 해제해주는 것이 안전합니다.
+      
         hasGun = false;
         gunAttackCount = 0;
 
@@ -61,8 +87,6 @@ public class PlayerStatus : MonoBehaviour
 
         Debug.Log($"검 장착! 현재 공격력: {currentDamage}, 현재 범위: {currentAttackRange}, 남은 횟수: {swordAttackCount}");
     }
-
-    // ★ 검 공격을 실행할 때 호출 (OnAttackExecute에서 이름을 분리하여 명확하게 변경)
     public void OnSwordAttackExecute()
     {
         if (hasSword && swordAttackCount > 0)
@@ -80,26 +104,26 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    // ★ 맨손 공격을 실행할 때 호출할 함수 (기존 함수는 맨손용으로 유지)
+  
     public void OnAttackExecute()
     {
         Debug.Log("맨손 공격 실행됨.");
-        // 맨손 공격 시 추가적인 내구도 차감 등은 없음
+        
     }
 
     // 능력치 원상 복구 (검 해제)
     private void ResetAttackStatus()
     {
-        hasSword = false; // ★ 상태 해제
+        hasSword = false; 
         swordAttackCount = 0;
         currentDamage = baseDamage;
         currentAttackRange = baseAttackRange;
     }
 
-    // 총 버프 활성화 (검 해제 로직 포함)
+    
     public void EnableGunBuff(int count)
     {
-        // 새로운 무기를 들면 기존 무기 상태는 해제
+
         ResetAttackStatus();
 
         gunAttackCount = count;
@@ -107,7 +131,7 @@ public class PlayerStatus : MonoBehaviour
         Debug.Log($"총 장착! 장탄수: {gunAttackCount}발");
     }
 
-    // 총 쏠 때마다 카운트 차감
+
     public void OnGunAttackExecute()
     {
         if (hasGun && gunAttackCount > 0)
@@ -125,7 +149,6 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    // HP 변경을 안전하게 처리하는 함수
     public void ChangeHp(float amount)
     {
         if (isDead) return;
