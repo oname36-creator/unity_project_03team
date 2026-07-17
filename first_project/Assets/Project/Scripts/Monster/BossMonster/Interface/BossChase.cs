@@ -44,7 +44,6 @@ public class BossChase : IMonsterState
             pos.x += 10f;
             pos.y -= 10f;
             Debug.Log("Boss Respawn Tentacle Trap");
-            _monsterRespawn.RespawnTrap(pos);
             _time = 0f;
         }
 
