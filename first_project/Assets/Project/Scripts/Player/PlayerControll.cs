@@ -277,6 +277,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             if (status.hasSword)
             {
+                if (animator != null)
+                {
+                    animator.SetTrigger("OnSwordAttack");
+                }
                 Debug.Log("검 공격 발동! (검 히트박스 활성화)");
                 StartCoroutine(SwordAttackHitboxRoutine());
                 status.OnSwordAttackExecute();
