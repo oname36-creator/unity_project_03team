@@ -58,7 +58,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (SceneManagerEx.Instance != null)
         {
-            SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuCanvas");
+           // SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuPanel");
 
             if (SceneManagerEx.Instance.pauseMenuUI != null)
                 SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
@@ -71,10 +71,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         itemApplicator = GetComponent<ItemEffectApplicator>();
         rb = GetComponent<Rigidbody2D>();
 
-        // ★ [수정] 부모 오브젝트의 애니메이터를 끄고 자식(Visual)에서 애니메이터를 안전하게 가져옵니다.
+        
         animator = GetComponentInChildren<Animator>();
 
-        // ★ [수정 및 추가] 시작 시 인스펙터에 지정된 플레이어 오브젝트의 고유 Scale 값을 저장해 둡니다.
+       
         originalScaleX = transform.localScale.x;
         originalScaleY = transform.localScale.y;
     }

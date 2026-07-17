@@ -52,17 +52,17 @@ public class PlayerStatus : MonoBehaviour
     {
         if (isDead) return;
 
-        // 이미 작동 중인 슬로우 타이머가 있다면 중복 실행을 방지하기 위해 끕니다. (슬로우 시간 갱신 효과)
+        
         if (slowCoroutine != null)
         {
             StopCoroutine(slowCoroutine);
         }
 
-        // 슬로우 타이머 시작
+        
         slowCoroutine = StartCoroutine(SlowTimer(duration));
     }
 
-    // ★ [추가] 슬로우 시간을 측정하고 해제하는 코루틴 함수
+    
     private IEnumerator SlowTimer(float duration)
     {
         isSlow = true; // 슬로우 활성화
