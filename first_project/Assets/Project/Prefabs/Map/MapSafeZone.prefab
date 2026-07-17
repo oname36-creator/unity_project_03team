@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8094089709612127119}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: EndPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3831571042361631100}
   - component: {fileID: 7128048202718053195}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 5728924990931830575}
   m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -552,9 +552,9 @@ GameObject:
   - component: {fileID: 3070873199053448093}
   - component: {fileID: 2559313851394986435}
   - component: {fileID: 2285323167233519901}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: MapSafeZone
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -592,6 +592,9 @@ MonoBehaviour:
   startPosition: {fileID: 0}
   endPosition: {fileID: 8094089709612127119}
   cameraBoundaryCollider: {fileID: 2285323167233519901}
+  spawnSetting: {fileID: 0}
+  minPlayerDistance: 4
+  margin: 2
 --- !u!61 &2285323167233519901
 BoxCollider2D:
   m_ObjectHideFlags: 0
