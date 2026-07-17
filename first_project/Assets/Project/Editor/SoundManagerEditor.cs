@@ -29,30 +29,6 @@ public class SoundManagerEditor : Editor
         {
             soundManager.PlayBGM(SoundManager.GameSceneBGM);
         }
-        if (GUILayout.Button("재생: Game Scene BGM1", GUILayout.Height(30)))
-        {
-            soundManager.PlayBGM(SoundManager.GameSceneBGM1);
-        }
-        if (GUILayout.Button("재생: Game Scene BGM2", GUILayout.Height(30)))
-        {
-            soundManager.PlayBGM(SoundManager.GameSceneBGM2);
-        }
-        if (GUILayout.Button("재생: Game Scene BGM3", GUILayout.Height(30)))
-        {
-            soundManager.PlayBGM(SoundManager.GameSceneBGM3);
-        }
-        if (GUILayout.Button("재생: Game Scene BGM4", GUILayout.Height(30)))
-        {
-            soundManager.PlayBGM(SoundManager.GameSceneBGM4);
-        }
-        if (GUILayout.Button("재생: Game Scene BGM5", GUILayout.Height(30)))
-        {
-            soundManager.PlayBGM(SoundManager.GameSceneBGM5);
-        }
-        if (GUILayout.Button("재생: Game Scene BGM6", GUILayout.Height(30)))
-        {
-            soundManager.PlayBGM(SoundManager.GameSceneBGM6);
-        }
 
         if (GUILayout.Button("재생: Ending Scene BGM", GUILayout.Height(30)))
         {

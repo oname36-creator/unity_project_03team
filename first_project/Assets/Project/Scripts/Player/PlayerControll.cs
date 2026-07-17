@@ -56,13 +56,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     void Start()
     {
-        if (SceneManagerEx.Instance != null)
+        /*if (SceneManagerEx.Instance != null)
         {
            // SceneManagerEx.Instance.pauseMenuUI = GameObject.Find("PauseMenuPanel");
 
             if (SceneManagerEx.Instance.pauseMenuUI != null)
                 SceneManagerEx.Instance.pauseMenuUI.SetActive(false);
-        }
+        }*/
     }
 
     void Awake()
@@ -284,6 +284,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             if (status.hasGun)
             {
                 Debug.Log("총기 발사!");
+                if (animator != null)
+                {
+                    animator.SetTrigger("OnGunAttack");
+                }
                 Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
                 GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
 
