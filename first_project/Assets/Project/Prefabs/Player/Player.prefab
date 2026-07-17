@@ -396,8 +396,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6601928739826459179}
   - component: {fileID: 2704475883169634780}
-  - component: {fileID: 269528678239602801}
-  - component: {fileID: 2723052298513159584}
+  - component: {fileID: 8871773683800496912}
+  - component: {fileID: 6874083082631024396}
   m_Layer: 6
   m_Name: Visual
   m_TagString: Untagged
@@ -442,7 +442,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!111 &269528678239602801
+--- !u!111 &8871773683800496912
 Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -458,7 +458,7 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
---- !u!212 &2723052298513159584
+--- !u!212 &6874083082631024396
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0

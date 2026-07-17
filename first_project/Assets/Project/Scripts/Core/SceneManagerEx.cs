@@ -45,7 +45,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
 
     public void LoadGameScene()
     {
-        // 💡 핵심: 멈췄던 시간을 반드시 1(정상 속도)로 초기화하고 씬을 넘겨야 합니다!
+      
         Time.timeScale = 1f;
         isPaused = false; // 일시정지 상태 변수도 거짓으로 초기화
 
