@@ -1,5 +1,8 @@
 ﻿using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class BossChase : IMonsterState
 {
@@ -10,12 +13,23 @@ public class BossChase : IMonsterState
 
     private MonsterRespawn _monsterRespawn;
 
-    
+    private Camera _camera;
+
     private Coroutine _chaseCoroutine;
+
+
+    public GameObject _distanceUi;
+    public RectTransform _bossDistanceTransform;
+    public TextMeshProUGUI _bossDistanceText;
+    public Canvas _canvas; // 타겟 UI가 포함된 Canvas
+
 
 
 
     private float _time;
+
+    private float _CameraWidth;
+    private float _orthoSize;
 
 
     // 생성자에서 owner를 직접 받도록 셋업
@@ -26,6 +40,16 @@ public class BossChase : IMonsterState
         _chaseCoroutine = _owner.StartCoroutine(Chase());
         _monsterRespawn = _owner.MonsterRespawner.GetComponent<MonsterRespawn>();
         _playerTransform = _owner.Player.transform;
+        _bossDistanceTransform = _owner.BossDistanceTransform;
+        _bossDistanceText = _owner.BossDistanceText;
+
+        _distanceUi = _bossDistanceTransform.gameObject;
+        _canvas = _owner.Canvas;
+
+        _camera = _owner.Camera;
+        _orthoSize = _camera.orthographicSize;
+        _CameraWidth = _orthoSize * _camera.aspect;
+
     }
 
 
@@ -42,17 +66,36 @@ public class BossChase : IMonsterState
 
     public void Update()
     {
-        _time += Time.deltaTime;
 
-        if(_time > 6f) 
+        if (!_distanceUi.activeSelf) { return;}
+
+        float directionX = _playerTransform.position.x - _ownerTransform.position.x;
+
+        _bossDistanceText.text = (directionX).ToString("F2") + "m";
+
+
+        Camera canvasCam = _canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : _canvas.worldCamera;
+
+        Vector2 uiScreenPos = RectTransformUtility.WorldToScreenPoint(canvasCam, _bossDistanceTransform.position);
+
+
+        Vector3 uiWorldPoint = _camera.ScreenToWorldPoint(new Vector3(uiScreenPos.x, uiScreenPos.y, 0f));
+        float targetWorldX = uiWorldPoint.x;
+
+
+        float targetWorldY = EffectPosition(targetWorldX);
+
+
+        Vector3 targetGlobalPos = new Vector3(targetWorldX, targetWorldY, _ownerTransform.position.z);
+        Vector3 targetScreenPos = _camera.WorldToScreenPoint(targetGlobalPos);
+
+
+        RectTransform parentRect = _bossDistanceTransform.parent as RectTransform;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, targetScreenPos, canvasCam, out Vector2 localPos))
         {
 
-            Vector2 pos = _playerTransform.position;
-            pos.x += 10f;
-            pos.y -= 10f;
-            //_monsterRespawn.RespawnTrap(pos);
-            Debug.Log("Boss Respawn Tentacle Trap");
-            _time = 0f;
+            Vector2 currentAnchoredPos = _bossDistanceTransform.anchoredPosition;
+            _bossDistanceTransform.anchoredPosition = new Vector2(currentAnchoredPos.x, localPos.y);
         }
 
     }
@@ -66,10 +109,17 @@ public class BossChase : IMonsterState
         }
 
     }
+    private float EffectPosition(float x)
+    {
+        float gradient = (_playerTransform.position.y - _ownerTransform.position.y) / (_playerTransform.position.x - _ownerTransform.position.x);
+
+        return gradient * (x - _ownerTransform.position.x) + _ownerTransform.position.y;
+
+    }
 
 
 
-    IEnumerator Chase() 
+    IEnumerator Chase()
     {
         //_owner.SetTarget();
 

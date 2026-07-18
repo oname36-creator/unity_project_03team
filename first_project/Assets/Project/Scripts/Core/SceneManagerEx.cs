@@ -17,7 +17,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == "GameScenePlayer")
+        if (SceneManager.GetActiveScene().name == "GameScene")
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -32,6 +32,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         isPaused = true;
         Time.timeScale = 0f;
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+        SoundManager.Instance.PauseBGM();
         Debug.Log("게임 일시정지");
     }
 
@@ -40,6 +41,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         isPaused = false;
         Time.timeScale = 1f;
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        SoundManager.Instance.ResumeBGM();
         Debug.Log("게임 재개");
     }
 
@@ -78,7 +80,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         Time.timeScale = 1f; // 💡 중요: 정지된 시간을 풀고 씬을 새로고침합니다.
 
         // 현재 씬("GameScenePlayer")을 다시 로드하여 처음부터 시작하게 만듭니다.
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScenePlayer");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
         Debug.Log("게임 다시 시작");
     }
 }

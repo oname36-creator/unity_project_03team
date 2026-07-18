@@ -5,10 +5,13 @@ using Unity.VisualScripting;
 public class TentacleUp : IMonsterState
 {
     private TentacleController _owner;
+    private Transform _bossTransform;
 
     private SpriteRenderer _warningEffect;
 
     private Transform _playerTransform;
+
+    private Camera _camera;
 
     // 5초 타이머를 위한 변수
     private float _timer;
@@ -22,15 +25,26 @@ public class TentacleUp : IMonsterState
 
     private Vector2 _prevPlayerPos;
     private Vector2 _velocity = Vector2.zero; // SmoothDamp의 내부 속도 계산용
-    private float _followSmoothTime = 0.15f;  // 따라가는 딜레이 (값이 클수록 무겁게/느리게 따라감)
+    private float _followSmoothTime = 0.1f;  // 따라가는 딜레이 (값이 클수록 무겁게/느리게 따라감)
 
     private float _targetAlpha = 0.5f;
+
+    private float _CameraWidth;
+    private float _orthoSize;
+
 
     public TentacleUp(TentacleController owner)
     {
         _owner = owner;
         _playerTransform = _owner.Boss.Player.transform;
         _playerRadius = _owner.Boss.Player.GetComponent<CapsuleCollider2D>().size.y / 2;
+
+        _bossTransform = _owner.Boss.transform;
+
+        _camera = _owner.Boss.Camera;
+
+        _orthoSize = _camera.orthographicSize;
+        _CameraWidth = _orthoSize * _camera.aspect;
 
         _warningEffect = _owner.warningEffectRenderer_1;
     }
@@ -79,16 +93,20 @@ public class TentacleUp : IMonsterState
 
         Vector2 currentLerpOffset = Vector2.Lerp(_startOffset, targetOffset, easeOutT);
 
-        currentLerpOffset.y -= _playerRadius;
+        //currentLerpOffset.y -= _playerRadius;
 
         _owner.IkTargetPosition = (Vector2)_owner.tentacleRoot.position + currentLerpOffset;
 
         // 4. 이펙트 위치 및 페이드인(알파값) 동시 갱신
         if (_warningEffect != null && _warningEffect.gameObject.activeSelf)
         {
+            float posX = _prevPlayerPos.x - _CameraWidth * 0.8f;
+            Vector2 EffecetPos = new Vector2(posX, EffectPosition(posX));
+
+
             _warningEffect.transform.position = Vector2.SmoothDamp(
                 _warningEffect.transform.position,
-                _prevPlayerPos,
+                EffecetPos,
                 ref _velocity,
                 _followSmoothTime
             );
@@ -106,6 +124,8 @@ public class TentacleUp : IMonsterState
         {
             _owner.Attack = true;
             Debug.Log("5초 경과! 촉수 공격 준비 완료 (Attack = true)");
+
+
         }
     }
 
@@ -118,4 +138,16 @@ public class TentacleUp : IMonsterState
             _warningEffect.gameObject.SetActive(false);
         }
     }
+
+    private float EffectPosition(float x) 
+    {
+        float gradient = (_prevPlayerPos.y - _bossTransform.position.y + 2f)/(_prevPlayerPos.x - _bossTransform.position.x); 
+
+        return gradient * (x - _bossTransform.position.x) + _bossTransform.position.y + 2f;
+
+    }
+
+
+
+
 }

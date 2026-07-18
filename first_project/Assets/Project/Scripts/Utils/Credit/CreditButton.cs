@@ -11,6 +11,13 @@ public class CreditButton : MonoBehaviour
 
     public void OnClickCreditButton() 
     {
+        SoundManager.Instance.PlayBGM("CreditBGM");
         _creditUI.SetActive(true);
     }
+
+    public void OnDisableStartSceneCreditUI()
+    {
+        SoundManager.Instance.PlayBGM("StartSceneBGM");
+    }
+
 }
