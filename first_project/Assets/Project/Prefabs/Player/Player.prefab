@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControll
   jumpCount: 1
-  JumpForce: 15
+  JumpForce: 17
   MoveSpeed: 5
   aerialDampingAmount: 0.5
   attackBoxSize: {x: 1.5, y: 1}
