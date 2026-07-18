@@ -1,31 +1,31 @@
 fileFormatVersion: 2
-guid: 6c72cef7156b5764d861e42b1574619f
+guid: 4421d355762d622498e9080bfb1373a8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 844156799403807979
-    second: gunMotion_0
+      213: 3604192591476135790
+    second: dead_0
   - first:
-      213: -2048517331775702553
-    second: gunMotion_1
+      213: -2991312472683628695
+    second: dead_1
   - first:
-      213: 6393421100916224215
-    second: gunMotion_2
+      213: 4404202361452085733
+    second: dead_2
   - first:
-      213: -6233845459029647689
-    second: gunMotion_3
+      213: -2479182351684794062
+    second: dead_3
   - first:
-      213: -4613815144231718945
-    second: gunMotion_4
+      213: -2436804021803932963
+    second: dead_4
   - first:
-      213: 6894284448036964001
-    second: gunMotion_5
+      213: 5825826999855438651
+    second: dead_5
   - first:
-      213: 4904493342563432909
-    second: gunMotion_6
+      213: -5348288698317918056
+    second: dead_6
   - first:
-      213: -6182599216839211316
-    second: gunMotion_7
+      213: -2347424302258597211
+    second: dead_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -147,13 +147,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gunMotion_0
+      name: dead_0
       rect:
         serializedVersion: 2
-        x: 44
-        y: 551
-        width: 257
-        height: 389
+        x: 85
+        y: 538
+        width: 189
+        height: 429
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,20 +162,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: be4d133f22c07bb00800000000000000
-      internalID: 844156799403807979
+      spriteID: e67970de01aa40230800000000000000
+      internalID: 3604192591476135790
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_1
+      name: dead_1
       rect:
         serializedVersion: 2
-        x: 469
-        y: 549
-        width: 200
-        height: 378
+        x: 454
+        y: 543
+        width: 258
+        height: 385
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,20 +184,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7e9374b17543293e0800000000000000
-      internalID: -2048517331775702553
+      spriteID: 9673f7d9729bc76d0800000000000000
+      internalID: -2991312472683628695
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_2
+      name: dead_2
       rect:
         serializedVersion: 2
-        x: 824
-        y: 549
-        width: 228
-        height: 377
+        x: 811
+        y: 548
+        width: 273
+        height: 296
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,20 +206,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7d039931e9ef9b850800000000000000
-      internalID: 6393421100916224215
+      spriteID: 5e1c94996bede1d30800000000000000
+      internalID: 4404202361452085733
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_3
+      name: dead_3
       rect:
         serializedVersion: 2
-        x: 1199
-        y: 549
-        width: 292
-        height: 377
+        x: 1207
+        y: 545
+        width: 248
+        height: 248
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,20 +228,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7be1bd5559eec79a0800000000000000
-      internalID: -6233845459029647689
+      spriteID: 239096259cc289dd0800000000000000
+      internalID: -2479182351684794062
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_4
+      name: dead_4
       rect:
         serializedVersion: 2
-        x: 56
-        y: 62
-        width: 304
-        height: 377
+        x: 37
+        y: 103
+        width: 284
+        height: 266
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,20 +250,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fdf20c4429f68ffb0800000000000000
-      internalID: -4613815144231718945
+      spriteID: dd2222527abbe2ed0800000000000000
+      internalID: -2436804021803932963
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_5
+      name: dead_5
       rect:
         serializedVersion: 2
-        x: 434
-        y: 60
-        width: 292
-        height: 376
+        x: 409
+        y: 99
+        width: 319
+        height: 176
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -272,20 +272,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1a64eb19d2b6daf50800000000000000
-      internalID: 6894284448036964001
+      spriteID: b3b53413ace79d050800000000000000
+      internalID: 5825826999855438651
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_6
+      name: dead_6
       rect:
         serializedVersion: 2
-        x: 794
-        y: 60
-        width: 335
-        height: 373
+        x: 783
+        y: 99
+        width: 349
+        height: 138
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,20 +294,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: dc9f2ceb5b2401440800000000000000
-      internalID: 4904493342563432909
+      spriteID: 890368ce3cf07c5b0800000000000000
+      internalID: -5348288698317918056
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_7
+      name: dead_7
       rect:
         serializedVersion: 2
-        x: 1172
-        y: 60
-        width: 303
-        height: 376
+        x: 1166
+        y: 98
+        width: 341
+        height: 122
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -316,8 +316,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cc6c0b3e4cef23aa0800000000000000
-      internalID: -6182599216839211316
+      spriteID: 5a2d1c6c8064c6fd0800000000000000
+      internalID: -2347424302258597211
       vertices: []
       indices: 
       edges: []
@@ -326,7 +326,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 874001130b1bf3c44b1c235eb44ba03b
+    spriteID: ed705a89540ae6c46a2db06cd256f243
     internalID: 0
     vertices: []
     indices: 
@@ -336,14 +336,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      gunMotion_0: 844156799403807979
-      gunMotion_1: -2048517331775702553
-      gunMotion_2: 6393421100916224215
-      gunMotion_3: -6233845459029647689
-      gunMotion_4: -4613815144231718945
-      gunMotion_5: 6894284448036964001
-      gunMotion_6: 4904493342563432909
-      gunMotion_7: -6182599216839211316
+      dead_0: 3604192591476135790
+      dead_1: -2991312472683628695
+      dead_2: 4404202361452085733
+      dead_3: -2479182351684794062
+      dead_4: -2436804021803932963
+      dead_5: 5825826999855438651
+      dead_6: -5348288698317918056
+      dead_7: -2347424302258597211
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

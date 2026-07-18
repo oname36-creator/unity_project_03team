@@ -1,31 +1,31 @@
 fileFormatVersion: 2
-guid: 6c72cef7156b5764d861e42b1574619f
+guid: 2e3964bdaea3f1d48b3df8af6f34b88d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 844156799403807979
-    second: gunMotion_0
+      213: -59066101396820148
+    second: hit_0
   - first:
-      213: -2048517331775702553
-    second: gunMotion_1
+      213: -9037724387597929990
+    second: hit_1
   - first:
-      213: 6393421100916224215
-    second: gunMotion_2
+      213: 8501104746477335304
+    second: hit_2
   - first:
-      213: -6233845459029647689
-    second: gunMotion_3
+      213: 7761068069398732630
+    second: hit_3
   - first:
-      213: -4613815144231718945
-    second: gunMotion_4
+      213: 1856308522752041849
+    second: hit_4
   - first:
-      213: 6894284448036964001
-    second: gunMotion_5
+      213: 1234192644943282544
+    second: hit_5
   - first:
-      213: 4904493342563432909
-    second: gunMotion_6
+      213: 989909491398256093
+    second: hit_6
   - first:
-      213: -6182599216839211316
-    second: gunMotion_7
+      213: -5926678406881896543
+    second: hit_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -147,13 +147,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gunMotion_0
+      name: hit_0
       rect:
         serializedVersion: 2
-        x: 44
-        y: 551
-        width: 257
-        height: 389
+        x: 32
+        y: 557
+        width: 261
+        height: 377
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,19 +162,85 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: be4d133f22c07bb00800000000000000
-      internalID: 844156799403807979
+      spriteID: c4fa9f791b72e2ff0800000000000000
+      internalID: -59066101396820148
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_1
+      name: hit_1
       rect:
         serializedVersion: 2
-        x: 469
-        y: 549
-        width: 200
+        x: 405
+        y: 554
+        width: 298
+        height: 366
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af1375bad8d839280800000000000000
+      internalID: -9037724387597929990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hit_2
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 578
+        width: 336
+        height: 339
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8033b24e9bdf9f570800000000000000
+      internalID: 8501104746477335304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hit_3
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 598
+        width: 340
+        height: 312
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65f532a0a4ad4bb60800000000000000
+      internalID: 7761068069398732630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hit_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 371
         height: 378
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -184,20 +250,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7e9374b17543293e0800000000000000
-      internalID: -2048517331775702553
+      spriteID: 9736a2c24cee2c910800000000000000
+      internalID: 1856308522752041849
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_2
+      name: hit_5
       rect:
         serializedVersion: 2
-        x: 824
-        y: 549
-        width: 228
-        height: 377
+        x: 398
+        y: 96
+        width: 349
+        height: 244
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,20 +272,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7d039931e9ef9b850800000000000000
-      internalID: 6393421100916224215
+      spriteID: 0718e3aebabb02110800000000000000
+      internalID: 1234192644943282544
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_3
+      name: hit_6
       rect:
         serializedVersion: 2
-        x: 1199
-        y: 549
-        width: 292
-        height: 377
+        x: 782
+        y: 84
+        width: 349
+        height: 203
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,20 +294,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7be1bd5559eec79a0800000000000000
-      internalID: -6233845459029647689
+      spriteID: dd5a49a007ddcbd00800000000000000
+      internalID: 989909491398256093
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: gunMotion_4
+      name: hit_7
       rect:
         serializedVersion: 2
-        x: 56
-        y: 62
-        width: 304
-        height: 377
+        x: 1162
+        y: 0
+        width: 374
+        height: 231
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,74 +316,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fdf20c4429f68ffb0800000000000000
-      internalID: -4613815144231718945
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: gunMotion_5
-      rect:
-        serializedVersion: 2
-        x: 434
-        y: 60
-        width: 292
-        height: 376
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1a64eb19d2b6daf50800000000000000
-      internalID: 6894284448036964001
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: gunMotion_6
-      rect:
-        serializedVersion: 2
-        x: 794
-        y: 60
-        width: 335
-        height: 373
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dc9f2ceb5b2401440800000000000000
-      internalID: 4904493342563432909
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: gunMotion_7
-      rect:
-        serializedVersion: 2
-        x: 1172
-        y: 60
-        width: 303
-        height: 376
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cc6c0b3e4cef23aa0800000000000000
-      internalID: -6182599216839211316
+      spriteID: 1a793dbc36530cda0800000000000000
+      internalID: -5926678406881896543
       vertices: []
       indices: 
       edges: []
@@ -326,7 +326,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 874001130b1bf3c44b1c235eb44ba03b
+    spriteID: c07ed59e6f70dc641aa881b824c93668
     internalID: 0
     vertices: []
     indices: 
@@ -336,14 +336,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      gunMotion_0: 844156799403807979
-      gunMotion_1: -2048517331775702553
-      gunMotion_2: 6393421100916224215
-      gunMotion_3: -6233845459029647689
-      gunMotion_4: -4613815144231718945
-      gunMotion_5: 6894284448036964001
-      gunMotion_6: 4904493342563432909
-      gunMotion_7: -6182599216839211316
+      hit_0: -59066101396820148
+      hit_1: -9037724387597929990
+      hit_2: 8501104746477335304
+      hit_3: 7761068069398732630
+      hit_4: 1856308522752041849
+      hit_5: 1234192644943282544
+      hit_6: 989909491398256093
+      hit_7: -5926678406881896543
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

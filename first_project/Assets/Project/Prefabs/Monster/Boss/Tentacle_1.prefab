@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 8888647828897842266}
   - component: {fileID: 1217820103569145571}
   - component: {fileID: 1122399446390420116}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Tentacle_1
-  m_TagString: Tentacle
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,7 +164,7 @@ EdgeCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397495312301300401}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 6088672967716364389}
   - component: {fileID: 5986897576048584658}
   - component: {fileID: 3959148784336028580}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Grabber
   m_TagString: Tentacle
   m_Icon: {fileID: 0}

@@ -92,6 +92,23 @@ public class DataManager : Singleton<DataManager>
         // 콘솔창에 녹색(또는 원하는 색상)으로 돋보이게 출력
         Debug.Log($"<color=green>{inventoryStatus}</color>");
     }
+
+
+    public void ResetGameData()
+    {
+
+        PlayerHp = 100;
+        // 인벤토리 모든 슬롯을 빈 칸(0)으로 초기화
+        for (int i = 0; i < PlayerInventory.Length; i++)
+        {
+            PlayerInventory[i] = 0;
+        }
+
+        Debug.Log("<color=cyan><b>[DataManager]</b> 체력 및 인벤토리 데이터가 완전히 초기화되었습니다.</color>");
+
+        // 만약 현재 씬에 인벤토리 UI가 존재한다면 즉시 비워진 상태를 반영
+        Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
