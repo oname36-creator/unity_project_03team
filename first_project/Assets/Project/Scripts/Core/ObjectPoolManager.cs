@@ -70,6 +70,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         {
             GameObject obj = Instantiate(_monsterBirdPrefab, this.transform);
             obj.GetComponent<MonsterController>().Player = Player;
+            obj.GetComponent<SpriteRenderer>().flipX = true;
             obj.SetActive(false); // 비활성화 상태로 대기
             _monsterBirdPool.Enqueue(obj); // 리스트에 추가
         }
@@ -217,7 +218,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         if (obj == null) return;
         obj.SetActive(false);
-
+        Debug.Log("오브젝트 풀 반환");
         if (obj.GetComponent<MonsterController>().Name == "Base")
         {
             _monsterBasePool.Enqueue(obj);

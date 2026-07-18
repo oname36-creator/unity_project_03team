@@ -21,9 +21,9 @@ public class BaseMonsterAttack : IMonsterState
     }
     public void Enter() 
     {
-        //Debug.Log("공격");
+        Debug.Log("공격");
         _owner.IsAttack = true;
-        //_animator.SetBool(AnimatorHash.IsAttack, true);
+        _animator.SetTrigger(AnimatorHash.IsAttack);
         _timer = 0f;
     }
 
@@ -42,7 +42,6 @@ public class BaseMonsterAttack : IMonsterState
     public void Exit() 
     {
         _owner.IsAttack = false;
-        //_animator.SetBool(AnimatorHash.IsAttack, false);
     }
 
 

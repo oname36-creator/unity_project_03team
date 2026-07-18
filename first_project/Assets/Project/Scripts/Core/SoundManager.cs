@@ -22,7 +22,7 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioClip _startSceneBGM;
     [SerializeField] private AudioClip _gameSceneBGM;
     [SerializeField] private AudioClip _endingSceneBGM;
-    [SerializeField] private AudioClip _endingSceneBGM1;
+    [SerializeField] private AudioClip _creditBGM;
 
     [Header("Master Volume")]
     [Range(0f, 1f)] public float masterBgmVolume = 1.0f;
@@ -33,7 +33,7 @@ public class SoundManager : Singleton<SoundManager>
     public const string StartSceneBGM = "StartSceneBGM";
     public const string GameSceneBGM = "GameSceneBGM";
     public const string EndingSceneBGM = "EndingSceneBGM";
-    public const string EndingSceneBGM1 = "EndingSceneBGM1";
+    public const string CreditBGM = "CreditBGM";
 
 
     private Dictionary<string, SoundData> _bgmDic = new Dictionary<string, SoundData>();
@@ -74,7 +74,7 @@ public class SoundManager : Singleton<SoundManager>
             { StartSceneBGM, new SoundData(_startSceneBGM) },
             { GameSceneBGM, new SoundData(_gameSceneBGM) },
             { EndingSceneBGM, new SoundData(_endingSceneBGM) },
-            { EndingSceneBGM1, new SoundData(_endingSceneBGM1) }
+            { CreditBGM, new SoundData(_creditBGM) }
         };
     }
 
@@ -114,12 +114,28 @@ public class SoundManager : Singleton<SoundManager>
     {
         if (_bgmDic.TryGetValue(key, out SoundData data))
         {
+
             _bgmSource.clip = data.Clip;
             _bgmSource.pitch = data.Pitch;
             _bgmSource.volume = masterBgmVolume * data.Volume;
             _bgmSource.Play();
         }
     }
+
+    public void PauseBGM() 
+    {
+        if(_bgmSource == null) { return; }
+        _bgmSource.Pause();
+    }
+
+    public void ResumeBGM() 
+    {
+        if(_bgmSource != null) 
+        {
+            _bgmSource.UnPause();
+        }
+    }
+
 
     public void PlaySFX(string key)
     {
