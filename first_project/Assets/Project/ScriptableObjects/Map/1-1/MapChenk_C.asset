@@ -14,134 +14,116 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SOMapData
   gimmicList:
   - gimmickType: 0
-    position: {x: 9.17344, y: -4.0387897, z: 0}
+    position: {x: -3.7044697, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 8.17344, y: -4.0387897, z: 0}
+    position: {x: -4.7044697, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 7.17344, y: -4.0387897, z: 0}
+    position: {x: -5.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 6.17344, y: -4.0387897, z: 0}
+    position: {x: -6.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 5.17344, y: -4.0387897, z: 0}
+    position: {x: -7.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 4.17344, y: -4.0387897, z: 0}
+    position: {x: -8.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 3.17344, y: -4.0387897, z: 0}
+    position: {x: -9.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 2.17344, y: -4.0387897, z: 0}
+    position: {x: -10.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 1.17344, y: -4.0387897, z: 0}
+    position: {x: -11.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 0.17344001, y: -4.0387897, z: 0}
+    position: {x: -12.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -0.82656014, y: -4.0387897, z: 0}
+    position: {x: -13.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -1.8265601, y: -4.0387897, z: 0}
+    position: {x: -14.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -2.82656, y: -4.0387897, z: 0}
+    position: {x: -15.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -3.82656, y: -4.0387897, z: 0}
+    position: {x: -16.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -4.82656, y: -4.0387897, z: 0}
+    position: {x: -17.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -5.82656, y: -4.0387897, z: 0}
+    position: {x: -18.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -6.82656, y: -4.0387897, z: 0}
+    position: {x: -19.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -7.82656, y: -4.0387897, z: 0}
+    position: {x: -20.70447, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -8.826561, y: -4.0387897, z: 0}
+    position: {x: -21.704472, y: -10.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -8.826561, y: -3.03879, z: 0}
+    position: {x: -21.704472, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -7.82656, y: -3.03879, z: 0}
+    position: {x: -20.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -6.82656, y: -3.03879, z: 0}
+    position: {x: -19.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 9.17344, y: -3.03879, z: 0}
+    position: {x: -3.7044697, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 8.17344, y: -3.03879, z: 0}
+    position: {x: -4.7044697, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 7.17344, y: -3.03879, z: 0}
+    position: {x: -5.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 6.17344, y: -3.03879, z: 0}
+    position: {x: -6.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 5.17344, y: -3.03879, z: 0}
+    position: {x: -7.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 4.17344, y: -3.03879, z: 0}
+    position: {x: -8.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 3.17344, y: -3.03879, z: 0}
+    position: {x: -9.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 2.17344, y: -3.03879, z: 0}
+    position: {x: -10.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 1.17344, y: -3.03879, z: 0}
+    position: {x: -11.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: 0.17344001, y: -3.03879, z: 0}
+    position: {x: -12.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -0.82656014, y: -3.03879, z: 0}
+    position: {x: -13.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -1.8265601, y: -3.03879, z: 0}
+    position: {x: -14.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -2.82656, y: -3.03879, z: 0}
+    position: {x: -15.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -3.82656, y: -3.03879, z: 0}
+    position: {x: -16.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -4.82656, y: -3.03879, z: 0}
+    position: {x: -17.70447, y: -9.766621, z: 0}
     prefabIndex: 1
   - gimmickType: 0
-    position: {x: -5.82656, y: -3.03879, z: 0}
+    position: {x: -18.70447, y: -9.766621, z: 0}
     prefabIndex: 1
-  - gimmickType: 1
-    position: {x: 6.1734395, y: -1.03879, z: 0}
-    prefabIndex: 0
-  - gimmickType: 1
-    position: {x: 5.1734395, y: -1.03879, z: 0}
-    prefabIndex: 0
-  - gimmickType: 1
-    position: {x: 4.1734395, y: -1.03879, z: 0}
-    prefabIndex: 0
-  - gimmickType: 1
-    position: {x: 3.17344, y: -1.03879, z: 0}
-    prefabIndex: 0
-  - gimmickType: 5
-    position: {x: -5.24, y: -10.57, z: 0}
-    prefabIndex: 0
-  - gimmickType: 5
-    position: {x: 1.9599957, y: -10.57, z: 0}
-    prefabIndex: 0
