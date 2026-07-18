@@ -184,6 +184,14 @@ public class MonsterAiBrain
             initialState = search;
              transitionMap[search] = new List<Transition>
             {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
                 new Transition( // search -> hurt
                     condition: () =>
                     {
@@ -207,6 +215,13 @@ public class MonsterAiBrain
 
             transitionMap[attack] = new List<Transition>
             {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
 
                 new Transition( // attack -> hurt
                     condition: () =>
@@ -226,6 +241,13 @@ public class MonsterAiBrain
             };
             transitionMap[re] = new List<Transition>
             {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
 
                 new Transition( // attack -> hurt
                     condition: () =>

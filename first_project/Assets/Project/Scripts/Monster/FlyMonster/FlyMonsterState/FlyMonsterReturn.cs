@@ -10,7 +10,7 @@ public class FlyMonsterReturn : IMonsterState
     private Vector2 _originalStartPos; // 공격을 시작했던 원래 위치
     private Vector2 _endPos; // 최종 도착 지점
     private float _duration;
-    private float _curveOffset = -1.5f; // Attack과 동일한 값 사용
+    private float _curveOffset = -1.0f; // Attack과 동일한 값 사용
 
     // 생성자에서 원래 시작 위치를 받아와서 대칭 도착점을 계산합니다.
     public FlyMonsterReturn(MonsterController owner)

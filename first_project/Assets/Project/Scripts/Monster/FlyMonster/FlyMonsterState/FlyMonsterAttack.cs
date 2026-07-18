@@ -9,7 +9,7 @@ public class FlyMonsterAttack : IMonsterState
     private Vector2 _originalStartPos;
     private Vector2 _playerPos;
     private float _duration;
-    private float _curveOffset = -1.5f; // 곡선의 휨 정도 (양수면 위로 도약 후 강하)
+    private float _curveOffset = -1.0f; // 곡선의 휨 정도 (양수면 위로 도약 후 강하)
 
     public FlyMonsterAttack(MonsterController owner)
     {
