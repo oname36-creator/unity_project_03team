@@ -7,10 +7,10 @@ public class BaseMonsterAttack : IMonsterState
     private Animator _animator;
     private Transform _ownerTransform;
 
-    private float _timer;
+    private float _timer = 7;
 
     // 애니메이션 작동 시간
-    private readonly float _attackDuration = 1f;
+    private readonly float _attackDuration = 7f;
     
     // 생성자에서 owner를 직접 받도록 셋업
     public BaseMonsterAttack(MonsterController owner)
@@ -21,7 +21,7 @@ public class BaseMonsterAttack : IMonsterState
     }
     public void Enter() 
     {
-        Debug.Log("공격");
+        //Debug.Log("공격");
         _owner.IsAttack = true;
         _animator.SetTrigger(AnimatorHash.IsAttack);
         _timer = 0f;
@@ -35,6 +35,7 @@ public class BaseMonsterAttack : IMonsterState
         {
             FireBullet();
             _owner.IsAttack = false;
+            _timer = 0f;
         }
 
     }

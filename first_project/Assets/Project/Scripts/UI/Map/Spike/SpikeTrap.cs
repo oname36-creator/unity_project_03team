@@ -22,7 +22,7 @@ public class SpikeTrap : MonoBehaviour
                     Debug.Log($"가시에 찔림! 대미지: {damage}");
 
                     // 체력 차감 (음수값 전달)
-                    playerStatus.ChangeHp(-damage);
+                     playerStatus.ChangeHp(-damage);
 
                     // 유니티 데이터 매니저와 HP 연동
                     if (DataManager.Instance != null)

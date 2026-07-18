@@ -217,9 +217,10 @@ public class MonsterController : MonoBehaviour
             gameObject.tag = "Monster";
             gameObject.layer = LayerMask.GetMask("Monster");
         }
-        if (!onFlip) 
+        if (!onFlip && _renderer != null) 
         {
             onFlip = true;
+            _renderer.flipX = onFlip;
         }
         _hp = MonsterData.hp;
 
@@ -250,6 +251,13 @@ public class MonsterController : MonoBehaviour
         _name = MonsterData.Name;
 
 
+        isDead = false;
+        //isFounded = false;
+        isAttack = false;
+        isAttackable = true;
+        isHurt = false;
+        isBack = false;
+
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
         _rigidBody2D = this.GetComponent<Rigidbody2D>();
@@ -275,7 +283,7 @@ public class MonsterController : MonoBehaviour
     {
 
         // 죽었다면
-        
+       
         CaculateMonsterToPlayerVector();
         _monsterMachine.Update();
 
@@ -300,7 +308,7 @@ public class MonsterController : MonoBehaviour
         else
         {
             //Debug.Log("dir * _speed : " + dir * _speed);
-            _rigidBody2D.AddForce(dir * _speed, ForceMode2D.Force);
+            _rigidBody2D.AddForce(dir * _force, ForceMode2D.Force);
         }
 
         if (_rigidBody2D.linearVelocity.magnitude > _maxSpeed)
@@ -378,35 +386,43 @@ public class MonsterController : MonoBehaviour
 
     public bool CheckForObstacles()
     {
-        // 1. 몬스터의 시야 시작점 (눈 높이)
+
         Vector2 origin = transform.position;
         origin.y += 0.5f;
 
-        // 2. 플레이어의 머리와 발 위치 계산
+
         Vector2 playerPos = _playerTransform.position;
 
-        // pivot(중심점)이 캐릭터 중앙에 있다고 가정할 때:
+
+        Vector2 centerTarget = playerPos; // 몸통(중심) 위치
+
         Vector2 headTarget = playerPos;
         headTarget.y += _playerRadius; // 머리 위치 (위로)
 
         Vector2 feetTarget = playerPos;
         feetTarget.y -= _playerRadius; // 발 위치 (아래로)
 
-        // 3. 머리와 발을 향하는 각각의 방향 벡터 계산
+
+        Vector2 dirToCenter = (centerTarget - origin).normalized;
         Vector2 dirToHead = (headTarget - origin).normalized;
         Vector2 dirToFeet = (feetTarget - origin).normalized;
 
-        // 4. 레이캐스트 발사
+
+        RaycastHit2D hitCenter = Physics2D.Raycast(origin, dirToCenter, _searchRange, _obstacleLayer);
         RaycastHit2D hitHead = Physics2D.Raycast(origin, dirToHead, _searchRange, _obstacleLayer);
         RaycastHit2D hitFeet = Physics2D.Raycast(origin, dirToFeet, _searchRange, _obstacleLayer);
 
-        Debug.DrawRay(origin, dirToHead * _searchRange, Color.yellow); // 머리: 노란색
-        Debug.DrawRay(origin, dirToFeet * _searchRange, Color.red);    // 발: 빨간색
 
+        Debug.DrawRay(origin, dirToCenter * _searchRange, Color.green); // 몸통: 초록색
+        Debug.DrawRay(origin, dirToHead * _searchRange, Color.yellow);  // 머리: 노란색
+        Debug.DrawRay(origin, dirToFeet * _searchRange, Color.red);     // 발: 빨간색
+
+  
+        bool isCenterBlocked = hitCenter.collider != null && hitCenter.collider.CompareTag("Ground");
         bool isHeadBlocked = hitHead.collider != null && hitHead.collider.CompareTag("Ground");
         bool isFeetBlocked = hitFeet.collider != null && hitFeet.collider.CompareTag("Ground");
 
-        return isHeadBlocked && isFeetBlocked;
+        return isHeadBlocked && isCenterBlocked && isFeetBlocked;
     }
 
     public void SetQuestionMark(bool active)
@@ -419,9 +435,8 @@ public class MonsterController : MonoBehaviour
         ExclamationMark.SetActive(active);
     }
 
-    public void OnDieAnimationEnd()
+    public void OnDieAnimationEnd() 
     {
-        Debug.Log("리턴 함수");
         ObjectPoolManager.Instance.MonsterPush(this.gameObject);
     }
 
