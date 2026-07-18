@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5612158517747985626
 RectTransform:
   m_ObjectHideFlags: 0
@@ -51,23 +51,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreditView
   _entries:
-  - _part: asdasd
+  - _part: Read Programer
     _names:
-    - asdasd
-  - _part: gfewqg
+    - Clode
+    - Jemini
+    - GPT
+    - AntiAgent
+  - _part: TA
     _names:
-    - asgdg
+    - Ater Ai
+  - _part: Player
+    _names:
+    - 9.8
+  - _part: Map
+    _names:
+    - BF_Lee
+  - _part: Monster
+    _names:
+    - hanseong
+  - _part: UI
+    _names:
+    - 9.8
+    - BF_Lee
+    - hanseong
   _viewport: {fileID: 2184347052287370257}
   _content: {fileID: 2184347052287370257}
   _linePrefab: {fileID: 3408259316312325438, guid: b60e2bc48c6825545b803ee8bd05a082, type: 3}
-  _partFont: {fileID: 11400000, guid: a0e581120642e6a449ec61e35db300a9, type: 2}
-  _nameFont: {fileID: 11400000, guid: a0e581120642e6a449ec61e35db300a9, type: 2}
+  _partFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  _nameFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   _partLineHeight: 50
   _nameLineHeight: 40
   _lineSpacing: 5
   _groupSpacing: 30
   _autoScroll: 1
-  _scrollSpeed: 40
+  _scrollSpeed: 100
+  _onDisableEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: CreditButton, Assembly-CSharp
+        m_MethodName: OnDisableStartSceneCreditUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3046938451133546163
 GameObject:
   m_ObjectHideFlags: 0

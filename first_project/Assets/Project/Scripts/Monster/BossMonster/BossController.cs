@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
+using TMPro;
 
 
 public class BossController : MonoBehaviour
@@ -16,6 +18,15 @@ public class BossController : MonoBehaviour
 
     [Header("Monster Respawn")]
     public GameObject MonsterRespawner;
+
+    [Header("Camera")]
+    public Camera Camera;
+
+    [Header("Boss Distance Ui")]
+    public RectTransform BossDistanceTransform;
+    public TextMeshProUGUI BossDistanceText;
+    public Canvas Canvas; // 타겟 UI가 포함된 Canvas
+
 
     [Header("Sound Clips")]
     [SerializeField] private AudioClip _bossSound;

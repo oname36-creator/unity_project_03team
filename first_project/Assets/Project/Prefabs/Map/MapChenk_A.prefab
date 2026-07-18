@@ -1996,6 +1996,38 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[38].x
+      value: 0.039764404
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[38].y
+      value: 0.19559097
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[39].x
+      value: 0.021266937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[39].y
+      value: 0.20730972
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[40].x
+      value: 0.0039949417
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[40].y
+      value: 0.20895576
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[41].x
+      value: -0.009177208
+      objectReference: {fileID: 0}
+    - target: {fileID: 1853929898825661681, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[41].y
+      value: 0.2077303
+      objectReference: {fileID: 0}
     - target: {fileID: 8730963568467162257, guid: a9699d656ae37aa4fa646517443cb602, type: 3}
       propertyPath: m_LocalPosition.x
       value: -37.478645
