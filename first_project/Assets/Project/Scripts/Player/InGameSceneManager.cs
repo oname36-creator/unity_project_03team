@@ -46,6 +46,11 @@ public class InGameSceneManager : MonoBehaviour
         if(SceneManagerEx.Instance != null)
         {
             SceneManagerEx.Instance.Btn_Restart();
+           
+        }
+        if (DataManager.Instance != null)
+        {
+            DataManager.Instance.ResetGameData();
         }
     }
 }

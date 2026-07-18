@@ -16,6 +16,8 @@ public class MapChunk : MonoBehaviour
     [Header("몬스터 자동 스폰 설정")]
     [SerializeField] private SOMonsterSpawnSetting spawnSetting;
 
+    [Header("상자 자동 스폰 설정")]
+    [SerializeField] private SOBoxSpawnSetting boxSpawnSetting;
     
     private TentacleTrapSpawner trapSpawner;
 
@@ -28,6 +30,8 @@ public class MapChunk : MonoBehaviour
 
     // 해당 청크에서 스폰되어 추적 중인 몬스터 목록
     private List<GameObject> spawnedMonsters = new List<GameObject>();
+
+    private List<GameObject> spawnedBoxes = new List<GameObject>();
     #endregion
 
     private void Awake()
@@ -39,7 +43,8 @@ public class MapChunk : MonoBehaviour
     {
         // 맵 청크 활성화 시 스폰 처리
         SpawnMonstersInChunk();
-        if(trapSpawner != null)
+
+        if (trapSpawner != null)
         {
             trapSpawner.SpawnTraps();
         }
@@ -48,15 +53,21 @@ public class MapChunk : MonoBehaviour
     {
         // 맵 청크 비활성화 시 스폰한 몬스터 일괄 풀 반환
         RecycleMonsters();
+
+        RecycleBoxes();
         
         if(trapSpawner != null)
         {
             trapSpawner.RecycleTraps();
         }
     }
+
+
     #endregion
 
-    #region MonstersInChunk
+#region InChunk
+
+    #region Monsters
     private void SpawnMonstersInChunk()
     {
         // 예외 처리 : SO가 지정되지 않을 시 스폰 생략
@@ -78,10 +89,18 @@ public class MapChunk : MonoBehaviour
             }
         }
 
+        // 1-2. SpikeTrap 컴포넌트가 부착된 하위 오브젝트의 모든 Collider2D도 수집함
+        SpikeTrap[] spikeTraps = GetComponentsInChildren<SpikeTrap>(true);
+        foreach(var spike in spikeTraps)
+        {
+            Collider2D[] spikeColliders = spike.GetComponentsInChildren<Collider2D>(true);
+            prohibitedColliders.AddRange(spikeColliders);
+        }
+
         // Overlap 판정 작동하도록 강제 동기화
         Physics2D.SyncTransforms();
 
-        Debug.Log($"[MapChunk] 수집된 금지 구역 콜라이더 개수 : {prohibitedColliders.Count}개");
+       //Debug.Log($"[MapChunk] 수집된 금지 구역 콜라이더 개수 : {prohibitedColliders.Count}개");
 
         // 2. Ground 역할을 할 Tilemap 탐색
         UnityEngine.Tilemaps.Tilemap tilemap = null;
@@ -115,7 +134,7 @@ public class MapChunk : MonoBehaviour
         MapSpawnTrigger spawnTrigger = GetComponentInChildren<MapSpawnTrigger>();
         Collider2D triggerCollider = spawnTrigger != null ? spawnTrigger.GetComponent<Collider2D>() : null;
         
-        Debug.Log($"[MapChunk Debug] StartAnchor: {startAnchorPos}, isStartPositionNull: {startPosition == null}");
+        // Debug.Log($"[MapChunk Debug] StartAnchor: {startAnchorPos}, isStartPositionNull: {startPosition == null}");
 
         int entryExcludingCount = 0;
 
@@ -247,10 +266,76 @@ public class MapChunk : MonoBehaviour
                 }
             });
         }
+
+        SpawnBoxesInChunk(validSpawnPositions, actualSpawnedPositions);
     }
     #endregion
 
-    #region RecycleMonsters
+    #region Box
+    private void SpawnBoxesInChunk(List<Vector3> candidatePositions, List<Vector3> spawnedMonsterPostion)
+    {
+        #region Exception handling
+        if(boxSpawnSetting == null)
+        {
+            Debug.LogError("SOBoxSpawnSetting이 할당안됨");
+        }
+
+        if (candidatePositions == null || candidatePositions.Count == 0) return;
+        #endregion
+
+        int spawnedBoxCount = 0;
+        List<Vector3> actualSpawnedBoxPositions = new List<Vector3>();
+
+        foreach(Vector3 candidatePos in candidatePositions)
+        {
+            if (spawnedBoxCount >= boxSpawnSetting.maxBoxCount) break;
+
+            // 1. 이미 몬스터가 스폰된 위치와의 간격 검사 => 중복 검사
+            bool isOverlapWithMonser = false;
+            foreach(Vector3 monsterPos in spawnedMonsterPostion)
+            {
+                if(Vector3.Distance(monsterPos, candidatePos) < boxSpawnSetting.minSpawnInterval)
+                {
+                    isOverlapWithMonser = true;
+                    break;
+                }    
+            }
+            if (isOverlapWithMonser) continue;
+
+            // 2. 이미 스폰된 다른 상자와의 간격 검사
+            bool toCloseToBox = false;
+            foreach(Vector3 boxPos in actualSpawnedBoxPositions)
+            {
+                if(Vector3.Distance(boxPos, candidatePos) < boxSpawnSetting.minSpawnInterval)
+                {
+                    toCloseToBox = true;
+                    break;
+                }
+            }
+            if (toCloseToBox) continue;
+
+            // 3. 상자 스폰 이벤트 호출
+            if (UnityEngine.Random.value > boxSpawnSetting.spawnChance) continue;
+
+            // 4. 상자 스폰 이벤트 호출
+            Vector3 spawnPos = candidatePos;    // 상자는 바닥에 스폰되므로 후보 위치 그대로 사용
+            MapEvent.onRequestBoxSpawn?.Invoke(spawnPos, boxSpawnSetting.rewardItems, (box) =>
+            {
+                if (box != null)
+                {
+                    spawnedBoxes.Add(box);
+                    spawnedBoxCount++;
+                    actualSpawnedBoxPositions.Add(spawnPos);
+                }
+            });
+        }
+    }
+    #endregion
+    #endregion
+
+#region Recycle
+
+    #region Monsters
     private void RecycleMonsters()
     {
         foreach(var monster in spawnedMonsters)
@@ -265,6 +350,24 @@ public class MapChunk : MonoBehaviour
         spawnedMonsters.Clear();
     }
     #endregion
+
+    #region Boxes
+    private void RecycleBoxes()
+    {
+        foreach(var box in spawnedBoxes)
+        {
+            if(box != null && box.activeSelf)
+            {
+                ObjectPoolManager.Instance.BoxPush(box);
+            }
+        }
+        spawnedBoxes.Clear();
+    }
+    #endregion
+
+#endregion
+
+
 
 
 }
