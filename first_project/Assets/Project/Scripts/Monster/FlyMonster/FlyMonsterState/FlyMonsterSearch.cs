@@ -10,6 +10,7 @@ public class FlyMonsterSearch : IMonsterState
 
     private Vector2 _centerPos;
 
+
     private float _patrolRadius = 10f;
     private float _flySpeed;
     private float _directionChangeInterval = 2f;
@@ -29,7 +30,7 @@ public class FlyMonsterSearch : IMonsterState
         Debug.Log("Bird : serch");
         Vector2 startCenterPos = _ownerTransform.position;
         _owner.Stop();
-        _patrolCoroutine = _owner.StartCoroutine(PatrolRoutine(_centerPos));
+        _patrolCoroutine = _owner.StartCoroutine(PatrolRoutine(startCenterPos));
         _owner.IsBack = false;
 
     }
@@ -72,9 +73,10 @@ public class FlyMonsterSearch : IMonsterState
                 timer = 0f;
                 _owner.Stop();
                 _owner.Front = -_owner.Front;
-                
+                Debug.Log("Owner Front: " +_owner.Front);
                 Vector2 randomOffset = _owner.Front * _patrolRadius;
                 targetPosition = centerPosition + randomOffset;
+                Debug.Log("targetPos :" + targetPosition);
                 //_owner.Move(Vector2.up, true);
             }
 
@@ -82,8 +84,7 @@ public class FlyMonsterSearch : IMonsterState
             Vector2 currentPos = _ownerTransform.position;
             Vector2 moveDir = (targetPosition - currentPos).normalized;
 
-            // 중력 상쇄
-            //_owner.Move(Vector2.up, false, true);
+            Debug.Log("moveDir : " + moveDir);
 
             if (Vector2.Distance(currentPos, targetPosition) > 0.1f)
             {

@@ -4,17 +4,55 @@ using UnityEngine;
 
 public class MonsterBullet : MonoBehaviour
 {
+
+    [Header("Audio Clip")]
+    [SerializeField] private AudioClip _boomClip;
+
+
     private Vector2 _startPos;
     private Vector2 _moveDir;
     private float _speed;
 
+    private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
     private Coroutine _moveCoroutine;
+
+
+    public void OnEnable()
+    {
+        if(_animator != null) 
+        {
+            _animator.SetBool(AnimatorHash.Idle, true);
+        }
+    }
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void Start()
+    {
+        SoundManager.Instance.AddSfx("SlimBoom", _boomClip);
+    }
+
+
 
     public void Launch(Vector2 startPosition, Vector2 direction, float speed)
     {
         _startPos = startPosition;
         _moveDir = direction.normalized; 
         _speed = speed;
+
+        if (direction.x < 0)
+        {
+            _spriteRenderer.flipX = true;
+        }
+        else 
+        {
+            _spriteRenderer.flipX = false;
+        }
 
         transform.position = _startPos;
 
@@ -42,7 +80,6 @@ public class MonsterBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 1. 발사한 몬스터 자신이나 다른 총알에 부딪히는 예외 처리
         if (collision.CompareTag("Monster"))
         {
             return;
@@ -53,6 +90,13 @@ public class MonsterBullet : MonoBehaviour
             StopCoroutine(_moveCoroutine);
         }
 
+        SoundManager.Instance.PlaySFX("SlimBoom");
+        _animator.SetBool(AnimatorHash.Idle, false);
+        _animator.SetTrigger(AnimatorHash.IsAttack);
+    }
+
+    public void OnBulletAnimationDone() 
+    {
         ObjectPoolManager.Instance.MonsterBulletPush(this.gameObject);
     }
 }

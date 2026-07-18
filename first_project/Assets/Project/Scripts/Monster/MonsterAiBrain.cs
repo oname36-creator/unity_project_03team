@@ -112,7 +112,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                      return !owner.IsAttack;
+                      return !owner.IsAttack || !(owner.InAttackRange && owner.InAngle);
                     },
                     targetState: chase
                     )

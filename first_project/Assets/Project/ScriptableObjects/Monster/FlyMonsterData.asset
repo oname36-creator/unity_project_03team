@@ -15,7 +15,7 @@ MonoBehaviour:
   hp: 100
   damage: 10
   Speed: 2
-  MaxSpeed: 5
+  MaxSpeed: 10
   Force: 100
   Name: Bird
   searchRange: 30
