@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 15f;       // 총알 속도
-    public float damage = 10f;      // 총알 데미지
+    public float damage = 100f;      // 총알 데미지
     public float lifeTime = 3f;     // 화면에 머무를 최대 시간 (예외 처리용)
 
     private float directionX = 1f;
@@ -40,16 +40,15 @@ public class Bullet : MonoBehaviour
         {
             Debug.Log($"총알 적중: {collision.name}");
 
-            // 몬스터 데미지 처리 예시
-            // MonsterStatus monster = collision.GetComponent<MonsterStatus>();
-            // if (monster != null) { monster.TakeDamage(damage); }
-
-            // 적중했으므로 총알을 다시 풀로 반환
+           
             ObjectPoolManager.Instance.ReturnBullet(gameObject);
         }
-        else if (collision.CompareTag("Ground")) // 벽이나 바닥에 부딪혀도 소멸
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
+            Debug.Log("벽이나 바닥에 부딪혀 총알 소멸");
             ObjectPoolManager.Instance.ReturnBullet(gameObject);
         }
+       
+        
     }
 }

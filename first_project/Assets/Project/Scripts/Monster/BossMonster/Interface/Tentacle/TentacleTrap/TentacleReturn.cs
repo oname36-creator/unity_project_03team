@@ -24,6 +24,10 @@ public class TentacleReturn : IMonsterState
     public void Enter()
     {
         Debug.Log("TentacleTrap Return");
+
+        _owner.gameObject.layer = LayerMask.NameToLayer("Boss");
+        _owner.tag = "Boss";
+
         _rootPos = _owner.RootPos;
         _targetPos = _owner.IkTargetPosition; // 현재 하늘에 있는 촉수 끝 위치에서 시작
         _time = 0f;

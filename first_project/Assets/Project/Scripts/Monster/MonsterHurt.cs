@@ -21,7 +21,8 @@ public class MonsterHurt : IMonsterState
     }
     public void Enter()
     {
-        _animator.SetBool(AnimatorHash.IsHurt, true);
+        _animator.SetTrigger(AnimatorHash.IsHurt);
+
         _timer = 0f;
 
     }
@@ -46,7 +47,6 @@ public class MonsterHurt : IMonsterState
         _owner.IsHurt = false;
         // 원상복귀
         _spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
-        _animator.SetBool(AnimatorHash.IsHurt, false);
     }
 
 

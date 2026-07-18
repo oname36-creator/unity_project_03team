@@ -10,6 +10,7 @@ TagManager:
   - PlayerAttack
   - Boss
   - Tentacle
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -24,8 +25,8 @@ TagManager:
   - MonsterBody
   - Boss
   - Tentacle
-  - 
-  - 
+  - Bullet
+  - Dead
   - 
   - 
   - 

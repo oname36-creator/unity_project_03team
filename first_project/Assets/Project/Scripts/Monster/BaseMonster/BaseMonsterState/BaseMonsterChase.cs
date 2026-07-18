@@ -16,7 +16,7 @@ public class BaseMonsterChase : IMonsterState
 
         _owner.SetExclamationMark(true);
         _owner.SetQuestionMark(false);
-        //Debug.Log("추격");
+        Debug.Log("추격");
         //_animator.SetBool(AnimatorHash.IsChase, true);
     }
 
@@ -27,7 +27,7 @@ public class BaseMonsterChase : IMonsterState
 
     public void Exit() 
     {
-        //_animator.SetBool(AnimatorHash.IsChase, false);
+
 
     }
 

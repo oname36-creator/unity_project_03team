@@ -19,13 +19,17 @@ public class MapManager : MonoBehaviour
     [Header("시작 설정")]
     public GameObject safeZonePrefab;
 
+    [Header("배경 지연 설정")]
+    public GameObject backgroundGroup;
+    [Tooltip("안전지대 생성 후 배경이 나타날 때까지의 대기 시간")]
+    [Range(0,3)]public float backgroundDelayTime = 3.0f;
     [Header("난이도 페이즈 설정")]
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
 
     [SerializeField] private int currentLogicalPhase = 0;
     public int CurrentLogicalPhase => currentLogicalPhase;
-
+    public static System.Action OnMapReady;
     public int CurrentPhaseIndex => currentPhaseIndex;
     private float gameTimer = 0f;
 
@@ -63,12 +67,18 @@ public class MapManager : MonoBehaviour
         // 안전지대 생성
         SpawnSpecificMap(safeZonePrefab);
 
-       // UpdateShuffleBagForCurrentPhase();
-        
-       // nextSpawnPosition = SpawnMap(GetNextPrefabFromShuffleBag(), nextSpawnPosition);
+        // 시작하자마자 배경을 끄고 카운터 코루틴 실행
+        if(backgroundGroup != null)
+        {
+            backgroundGroup.SetActive(false);
+            StartCoroutine(CoEnableBackgroundRoutine());
+        }
+
         // 1페이즈 맵들로 셔플 백 채우기
         StartCoroutine(CoPhaseTimerRoutine());
     }
+
+    
     #endregion
 
     #region HandleMapSpawnEvent
@@ -281,6 +291,20 @@ public class MapManager : MonoBehaviour
                 yield break;
             }
         }
+    }
+
+    private IEnumerator CoEnableBackgroundRoutine()
+    {
+        // 설정한 딜레이 시간만큼 대기
+        yield return new WaitForSeconds(backgroundDelayTime);
+
+        if(backgroundGroup != null)
+        {
+            backgroundGroup.SetActive(true);
+        }
+
+        // 배경 세팅까지 모두 끝났음을 이벤트를 통해 알림
+        OnMapReady?.Invoke();
     }
     #endregion
 }
