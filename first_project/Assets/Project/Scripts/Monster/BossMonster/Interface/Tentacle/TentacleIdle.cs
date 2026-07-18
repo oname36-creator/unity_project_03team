@@ -24,7 +24,10 @@ public class TentacleIdle : IMonsterState
         _owner.IsSearch = false;
         _owner.IsAttach = false;
         _owner.Attack = false;
-        
+
+        _owner.gameObject.layer = LayerMask.NameToLayer("Tentacle");
+        _owner.tag = "Tentacle";
+
         _owner.Target = null;
         _owner.UpdateSegmentLength(_owner.PrevSegmentLength);
         _owner.segmentDistance = 0.5f;

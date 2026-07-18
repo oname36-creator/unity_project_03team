@@ -64,8 +64,13 @@ public class TentacleAttack : IMonsterState
     {
         if (!_owner.IsAttach) 
         {
+
+
+
             ObjectPoolManager.Instance.TentaclePush(_owner.gameObject);
         }
+
+
         
     }
 }

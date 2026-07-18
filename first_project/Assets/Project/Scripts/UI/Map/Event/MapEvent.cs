@@ -10,4 +10,7 @@ public static class MapEvent
 
     // 촉수 트랩 생성(좌표, 콜백)
     public static Action<Vector2, Action<GameObject>> onRequestTrapSpawn;
+
+    // 상자 스폰 생성(좌표, 보상아이템 목록, 콜백)
+    public static Action<Vector3, ItemData[], Action<GameObject>> onRequestBoxSpawn;
 }

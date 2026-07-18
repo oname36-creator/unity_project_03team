@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 {
@@ -18,13 +19,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     [Header("Weapon Settings (무기 설정)")]
     [Tooltip("총알이 발사될 위치(총구)에 배치한 빈 오브젝트를 넣어주세요.")]
-    public Transform muzzlePoint;
+    public UnityEngine.Transform muzzlePoint;
 
     [Header("Ground Check Settings (바닥 체크 설정)")]
     [Tooltip("플레이어 발밑에 배치한 빈 오브젝트를 넣어주세요.")]
-    public Transform groundCheckPoint;
+    public UnityEngine.Transform groundCheckPoint;
     [Tooltip("바닥을 감지할 박스의 크기입니다.")]
-    public Vector2 groundCheckSize = new Vector2(0.6f, 0.15f); // 💡 점프 씹힘 방지를 위해 Y축 판정을 0.1에서 0.15로 살짝 늘렸습니다.
+    public Vector2 groundCheckSize = new Vector2(0.6f, 0.15f);
     [Tooltip("바닥으로 인식할 레이어(예: Ground)를 선택하세요.")]
     public LayerMask groundLayer;
 
@@ -45,7 +46,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private Vector2 moveInput;
 
     private System.Collections.Generic.List<MovingPlatform> _activePlatforms = new System.Collections.Generic.List<MovingPlatform>();
-    private Transform _currentPlatformTransform = null;
+    private UnityEngine.Transform _currentPlatformTransform = null;
 
     private float facingDirectionX = 1f;
 
@@ -88,8 +89,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (Time.timeScale == 0f) return;
         if (status == null || status.isDead) return;
 
-        // 💡 [수정] 점프 씹힘 방지: 물리 기반 바닥 체크(OverlapBox) 코드를 FixedUpdate로 이동시켰습니다.
-
         if (moveInput.x != 0f)
         {
             facingDirectionX = Mathf.Sign(moveInput.x);
@@ -101,9 +100,25 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             float inputSpeed = Mathf.Abs(moveInput.x);
             float finalAnimSpeed = inputSpeed;
 
-            if (inputSpeed == 0f && Mathf.Abs(rb.linearVelocity.x) > 1.5f)
+            // 이동 발판의 순수 x 속도 구하기
+            float platformXVelocity = 0f;
+            if (transform.parent != null && transform.parent.TryGetComponent<MovingPlatform>(out var platform))
+            {
+                platformXVelocity = platform.Velocity.x;
+            }
+
+            // 플레이어의 실제 속도에서 발판의 속도를 뺀 '순수 플레이어 속도' 계산
+            float purePlayerVelocityX = rb.linearVelocity.x - platformXVelocity;
+
+            // 입력이 없는데도 플레이어 순수 속도가 남아있을 때만 달리기 모션 유지
+            if (inputSpeed == 0f && Mathf.Abs(purePlayerVelocityX) > 1.5f)
             {
                 finalAnimSpeed = 1f;
+            }
+            else if (inputSpeed == 0f)
+            {
+                // 입력이 없고 발판 위에 가만히 있다면 확실하게 아이들(0)로 고정
+                finalAnimSpeed = 0f;
             }
 
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -112,7 +127,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             animator.SetBool("isAttacking", attacking);
             animator.SetBool("isGrounded", status.isGrounded);
             animator.SetFloat("VelocityY", rb.linearVelocity.y);
-            animator.SetFloat("Speed", finalAnimSpeed);
+            animator.SetFloat("Speed", finalAnimSpeed); // 수정된 속도 적용
         }
 
         if (playerPosData != null)
@@ -126,7 +141,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
-        // 💡 [추천 반영] 바닥 체크 연산을 물리 사이클(FixedUpdate) 맨 위로 옯겨 타이밍을 완벽히 동기화했습니다.
         if (groundCheckPoint != null)
         {
             status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
@@ -257,21 +271,14 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             if (status.hasGun)
             {
-                Debug.Log("총기 발사!");
+                // 애니메이션은 트리거를 즉시 실행하여 선딜레이 모션을 보여줍니다.
                 if (animator != null)
                 {
                     animator.SetTrigger("OnGunAttack");
                 }
-                Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
-                GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
 
-                if (bulletGo != null)
-                {
-                    Bullet bulletScript = bulletGo.GetComponent<Bullet>();
-                    if (bulletScript != null) bulletScript.Launch(facingDirectionX);
-                }
-
-                status.OnGunAttackExecute();
+                // 0.3초 지연 후 발사하는 코루틴 실행
+                StartCoroutine(GunAttackRoutine());
                 return;
             }
 
@@ -363,13 +370,15 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.CompareTag("Boss"))
+        if (collision.CompareTag("DeadZone") ||collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.CompareTag("Boss"))
         {
-            Debug.Log("💀 [즉사] Boss 오브젝트(레이어/태그)와 충돌하여 즉시 사망합니다.");
-
             if (DataManager.Instance != null)
             {
                 DataManager.Instance.PlayerHp = 0;
+                if (animator != null)
+                {
+                    animator.SetTrigger("OnDead");
+                }
             }
             status.ChangeHp(-status.currentHp);
 
@@ -398,6 +407,12 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private System.Collections.IEnumerator KnockbackAndInvincibleRoutine(Vector3 enemyPosition)
     {
+        if (animator != null)
+        {
+            animator.SetTrigger("OnHit");
+        }
+        
+
         status.isHurt = true;
         status.isInvincible = true;
 
@@ -418,7 +433,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
 
-            // 💡 [수정] 넉백 힘을 절반으로 줄였습니다. (0.4f -> 0.2f / 0.2f -> 0.1f) 
+     
             rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.2f, JumpForce * 0.1f), ForceMode2D.Impulse);
         }
 
@@ -502,5 +517,27 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             LayerMask.NameToLayer("Monster"),
             false
         );
+    }
+
+    private System.Collections.IEnumerator GunAttackRoutine()
+    {
+        // 0.3초 대기 (선딜레이)
+        yield return new WaitForSeconds(0.5f);
+
+        // 대기하는 동안 플레이어가 죽거나 게임이 멈췄는지 체크
+        if (status == null || status.isDead || Time.timeScale == 0f) yield break;
+
+        Debug.Log("총기 발사! (0.3초 후 실행됨)");
+
+        Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
+        GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
+
+        if (bulletGo != null)
+        {
+            Bullet bulletScript = bulletGo.GetComponent<Bullet>();
+            if (bulletScript != null) bulletScript.Launch(facingDirectionX);
+        }
+
+        status.OnGunAttackExecute();
     }
 }
