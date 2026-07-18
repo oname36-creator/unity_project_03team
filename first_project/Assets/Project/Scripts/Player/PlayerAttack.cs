@@ -4,8 +4,7 @@ public class PlayerAttack : MonoBehaviour
 {
     private PlayerStatus playerStatus;
 
-    // 🔔 [수정] 복잡한 내부 변수와 오타를 다 지우고, 
-    // 몬스터가 읽으러 올 때 부모(PlayerStatus)의 최신 대미지를 다이렉트로 넘겨줍니다.
+    
     public int Damage
     {
         get

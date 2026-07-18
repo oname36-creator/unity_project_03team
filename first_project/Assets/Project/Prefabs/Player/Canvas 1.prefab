@@ -768,7 +768,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -952.78796, y: 435.58594}
+  m_AnchoredPosition: {x: -952.78796, y: -500}
   m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2211251635208332775
@@ -3352,7 +3352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingPanel
   fadeDuration: 0.5
-  inGameUI: {fileID: 0}
+  inGameUI: {fileID: 9161382768393421321}
 --- !u!1 &7679638928604248194
 GameObject:
   m_ObjectHideFlags: 0

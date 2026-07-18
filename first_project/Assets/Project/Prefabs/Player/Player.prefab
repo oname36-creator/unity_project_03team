@@ -180,7 +180,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 6200000, guid: 5c9237e74b30ee647817d67e6fb7890e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControll
   jumpCount: 1
-  JumpForce: 13
+  JumpForce: 15
   MoveSpeed: 5
   aerialDampingAmount: 0.5
   attackBoxSize: {x: 1.5, y: 1}
