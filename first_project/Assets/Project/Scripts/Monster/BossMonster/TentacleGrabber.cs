@@ -15,6 +15,7 @@ public class TentacleGrabber : MonoBehaviour
     // 자신의 Trigger에 닿았을 때 호출
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if(Tentacle.Attack == false) { return; }
         TryGrab(other);
 
     }

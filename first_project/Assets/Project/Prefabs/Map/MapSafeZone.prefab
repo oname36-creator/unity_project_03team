@@ -465,7 +465,7 @@ TilemapCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.13}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
@@ -593,6 +593,7 @@ MonoBehaviour:
   endPosition: {fileID: 8094089709612127119}
   cameraBoundaryCollider: {fileID: 2285323167233519901}
   spawnSetting: {fileID: 0}
+  boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
   margin: 2
 --- !u!61 &2285323167233519901

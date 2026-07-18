@@ -32,6 +32,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         isPaused = true;
         Time.timeScale = 0f;
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
+        SoundManager.Instance.PauseBGM();
         Debug.Log("게임 일시정지");
     }
 
@@ -40,6 +41,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         isPaused = false;
         Time.timeScale = 1f;
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
+        SoundManager.Instance.ResumeBGM();
         Debug.Log("게임 재개");
     }
 

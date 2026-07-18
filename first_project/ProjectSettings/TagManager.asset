@@ -12,6 +12,7 @@ TagManager:
   - Tentacle
   - Trap
   - DeadZone
+  - Box
   layers:
   - Default
   - TransparentFX

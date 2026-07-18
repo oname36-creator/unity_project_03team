@@ -10,6 +10,7 @@ public class LoadingPanel : MonoBehaviour
 
     [Header("인게임 UI 설정")]
     [SerializeField] private GameObject inGameUI;
+    [SerializeField] private GameObject DistanceUI;
     private CanvasGroup _canvasGroup;
 
     private void Awake()
@@ -24,6 +25,7 @@ public class LoadingPanel : MonoBehaviour
         if(inGameUI != null)
         {
             inGameUI.SetActive(false);
+            DistanceUI.SetActive(false);
         }
     }
 
@@ -46,6 +48,8 @@ public class LoadingPanel : MonoBehaviour
         if(inGameUI != null)
         {
             inGameUI.SetActive(true);
+            DistanceUI.SetActive(true);
+            SoundManager.Instance.PlayBGM("GameSceneBGM");
         }
         StartCoroutine(CoFadeOutRoutine());
     }

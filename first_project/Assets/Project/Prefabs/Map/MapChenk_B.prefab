@@ -811,7 +811,7 @@ TilemapCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.13}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
@@ -963,8 +963,8 @@ MonoBehaviour:
   endPosition: {fileID: 1398808308320012327}
   cameraBoundaryCollider: {fileID: 3786097781232641900}
   spawnSetting: {fileID: 11400000, guid: c1aba61b04e9a654e97673d69e88ba7c, type: 2}
+  boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
-  monsterRespawner: {fileID: 0}
   margin: 2
 --- !u!61 &3786097781232641900
 BoxCollider2D:
@@ -1025,6 +1025,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
   mapData: {fileID: 11400000, guid: acd3aeeb497045c4cab24b0696d9d679, type: 2}
+  trapSpawnChance: 0.6
+  staggerDelay: 0.5
+  cameraMargin: 1
 --- !u!1001 &191806618759987609
 PrefabInstance:
   m_ObjectHideFlags: 0

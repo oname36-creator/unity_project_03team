@@ -352,17 +352,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &264164551 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8980866290287863390, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
-  m_PrefabInstance: {fileID: 4545631451409107627}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a206500beeb33144a597eaee98a363d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CreditButton
 --- !u!1 &727516582
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,8 +547,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   _startSceneBGM: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
   _gameSceneBGM: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
-  _endingSceneBGM: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
-  _endingSceneBGM1: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
+  _endingSceneBGM: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
+  _creditBGM: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
   masterBgmVolume: 1
   masterSfxVolume: 1
 --- !u!1001 &1612265193
@@ -573,10 +562,6 @@ PrefabInstance:
     - target: {fileID: 2883944513104351637, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
       propertyPath: m_Name
       value: Credit
-      objectReference: {fileID: 0}
-    - target: {fileID: 2883944513104351637, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5612158517747985626, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
       propertyPath: m_Pivot.x
@@ -659,133 +644,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _scrollSpeed
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[0]._part
-      value: Read Programer
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[1]._part
-      value: TA
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[2]._part
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[3]._part
-      value: Map
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[4]._part
-      value: Monster
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[5]._part
-      value: UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[0]._names.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[2]._names.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[3]._names.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[4]._names.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _entries.Array.data[5]._names.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[0]._names.Array.data[0]'
-      value: Clode
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[0]._names.Array.data[1]'
-      value: Jemini
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[0]._names.Array.data[2]'
-      value: GPT
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[0]._names.Array.data[3]'
-      value: AntiAgent
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[0]._names.Array.data[4]'
-      value: AntiAgent
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[1]._names.Array.data[0]'
-      value: Ater Ai
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[2]._names.Array.data[0]'
-      value: 9.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[3]._names.Array.data[0]'
-      value: BF_Lee
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[4]._names.Array.data[0]'
-      value: hanseong
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[5]._names.Array.data[0]'
-      value: 9.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[5]._names.Array.data[1]'
-      value: BF_Lee
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: '_entries.Array.data[5]._names.Array.data[2]'
-      value: hanseong
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: _partFont
+      value: 
+      objectReference: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
     - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
       propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 264164551}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DisableCredit
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CreditButton, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
-      propertyPath: _onDisableEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4545631451409107628}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1067,6 +932,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StartSceneUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6957581568388768150, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 4545631451409107628}
     - target: {fileID: 8350360671928269836, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1156,6 +1025,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
+--- !u!114 &4545631451409107628 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8980866290287863390, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
+  m_PrefabInstance: {fileID: 4545631451409107627}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a206500beeb33144a597eaee98a363d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreditButton
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
