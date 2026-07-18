@@ -1,17 +1,31 @@
 using UnityEngine;
-using UnityEngine.UI; // 💡 UI 컴포넌트(Slider)를 제어하기 위해 꼭 필요해요!
+using UnityEngine.UI; 
 
 public class HPBarController : MonoBehaviour
 {
-    // 유니티 에디터에서 드래그앤드롭으로 연결해 줄 슬라이더 변수입니다.
+    
     public Slider hpSlider;
 
-    void Start()
+    void OnEnable()
     {
-        // 1. 게임이 시작되면 이 슬라이더의 최대치를 100으로 설정합니다.
         if (hpSlider != null)
         {
             hpSlider.maxValue = 100;
+
+            // 홈을 거쳐서 새 씬이 로드될 때 확실하게 값을 먼저 주입
+            if (DataManager.Instance != null)
+            {
+                hpSlider.value = DataManager.Instance.PlayerHp;
+                Debug.Log($"[HP UI OnEnable] 씬 로드 즉시 체력 주입: {DataManager.Instance.PlayerHp}");
+            }
+        }
+    }
+    void Start()
+    {
+        // 혹시 모를 타이밍을 위해 Start에서도 한 번 더 안전장치로 주입
+        if (hpSlider != null && DataManager.Instance != null)
+        {
+            hpSlider.value = DataManager.Instance.PlayerHp;
         }
     }
 

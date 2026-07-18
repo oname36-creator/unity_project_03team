@@ -30,7 +30,7 @@ public class FlyMonsterReturn : IMonsterState
         _endPos = new Vector2(_hitPos.x + (_hitPos.x - _originalStartPos.x), _originalStartPos.y);
 
         float distance = Vector2.Distance(_hitPos, _endPos);
-        _duration = distance / _owner.Speed;
+        _duration = distance / _owner.MaxSpeed;
 
         Debug.Log($"[복귀 상태 진입] 타격점: {_hitPos}, 도착: {_endPos}");
 

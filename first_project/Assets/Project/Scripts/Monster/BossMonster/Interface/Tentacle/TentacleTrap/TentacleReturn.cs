@@ -57,7 +57,7 @@ public class TentacleReturn : IMonsterState
         // 4. 바닥에 거의 다 내려왔거나, 마디가 완전히 쪼그라들었으면 종료
         float distanceToRoot = Vector2.Distance(_targetPos, _rootPos);
 
-        Debug.Log("rootPos: " + _rootPos + ", targetPos: " + _targetPos + " distance : " + distanceToRoot);
+        // Debug.Log("rootPos: " + _rootPos + ", targetPos: " + _targetPos + " distance : " + distanceToRoot);
         if (distanceToRoot < 0.5f || _owner.segmentDistance < 0.1f)
         {
             _owner.isTrap = false;
