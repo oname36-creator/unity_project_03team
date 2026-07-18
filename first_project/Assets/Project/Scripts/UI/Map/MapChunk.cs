@@ -319,7 +319,7 @@ public class MapChunk : MonoBehaviour
 
             // 4. 상자 스폰 이벤트 호출
             Vector3 spawnPos = candidatePos;    // 상자는 바닥에 스폰되므로 후보 위치 그대로 사용
-            MapEvent.onRequestBoxSpawn?.Invoke(spawnPos, boxSpawnSetting.rewardItems, (box) =>
+            MapEvent.onRequestBoxSpawn?.Invoke(spawnPos, boxSpawnSetting, (box) =>
             {
                 if (box != null)
                 {

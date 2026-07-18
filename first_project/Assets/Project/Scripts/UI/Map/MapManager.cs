@@ -15,6 +15,7 @@ public struct PhaseData
 }
 public class MapManager : MonoBehaviour
 {
+    
     #region DataAttribute
     [Header("시작 설정")]
     public GameObject safeZonePrefab;
@@ -27,12 +28,14 @@ public class MapManager : MonoBehaviour
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
 
-    [SerializeField] private int currentLogicalPhase = 0;
+    [SerializeField] private int currentLogicalPhase = -1;
     public int CurrentLogicalPhase => currentLogicalPhase;
     public static System.Action OnMapReady;
     public int CurrentPhaseIndex => currentPhaseIndex;
     private float gameTimer = 0f;
 
+    // 싱글톤 인스턴스(실제 페이즈에 접근할 수 있도록 선언)
+    public static MapManager Instance { get; private set; }
     #region DataStruct Fields
     // 프리팹 종류별로 관리
     private Dictionary<GameObject, Queue<GameObject>> mapPools = new Dictionary<GameObject, Queue<GameObject>>();
@@ -59,6 +62,17 @@ public class MapManager : MonoBehaviour
     }
     #endregion
 
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     #region Start
     void Start()
     {
@@ -78,7 +92,39 @@ public class MapManager : MonoBehaviour
         StartCoroutine(CoPhaseTimerRoutine());
     }
 
-    
+
+    #endregion
+
+    #region Update
+    private void Update()
+    {
+        gameTimer += Time.deltaTime;
+
+        // 실제 시간에 맞춰 논리적 페이즈 구분
+        int newLogicalPhase = 0;
+        if(gameTimer < 60f)
+        {
+            newLogicalPhase = 0;
+        }
+        else if(gameTimer < 120f)
+        {
+            newLogicalPhase = 1;
+        }
+        else
+        {
+            newLogicalPhase = 2;
+        }
+
+        // 3. 페이즈가 변경된 '최초 1회'만 연출 및 설정 업데이트
+        if(newLogicalPhase != currentLogicalPhase)
+        {
+            currentLogicalPhase = newLogicalPhase;
+            Debug.Log("[MapManager] : 논리적 페이즈 변경됨");
+
+            // 페이즈 변경 시점에 맞춰 카메라의 Y축 추적 모드를 변경
+            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentLogicalPhase);
+        }
+    }
     #endregion
 
     #region HandleMapSpawnEvent
@@ -254,34 +300,14 @@ public class MapManager : MonoBehaviour
         {
             PhaseData currentPhase = phases[currentPhaseIndex];
 
-            // 누적 시간에 따라 논리적 이즈 설정(기준 : 1분)
-            if(cumulativeTime < 60f)
-            {
-                currentLogicalPhase = 0;    // 1페이즈(Y축 고정)
-            }
-            else if(cumulativeTime < 120f)
-            {
-                currentLogicalPhase = 1; // 2페이즈(Y축 추적)
-            }
-            else
-            {
-                currentLogicalPhase = 2;    // 3페이즈
-            }
-
             // 테스트용 디버깅
             Debug.Log($"[{currentPhase.phaseName}] 돌입! " +
                 $"누적 시작 시간: {cumulativeTime}초, 논리적 페이즈: {currentLogicalPhase}");
 
-            // 페이즈 변경 시점에 맞춰 카메라의 Y축 추적 모드를 변경
-            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentLogicalPhase);
-           
             // 현재 페이즈의 맵들로 셔플 백 갈아끼우기
             UpdateShuffleBagForCurrentPhase();
 
-            // 현재 페이즈의 대기시간 누적
-            cumulativeTime += currentPhase.timeThreshold;
-
-            // 마지막 페이즈 -> 무한 대기(영원히 지속됨)
+            // 마지막 세부 페이즈인 경우 더 기다리지 않고 종료
             if(currentPhaseIndex < phases.Count-1)
             {
                 yield return new WaitForSeconds(currentPhase.timeThreshold);
