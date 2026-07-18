@@ -322,7 +322,7 @@ TilemapCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.13}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
@@ -485,6 +485,7 @@ MonoBehaviour:
   endPosition: {fileID: 472916033784187126}
   cameraBoundaryCollider: {fileID: 4893195698825185968}
   spawnSetting: {fileID: 11400000, guid: 384fab549f019e24ea67bc3735be51fd, type: 2}
+  boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
   margin: 2
 --- !u!61 &4893195698825185968
@@ -521,7 +522,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 8.602398, y: 0}
+  m_Offset: {x: 7.952505, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -531,7 +532,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 46.51503, y: 35}
+  m_Size: {x: 47.814816, y: 35}
   m_EdgeRadius: 0
 --- !u!114 &5911856925311398048
 MonoBehaviour:
@@ -546,7 +547,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
   mapData: {fileID: 11400000, guid: 4378c04734bf86342b1c6f0e720f70c1, type: 2}
-  _monsterRespawn: {fileID: 8936806820121352438, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
+  trapSpawnChance: 0.6
+  staggerDelay: 0.5
+  cameraMargin: 1
 --- !u!1 &4329006572359026784
 GameObject:
   m_ObjectHideFlags: 0
@@ -960,7 +963,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2926996684056065664, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
       propertyPath: speed
-      value: 3
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
       propertyPath: m_Name
@@ -1101,6 +1104,10 @@ PrefabInstance:
     - target: {fileID: 984604953044427423, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926996684056065664, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
+      propertyPath: speed
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 8320716752433674900, guid: 0ab7e2342cc314f45a02f3225d90683c, type: 3}
       propertyPath: m_Name

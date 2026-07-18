@@ -10,6 +10,8 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Boss")]
     public GameObject Boss;
 
+    [Header("Box")]
+    [SerializeField] private GameObject _boxPrefab;
 
     [Header("Monster Bullet Prefab")]
     [SerializeField] private GameObject _monsterBulletPrefab;
@@ -31,15 +33,16 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     public int poolSize = 20;        // 처음에 미리 만들어둘 총알 개수
 
     private Queue<GameObject> bulletPool = new Queue<GameObject>();
-    
 
+    #region Pool
     private Queue<GameObject> _monsterBulletPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBirdPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBasePool = new Queue<GameObject>();
     private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
-
     private Queue<GameObject> _dustEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _slashEffectPool = new Queue<GameObject>();
+    private Queue<GameObject> _boxPool = new Queue<GameObject>();
+    #endregion
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -94,9 +97,18 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             _slashEffectPool.Enqueue(obj); // 리스트에 추가
         }
 
+        // box Pool 생성
+        for (int i = 0; i < 20; ++i)
+        {
+            GameObject obj = Instantiate(_boxPrefab, this.transform);
+            obj.SetActive(false);
+            _boxPool.Enqueue(obj);
+        }
+
     }
 
-
+#region MonsterPop
+    #region Bullet
     // 풀에서 총알 가져오는 함수
     public GameObject MonsterBulletPop()
     {
@@ -110,17 +122,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
         return null;
     }
+    #endregion
 
-    // 다 쓴 총알을 다시 풀에 반환하는 함수
-    public void MonsterBulletPush(GameObject obj)
-    {
-        if (obj == null) return;
-
-        obj.SetActive(false);
-        _monsterBulletPool.Enqueue(obj);
-
-    }
-
+    #region Base
     // 풀에서 Base 몬스터 가져오는 함수
     public GameObject MonsterBasePop()
     {
@@ -133,7 +137,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
         return null;
     }
+    #endregion
 
+    #region Bird
     // 풀에서 Bird 몬스터 가져오는 함수
     public GameObject MonsterBirdPop()
     {
@@ -146,6 +152,65 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
         return null;
     }
+    #endregion
+
+    #region Tetacle
+    // 풀에서 가져오는 함수
+    public GameObject TentaclePop(bool trap = false)
+    {
+        if (_tentaclePool.Count > 0)
+        {
+            GameObject obj = _tentaclePool.Dequeue();
+            obj.GetComponent<TentacleController>().isTrap = trap;
+            return obj;
+        }
+
+        return null;
+    }
+    #endregion
+
+    #region TetacleTrap
+    public GameObject DustEffectPop()
+    {
+        if (_dustEffectPool.Count > 0)
+        {
+            GameObject obj = _dustEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+
+    public GameObject SlashEffectPop()
+    {
+        if (_slashEffectPool.Count > 0)
+        {
+            GameObject obj = _slashEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+    #endregion
+
+    #endregion
+
+#region MonsterPush
+
+    #region Bullet
+
+    // 다 쓴 총알을 다시 풀에 반환하는 함수
+    public void MonsterBulletPush(GameObject obj)
+    {
+        if (obj == null) return;
+
+        obj.SetActive(false);
+        _monsterBulletPool.Enqueue(obj);
+
+    }
+    #endregion
+
+    #region Monster(bird, base)
 
     // 몬스터를 다시 풀에 반환하는 함수
     public void MonsterPush(GameObject obj)
@@ -163,21 +228,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         }
 
     }
+    #endregion
 
-
-    // 풀에서 가져오는 함수
-    public GameObject TentaclePop(bool trap = false)
-    {
-        if (_tentaclePool.Count > 0)
-        {
-            GameObject obj = _tentaclePool.Dequeue();
-            obj.GetComponent<TentacleController>().isTrap = trap;
-            return obj;
-        }
-
-        return null;
-    }
-
+    #region Tentacle
     // 다시 풀에 반환하는 함수
     public void TentaclePush(GameObject obj)
     {
@@ -185,34 +238,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         obj.SetActive(false);
         _tentaclePool.Enqueue(obj);
     }
+    #endregion
 
-    public GameObject DustEffectPop()
-    {
-        if (_dustEffectPool.Count > 0)
-        {
-            GameObject obj = _dustEffectPool.Dequeue();
-            obj.SetActive(true);
-            return obj;
-        }
-        return null;
-    }
-
+    #region TentacleTrap
     public void DustEffectPush(GameObject obj)
     {
         if (obj == null) return;
         obj.SetActive(false);
         _dustEffectPool.Enqueue(obj);
-    }
-
-    public GameObject SlashEffectPop()
-    {
-        if (_slashEffectPool.Count > 0)
-        {
-            GameObject obj = _slashEffectPool.Dequeue();
-            obj.SetActive(true);
-            return obj;
-        }
-        return null;
     }
 
     public void SlashEffectPush(GameObject obj)
@@ -221,9 +254,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         obj.SetActive(false);
         _slashEffectPool.Enqueue(obj);
     }
+    #endregion
+    #endregion
 
-
-
+#region Init
     // 게임 시작 시 풀을 미리 채워둡니다.
     private void InitializePool()
     {
@@ -241,7 +275,11 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             bulletPool.Enqueue(bullet);
         }
     }
+    #endregion
 
+#region ETC
+
+    #region PlayerBullet
     // 플레이어가 총알을 요청할 때 꺼내주는 메서드
     public GameObject GetBullet(Vector2 position, Quaternion rotation)
     {
@@ -260,7 +298,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             return bullet;
         }
     }
+    #endregion
 
+    #region ReturnBullet
     // 총알이 화면 밖으로 나가거나 적에 부딪혔을 때 다시 풀로 반반환하는 메서드
     public void ReturnBullet(GameObject bullet)
     {
@@ -268,5 +308,40 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         bullet.transform.SetParent(this.transform);
         bulletPool.Enqueue(bullet);
     }
+    #endregion
+
+    #region Box
+    // 풀-> 상자 꺼내옴
+    public GameObject BoxPop()
+    {
+        if(_boxPool.Count > 0)
+        {
+            GameObject obj = _boxPool.Dequeue();
+            return obj;
+        }
+
+        // 풀이 비어있다면 새로 생성하여 대처
+        if(_boxPrefab != null)
+        {
+            GameObject obj = Instantiate(_boxPrefab, this.transform);
+            return obj;
+        }
+        return null;
+    }
+
+    // 상자-> 풀로 반환
+    public void BoxPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        obj.transform.SetParent(this.transform);
+        _boxPool.Enqueue(obj);
+    }
+
+    
+    #endregion
+
+#endregion
+
 }
 
