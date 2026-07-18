@@ -24,8 +24,9 @@ public class BaseMonsterSearch :  IMonsterState
     {
         _owner.SetExclamationMark(false);
         _owner.SetQuestionMark(true);
-        //Debug.Log("대기");
-        //_animator.SetBool(AnimatorHash.Idle, true);
+        Debug.Log("대기");
+        _animator.SetBool(AnimatorHash.Idle, true);
+        _directionTimer = 0f;
     }
 
     public void Update() 

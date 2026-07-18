@@ -18,6 +18,6 @@ MonoBehaviour:
   MaxSpeed: 6
   Force: 10
   Name: Base
-  searchRange: 5
-  angle: 15
-  attackRange: 5
+  searchRange: 7
+  angle: 70
+  attackRange: 7
