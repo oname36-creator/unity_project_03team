@@ -2288,10 +2288,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 824551909}
-    - target: {fileID: 7237943464492460150, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8026126389146484197, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2554,10 +2550,6 @@ PrefabInstance:
       propertyPath: hitStopManager
       value: 
       objectReference: {fileID: 1631045391}
-    - target: {fileID: 3864494816531230277, guid: e087a14a05d28dc45b43a5328f624f14, type: 3}
-      propertyPath: effectDestroyTime
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

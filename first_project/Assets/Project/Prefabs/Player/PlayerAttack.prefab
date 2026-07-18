@@ -47,4 +47,4 @@ MonoBehaviour:
   hitStopManager: {fileID: 0}
   hitStopDuration: 0.07
   hitEffectPrefab: {fileID: 3610882451772401995, guid: daeb7e02dd9aa924580f0c98d7cf6373, type: 3}
-  effectDestroyTime: 0.5
+  effectDestroyTime: 1

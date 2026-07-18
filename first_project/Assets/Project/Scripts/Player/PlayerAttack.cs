@@ -39,22 +39,21 @@ public class PlayerAttack : MonoBehaviour
         {
             Debug.Log($"⚔️ [타격 성공] {collision.name}에게 {Damage} 대미지를 꽂았습니다!");
 
-           
-            if (hitStopManager != null)
+            // 1. 히트 스톱 실행 (오브젝트가 존재하고, '활성화'되어 있을 때만 실행)
+            if (hitStopManager != null && hitStopManager.gameObject.activeInHierarchy)
             {
                 hitStopManager.TriggerHitStop(hitStopDuration);
             }
+            else
+            {
+                Debug.LogWarning("HitStopManager가 인스펙터에 없거나 비활성화 상태입니다. 히트스톱을 건너뜁니다.");
+            }
 
-            
+            // 2. 피격 이펙트 생성 (이제 히트 스톱 에러에 막히지 않고 무조건 실행됩니다)
             if (hitEffectPrefab != null)
             {
-                // 현재 히트박스 콜라이더와 몬스터 콜라이더가 만나는 가장 가까운 접점 좌표 구하기
                 Vector2 hitPoint = collision.ClosestPoint(transform.position);
-
-                // 해당 위치에 이펙트 생성
                 GameObject effect = Instantiate(hitEffectPrefab, hitPoint, Quaternion.identity);
-
-                // 생성 후 일정 시간이 지나면 자동으로 메모리에서 삭제
                 Destroy(effect, effectDestroyTime);
             }
         }
