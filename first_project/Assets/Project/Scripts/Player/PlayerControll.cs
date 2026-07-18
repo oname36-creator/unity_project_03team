@@ -407,6 +407,12 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private System.Collections.IEnumerator KnockbackAndInvincibleRoutine(Vector3 enemyPosition)
     {
+        if (animator != null)
+        {
+            animator.SetTrigger("OnHit");
+        }
+        
+
         status.isHurt = true;
         status.isInvincible = true;
 
@@ -516,7 +522,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     private System.Collections.IEnumerator GunAttackRoutine()
     {
         // 0.3초 대기 (선딜레이)
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
 
         // 대기하는 동안 플레이어가 죽거나 게임이 멈췄는지 체크
         if (status == null || status.isDead || Time.timeScale == 0f) yield break;
@@ -534,5 +540,4 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.OnGunAttackExecute();
     }
-
 }
