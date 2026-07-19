@@ -77,6 +77,7 @@ public class MapChunk : MonoBehaviour
             Debug.LogWarning($"[MapChunk] {gameObject.name}에 SOMonsterSpawnSetting이 할당되지 않아 몬스터 자동 스폰을 진행하지 않습니다.");
             return;
         }
+
         // 1. 이름이 Trap인 부모 오브젝트를 찾아 하위 콜라이더들을 자동 수집
         List<Collider2D> prohibitedColliders = new List<Collider2D>();
         foreach(Transform child in transform)
@@ -220,12 +221,24 @@ public class MapChunk : MonoBehaviour
         int spawnedCount = 0;
         List<Vector3> actualSpawnedPositions = new List<Vector3>();
 
-        foreach(Vector3 candidatePos in validSpawnPositions)
+
+
+        // 현재 페이즈에 맞는 확률과 딜레이 값 선택
+        int currentPhase = MapManager.Instance?.CurrentLogicalPhase ?? 0;
+        currentPhase = Mathf.Clamp(currentPhase, 0, 2);
+
+        // 페이즈별 설정 구조체 데이터 가져오기
+        SPhaseMonsterSpawnData activeSetting = spawnSetting.phaseSettings[Mathf.Clamp(currentPhase, 0, spawnSetting.phaseSettings.Length - 1)];
+        float MonsterSpawnChance = activeSetting.spawnChane;
+        int maxMonsterCount = activeSetting.maxMonsterCount;
+        MonsterType[] allowedTypes = activeSetting.spawnableMonsterTypes;
+
+        foreach (Vector3 candidatePos in validSpawnPositions)
         {
-            if (spawnedCount >= spawnSetting.maxMonsterCount) continue;
+            if (spawnedCount >= maxMonsterCount) continue;
 
             // 스폰 확률 검사
-            if (UnityEngine.Random.value > spawnSetting.spawnChance) continue;
+            if (UnityEngine.Random.value > maxMonsterCount) continue;
 
             // 최소 거리 검사
             bool tooClose = false;
@@ -240,11 +253,11 @@ public class MapChunk : MonoBehaviour
             if (tooClose) continue;
 
             // 스폰 타입 목록 예외처리
-            if (spawnSetting.spawnableMonsterTypes == null || spawnSetting.spawnableMonsterTypes.Length == 0)
+            if (allowedTypes == null || allowedTypes.Length == 0)
                 break;
 
             // 지정된 후보 타입 중 랜덤 선택
-            MonsterType selectedType = spawnSetting.spawnableMonsterTypes[UnityEngine.Random.Range(0, spawnSetting.spawnableMonsterTypes.Length)];
+            MonsterType selectedType = allowedTypes[UnityEngine.Random.Range(0, allowedTypes.Length)];
             string monsterName = selectedType.ToString();
 
             // 공중 몬스터의 경우 Y축에 높이 오프셋 추가
@@ -287,9 +300,17 @@ public class MapChunk : MonoBehaviour
         int spawnedBoxCount = 0;
         List<Vector3> actualSpawnedBoxPositions = new List<Vector3>();
 
-        foreach(Vector3 candidatePos in candidatePositions)
+        // 현재 페이즈 인덱스 조회 및 페이즈 범위 제한
+        int currentPhase = MapManager.Instance?.CurrentLogicalPhase ?? 0;
+        currentPhase = Mathf.Clamp(currentPhase, 0, 2);
+
+        // 현재 페이즈에 맞는 확률과 딜레이 값 선택
+        float boxSpawnChane = boxSpawnSetting.spawnChanes[Mathf.Clamp(currentPhase, 0, boxSpawnSetting.spawnChanes.Length - 1)];
+        float maxBoxCount = boxSpawnSetting.maxBoxCounts[Mathf.Clamp(currentPhase, 0, boxSpawnSetting.spawnChanes.Length - 1)];
+
+        foreach (Vector3 candidatePos in candidatePositions)
         {
-            if (spawnedBoxCount >= boxSpawnSetting.maxBoxCount) break;
+            if (spawnedBoxCount >= maxBoxCount) break;
 
             // 1. 이미 몬스터가 스폰된 위치와의 간격 검사 => 중복 검사
             bool isOverlapWithMonser = false;
@@ -316,7 +337,7 @@ public class MapChunk : MonoBehaviour
             if (toCloseToBox) continue;
 
             // 3. 상자 스폰 이벤트 호출
-            if (UnityEngine.Random.value > boxSpawnSetting.spawnChance) continue;
+            if (UnityEngine.Random.value > boxSpawnChane) continue;
 
             // 4. 상자 스폰 이벤트 호출
             Vector3 spawnPos = candidatePos;    // 상자는 바닥에 스폰되므로 후보 위치 그대로 사용
@@ -367,8 +388,5 @@ public class MapChunk : MonoBehaviour
     #endregion
 
 #endregion
-
-
-
 
 }

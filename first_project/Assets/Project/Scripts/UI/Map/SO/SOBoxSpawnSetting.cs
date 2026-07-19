@@ -24,15 +24,14 @@ public class SOBoxSpawnSetting : ScriptableObject
     public string groundTilemapName = "Tilemap";
 
     [Header("스폰 빈도 및 제한")]
-    [Range(0f, 1f)]
-    [Tooltip("상자가 스폰될 확률")]
-    public float spawnChance = 0.15f;
+    [Tooltip("페이즈별 스폰 확률")]
+    public float[] spawnChanes = new float[3] { 0.25f, 0.10f, 0.05f };
+
+    [Tooltip("페이즈별 청크당 최대 상자 개수")]
+    public int[] maxBoxCounts = new int[3] { 2, 2, 1 };
 
     [Tooltip("몬스터 혹은 다른 상자와의 최소 안전간격")]
-    public float minSpawnInterval = 3f;
-
-    [Tooltip("한 청크 내에 스폰될 수 있는 최대 상자 개수")]
-    public int maxBoxCount = 3;
+    public int minSpawnInterval = 3;
 
     [Header("상자 오픈 시 보상 아이템 목록")]
     [Tooltip("상자를 획득했을 때 이 배열에 있는 아이템 데이터 중 무작위로 하나 지급")]

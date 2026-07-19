@@ -19,20 +19,25 @@ public class TentacleTrapSpawner : MonoBehaviour
     private List<GameObject> spawnedTraps = new List<GameObject>();
     private List<CliffTrapNode> activeCliffNodes = new List<CliffTrapNode>();
     private float nextSpawnTime = 0f;
-    private bool[] _hasTrap;   
+    private bool[] _hasTrap;
 
     #region TentacleTrapSettings
     [Header("함정 설정")]
-    [Range(0f, 1f)]
-    [SerializeField] private float trapSpawnChance = 0.6f;  // 발동 확률
-    [SerializeField] private float staggerDelay = 0.5f;     // 함정 간의 스폰 시간차
-    [SerializeField] private float cameraMargin = 1.0f;     // 화면 우측에서 얼마나 더 오른쪽인 위치에서 스폰시킬지
+    [Tooltip("페이즈별 촉수 함정 발동 확률")]
+    [SerializeField] private float[] TentacletrapSpawnChanes = new float[3] { 0.30f, 0.65f, 0.95f };
+
+    [Tooltip("페이즈별 함정 간의 스폰 딜레이")]
+    [SerializeField] private float[] staggerDelays = new float[3] { 0.5f, 0.3f, 0.1f };
     #endregion
+
+    [SerializeField] private float cameraMargin = 1.0f;
+
     private void Start()
     {
         _hasTrap = new bool[activeCliffNodes.Count];
     
     }
+
     #region Update
     private void Update()
     {
@@ -40,6 +45,14 @@ public class TentacleTrapSpawner : MonoBehaviour
         if (activeCliffNodes.Count == 0) return;
         if (Camera.main == null) return;
         #endregion
+
+        
+        int currentPhase = MapManager.Instance?.CurrentLogicalPhase ?? 0;   // MapManager.Instance != null ? MapManager.Instance.CurrentLogicalPhase : 0;
+        currentPhase = Mathf.Clamp(currentPhase, 0, 2);
+
+        // 현재 페이즈에 맞는 확률과 딜레이 값 선택
+        float trapSpawnChance = TentacletrapSpawnChanes[Mathf.Clamp(currentPhase, 0, TentacletrapSpawnChanes.Length - 1)];
+        float staggerDelay = staggerDelays[Mathf.Clamp(currentPhase, 0, staggerDelays.Length - 1)];
 
         // 카메라 가로 반쪽 및 우측 경계선 계산(수학적으로)
         float camHalfWidth = Camera.main.orthographicSize + Camera.main.aspect;

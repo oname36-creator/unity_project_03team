@@ -797,7 +797,7 @@ MonoBehaviour:
   startPosition: {fileID: 6122493896129899115}
   endPosition: {fileID: 6176292426882540367}
   cameraBoundaryCollider: {fileID: 8428815529486151324}
-  spawnSetting: {fileID: 11400000, guid: 1528a36e29b63424abd09eb836fb4cd6, type: 2}
+  spawnSetting: {fileID: 11400000, guid: 50680bfa16239c74981b70b3166b1c93, type: 2}
   boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
   margin: 2
@@ -860,8 +860,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
   mapData: {fileID: 11400000, guid: 28b02c546c29f2f49949b3a250bb1e50, type: 2}
-  trapSpawnChance: 0.6
-  staggerDelay: 0.5
+  TentacletrapSpawnChanes:
+  - 0.3
+  - 0.65
+  - 0.95
+  staggerDelays:
+  - 0.5
+  - 0.3
+  - 0.1
   cameraMargin: 1
 --- !u!1 &5678572895258049636
 GameObject:

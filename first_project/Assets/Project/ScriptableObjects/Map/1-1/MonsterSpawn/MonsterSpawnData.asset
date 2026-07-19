@@ -10,11 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d9950d41559a434992039cc9843bc30, type: 3}
-  m_Name: MapChunkD
+  m_Name: MonsterSpawnData
   m_EditorClassIdentifier: Assembly-CSharp::SOMonsterSpawnSetting
   groundTilemapName: Ground
-  spawnableMonsterTypes: 0000000001000000
-  spawnChance: 0.7
+  phaseSettings:
+  - spawnableMonsterTypes: 00000000
+    spawnChane: 0.2
+    maxMonsterCount: 2
+  - spawnableMonsterTypes: 0000000001000000
+    spawnChane: 0.45
+    maxMonsterCount: 3
+  - spawnableMonsterTypes: 0000000001000000
+    spawnChane: 0.7
+    maxMonsterCount: 5
   minSpawnInterval: 3
-  maxMonsterCount: 3
   bridHeightOffset: 3.5
