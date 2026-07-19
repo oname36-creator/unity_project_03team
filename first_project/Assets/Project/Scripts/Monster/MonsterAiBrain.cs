@@ -282,6 +282,13 @@ public class MonsterAiBrain
                     {
                         return !owner.IsHurt && owner.IsAttack;
                     },
+                    targetState:attack
+                    ),
+            new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsHurt && !owner.IsBack;
+                    },
                     targetState:re
                     ),
 

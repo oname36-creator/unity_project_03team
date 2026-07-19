@@ -19,5 +19,5 @@ MonoBehaviour:
   Force: 100
   Name: Bird
   searchRange: 30
-  angle: 45
+  angle: 90
   attackRange: 30

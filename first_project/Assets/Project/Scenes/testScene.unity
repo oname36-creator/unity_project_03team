@@ -1797,7 +1797,7 @@ Transform:
   m_GameObject: {fileID: 1303370892}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7078275, w: 0.70638543}
-  m_LocalPosition: {x: 14.36, y: 5.72, z: 0}
+  m_LocalPosition: {x: -3.26, y: 5.68, z: 0}
   m_LocalScale: {x: 10.636477, y: 0.42673644, z: 1.2386}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2623,6 +2623,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenSlime
       objectReference: {fileID: 0}
+    - target: {fileID: 4832580084656564143, guid: 0bf7d512637474a469d2f606976f1bcb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8127177671941876280, guid: 0bf7d512637474a469d2f606976f1bcb, type: 3}
       propertyPath: Player
       value: 
@@ -2770,6 +2774,14 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 1119085446}
+    - target: {fileID: 6301555137212194624, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626749263745653531, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_Name
       value: Bird

@@ -230,6 +230,9 @@ public class MonsterController : MonoBehaviour
         isAttackable = true;
         isHurt = false;
         isBack = false;
+
+        _rigidBody2D = this.GetComponent<Rigidbody2D>();
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
 
@@ -260,8 +263,6 @@ public class MonsterController : MonoBehaviour
 
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
-        _rigidBody2D = this.GetComponent<Rigidbody2D>();
-        _renderer = GetComponent<SpriteRenderer>();
         _frontVector = new Vector2Int(-1, 0);
         onFlip = true;
         _renderer.flipX = onFlip;
@@ -321,6 +322,7 @@ public class MonsterController : MonoBehaviour
     {
         _rigidBody2D.MovePosition(dir);
         //Debug.Log("current Pos:" + _rigidBody2D.position);
+        //transform.position = dir;
     }
 
 
