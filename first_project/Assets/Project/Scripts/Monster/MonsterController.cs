@@ -24,8 +24,6 @@ public class MonsterController : MonoBehaviour
     public GameObject ExclamationMark;
 
 
-
-
     #endregion
 
 
@@ -210,6 +208,15 @@ public class MonsterController : MonoBehaviour
 
     #region Unity Lifecycle
 
+    private void Awake()
+    {
+
+        _rigidBody2D = this.GetComponent<Rigidbody2D>();
+        _renderer = GetComponent<SpriteRenderer>();
+
+    }
+
+
     private void OnEnable()
     {
         if (gameObject.CompareTag("Untagged"))
@@ -231,8 +238,6 @@ public class MonsterController : MonoBehaviour
         isHurt = false;
         isBack = false;
 
-        _rigidBody2D = this.GetComponent<Rigidbody2D>();
-        _renderer = GetComponent<SpriteRenderer>();
     }
 
 
@@ -388,38 +393,38 @@ public class MonsterController : MonoBehaviour
 
     public bool CheckForObstacles()
     {
-
         Vector2 origin = transform.position;
-        origin.y += 0.5f;
+        origin.y += 0.5f; // 몬스터 중심 높이
 
-
+        // 1. 플레이어 중심점 보정 (CaculateMonsterToPlayerVector와 동일하게 맞춤)
         Vector2 playerPos = _playerTransform.position;
+        playerPos.y += 0.5f;
 
-
-        Vector2 centerTarget = playerPos; // 몸통(중심) 위치
-
+        Vector2 centerTarget = playerPos;
         Vector2 headTarget = playerPos;
-        headTarget.y += _playerRadius; // 머리 위치 (위로)
-
+        headTarget.y += _playerRadius; // 머리 위치
         Vector2 feetTarget = playerPos;
-        feetTarget.y -= _playerRadius; // 발 위치 (아래로)
-
+        feetTarget.y -= _playerRadius; // 발 위치
 
         Vector2 dirToCenter = (centerTarget - origin).normalized;
         Vector2 dirToHead = (headTarget - origin).normalized;
         Vector2 dirToFeet = (feetTarget - origin).normalized;
 
+        // 2. 레이캐스트 거리를 '플레이어까지의 거리'로 제한
+        float distToCenter = Vector2.Distance(origin, centerTarget);
+        float distToHead = Vector2.Distance(origin, headTarget);
+        float distToFeet = Vector2.Distance(origin, feetTarget);
 
-        RaycastHit2D hitCenter = Physics2D.Raycast(origin, dirToCenter, _searchRange, _obstacleLayer);
-        RaycastHit2D hitHead = Physics2D.Raycast(origin, dirToHead, _searchRange, _obstacleLayer);
-        RaycastHit2D hitFeet = Physics2D.Raycast(origin, dirToFeet, _searchRange, _obstacleLayer);
+        // 3. 수정한 거리(distTo~)를 적용하여 레이캐스트 쏘기
+        RaycastHit2D hitCenter = Physics2D.Raycast(origin, dirToCenter, distToCenter, _obstacleLayer);
+        RaycastHit2D hitHead = Physics2D.Raycast(origin, dirToHead, distToHead, _obstacleLayer);
+        RaycastHit2D hitFeet = Physics2D.Raycast(origin, dirToFeet, distToFeet, _obstacleLayer);
 
 
-        Debug.DrawRay(origin, dirToCenter * _searchRange, Color.green); // 몸통: 초록색
-        Debug.DrawRay(origin, dirToHead * _searchRange, Color.yellow);  // 머리: 노란색
-        Debug.DrawRay(origin, dirToFeet * _searchRange, Color.red);     // 발: 빨간색
+        Debug.DrawRay(origin, dirToCenter * distToCenter, Color.green);
+        Debug.DrawRay(origin, dirToHead * distToHead, Color.yellow);
+        Debug.DrawRay(origin, dirToFeet * distToFeet, Color.red);
 
-  
         bool isCenterBlocked = hitCenter.collider != null && hitCenter.collider.CompareTag("Ground");
         bool isHeadBlocked = hitHead.collider != null && hitHead.collider.CompareTag("Ground");
         bool isFeetBlocked = hitFeet.collider != null && hitFeet.collider.CompareTag("Ground");

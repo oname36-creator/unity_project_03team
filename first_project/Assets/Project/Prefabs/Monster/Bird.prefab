@@ -394,6 +394,7 @@ MonoBehaviour:
     m_Bits: 8
   QuestionMark: {fileID: 6128156756579016845}
   ExclamationMark: {fileID: 5083543790418922066}
+  solidCollider: {fileID: 4529147896441430149}
 --- !u!58 &4529147896441430149
 CircleCollider2D:
   m_ObjectHideFlags: 0
