@@ -38,7 +38,8 @@ public class MapChunk : MonoBehaviour
     {
         trapSpawner = GetComponentInChildren<TentacleTrapSpawner>();
     }
-    #region Event
+
+#region Event
     private void OnEnable()
     {
         // 맵 청크 활성화 시 스폰 처리

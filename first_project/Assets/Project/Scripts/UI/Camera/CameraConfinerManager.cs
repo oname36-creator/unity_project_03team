@@ -91,6 +91,12 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 confinerB.BoundingShape2D = newBoundary;
                 confinerB.InvalidateBoundingShapeCache();
 
+                // 전환되어 사용할 카메라 B의 Y축 데드존을 항상 영구 고정 상태로 지정
+                if(positionComposerB != null)
+                {
+                    SetDeadZoneY(positionComposerB, 1.0f);
+                }
+
                 // 우선순위를 전환하여 CinemachineBrain이 두 가상 카메라 간의 Blending을 수행하도록 유도
                 virtualCameraA.Priority = 10;
                 virtualCameraB.Priority = 15;
@@ -118,6 +124,12 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 confinerA.BoundingShape2D = newBoundary;
                 confinerA.InvalidateBoundingShapeCache();
 
+                // 전환되어 사용할 카메라 B의 Y축 데드존을 항상 영구 고정 상태로 지정
+                if (positionComposerA != null)
+                {
+                    SetDeadZoneY(positionComposerA, 1.0f);
+                }
+
                 // 우선순위를 전환하여 A로 Blending
                 virtualCameraA.Priority = 15;
                 virtualCameraB.Priority = 10;
@@ -139,13 +151,13 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     }
     #endregion
 
-    #region SetCameraYTrackingByPhase
+    #region InitizlizeYTracking
     ///<summary>
-    ///페이즈 번호에 따라 카메라의 Y축 고정 여부를 결정합니다.
+    /// 게임 시작 시 가상 카메라들의 Y축을 부드럽게 고정 상태로 정렬하는 연출을 시작
     /// </summary>
-    public void SetCameraYTrackingByPhase(int phaseindex)
+    public void InitizlizeYTracking()
     {
-        if (positionComposerA == null)
+        if (positionComposerA == null || positionComposerB == null)
         {
             InitCameraReferences();
         }
@@ -162,22 +174,15 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
             _yTrackingCoroutineB = null;
         }
 
-        if(phaseindex == 0)
+        if(positionComposerA != null)
         {
-            if(positionComposerA != null)
-            {
-                _yTrackingCoroutineA = StartCoroutine(CoInitialYCorrection(positionComposerA, 1.5f));
-            }
-            if (positionComposerB != null)
-            {
-                _yTrackingCoroutineB = StartCoroutine(CoInitialYCorrection(positionComposerB, 1.5f));
-            }
+            _yTrackingCoroutineA = StartCoroutine(CoInitialYCorrection(positionComposerA, 1.5f));
         }
-        else
+        if (positionComposerB != null)
         {
-            SetDeadZoneY(positionComposerA, 0.2f);
-            SetDeadZoneY(positionComposerB, 0.2f);
+            _yTrackingCoroutineB = StartCoroutine(CoInitialYCorrection(positionComposerB, 1.5f));
         }
+        
     }
     #endregion
 
@@ -196,7 +201,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     }
     #endregion
 
-    #region CoInitialYCorrection
+    #region Corutin
     ///<summary>
     /// 1페이즈 시작 시 카메라 Y축 위치를 부드럽게 보정하기 위한 코루틴
     /// </summary>
