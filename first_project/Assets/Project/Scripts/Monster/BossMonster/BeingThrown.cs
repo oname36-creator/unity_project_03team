@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -14,24 +15,30 @@ public class BeingThrown : MonoBehaviour
 
 
     [Header("Audio Clip")]
-    [SerializeField] private AudioClip _startAudio;
     [SerializeField] private AudioClip _boomAudio;
 
     [Header("Name")]
     [SerializeField] private string _name;
 
+    [SerializeField]
+    private CinemachineImpulseSource _impulseSource;
+
     private Rigidbody2D _rigidBody;
     private SpriteRenderer _warringRenderer;
     private SpriteRenderer _myRenderer;
-
+    
+   
 
     private bool _isThrown = false;
+
+    private bool _first = true;
 
     private float _localScaleY;
 
     private string startKey;
     private string boomKey;
 
+    
     void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -50,8 +57,9 @@ public class BeingThrown : MonoBehaviour
     void OnEnable()
     {
         _isThrown = false;
+        _first = true;
 
-      
+
         if (_rigidBody != null)
         {
             _rigidBody.linearVelocity = Vector2.zero; 
@@ -66,7 +74,6 @@ public class BeingThrown : MonoBehaviour
         startKey = _name + "startKey";
         boomKey = _name + "boomKey";
 
-        SoundManager.Instance.AddSfx(startKey,_startAudio ,0.3f);
         SoundManager.Instance.AddSfx(boomKey, _boomAudio ,0.5f);
 
     }
@@ -90,7 +97,16 @@ public class BeingThrown : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        SoundManager.Instance.PlaySFX(boomKey);
+        if (_first)
+        {
+            if (_impulseSource != null)
+            {
+                _impulseSource.GenerateImpulse();
+            }
+
+            SoundManager.Instance.PlaySFX(boomKey);
+            _first = false;
+        }
         _rigidBody.gravityScale *= 2;
     }
 
@@ -128,7 +144,6 @@ public class BeingThrown : MonoBehaviour
             _warringObject.SetActive(false);
         }
 
-        SoundManager.Instance.PlaySFX(startKey);
 
         _rigidBody.bodyType = RigidbodyType2D.Dynamic;
 
