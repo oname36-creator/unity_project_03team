@@ -543,6 +543,7 @@ public class MonsterAiBrain
         IMonsterState idle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
         IMonsterState create = new BodyCreateTentacle(owner);
+        IMonsterState throwObject = new BodyThrowStone(owner);
 
         // 보스룸 상태 추가할 예정
 
@@ -578,6 +579,14 @@ public class MonsterAiBrain
                         return owner.Create;
                     },
                     targetState: create
+                    ),
+
+                new Transition(
+                    condition : () =>
+                    {
+                        return (owner.Phase > 1) && (owner.Distance > 100);
+                    },
+                    targetState: throwObject
                     )
             };
 
@@ -589,9 +598,35 @@ public class MonsterAiBrain
                         return !owner.Create;
                     },
                     targetState:move
+                    ),
+              
+                new Transition(
+                    condition : () =>
+                    {
+                        return (owner.Phase > 1) && (owner.Distance > 100);
+                    },
+                    targetState: throwObject
                     )
             };
 
+        transitionMap[throwObject] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Throw;
+                    },
+                    targetState:move
+                    ),
+
+                new Transition(
+                    condition : () =>
+                    {
+                        return owner.Create;
+                    },
+                    targetState: create
+                    )
+            };
 
         initialState.Enter();
         return new MonsterStateMachine(initialState, transitionMap);

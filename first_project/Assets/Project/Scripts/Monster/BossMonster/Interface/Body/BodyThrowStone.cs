@@ -9,21 +9,30 @@ public class BodyThrowStone : IMonsterState
 
     private Vector3 _targetPosition;
 
+    private float _time = 15f;
+
+    private Coroutine _throwCoroutine;
+
     public BodyThrowStone(BodyController owner)
     {
         _owner = owner;
         _playerTransform = _owner.Boss.Player.transform;
-        _targetPosition = Vector3.zero; 
+        _targetPosition = Vector3.zero;
     }
 
     public void Enter()
     {
-        GetGroundObjectRight();
+        if (_throwCoroutine != null)
+        {
+            _owner.Throw = false;
+            return;
+        }
+        Debug.Log("Throw");
+        _throwCoroutine = _owner.StartCoroutine(ThrowRoutine());
     }
 
     public void Update()
     {
-
     }
 
     public void Exit()
@@ -32,24 +41,46 @@ public class BodyThrowStone : IMonsterState
     }
     private void GetGroundObjectRight()
     {
-        Vector3 origin = _playerTransform.position + Vector3.up * 1.0f;
-
-
-        Vector3 direction = (_playerTransform.right + Vector3.down).normalized;
+        Vector2 origin = (Vector2)_playerTransform.position + Vector2.up * 1.0f;
+        Vector2 direction = ((Vector2)_playerTransform.right + Vector2.down).normalized;
 
         float maxDistance = 50f;
         int groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
 
-        RaycastHit hit;
 
         Debug.DrawRay(origin, direction * maxDistance, Color.red, 3f);
 
-        if (Physics.Raycast(origin, direction, out hit, maxDistance, groundLayerMask))
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, maxDistance, groundLayerMask);
+
+        if (hit.collider != null)
         {
             GameObject hitGroundObj = hit.collider.gameObject;
-
             _targetPosition = hitGroundObj.transform.position;
-
+        }
+        else
+        {
+            _targetPosition = Vector3.zero;
         }
     }
+
+    private IEnumerator ThrowRoutine()
+    {
+        yield return new WaitForSeconds(_owner.ThrowCycle);
+        GetGroundObjectRight();
+
+        if (_targetPosition != Vector3.zero)
+        {
+            GameObject thrown = ObjectPoolManager.Instance.ThrownPop();
+            if (thrown != null)
+            {
+                thrown.GetComponent<BeingThrown>().InitializeThrow(_targetPosition);
+            }
+        }
+
+        _owner.Throw = true;
+
+        _throwCoroutine = null;
+    }
+
 }

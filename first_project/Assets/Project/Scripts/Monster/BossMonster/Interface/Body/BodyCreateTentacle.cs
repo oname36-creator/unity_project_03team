@@ -4,6 +4,8 @@ using UnityEngine;
 public class BodyCreateTentacle : IMonsterState
 {
     private BodyController _owner;
+    private Coroutine _createCoroutine;
+
 
     public BodyCreateTentacle(BodyController owner)
     {
@@ -12,8 +14,13 @@ public class BodyCreateTentacle : IMonsterState
 
     public void Enter()
     {
-        _owner.StartCoroutine(CreateTentacleRoutine());
+        if (_createCoroutine != null)
+        {
+            _owner.Create = false;
+            return;
+        }
 
+        _createCoroutine = _owner.StartCoroutine(CreateTentacleRoutine());
     }
 
     public void Update()

@@ -28,6 +28,11 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [SerializeField] private GameObject _dustEffectPrefab;
     [SerializeField] private GameObject _slashEffectPrefab;
 
+    [Header("Being Thrown")]
+    [SerializeField] private GameObject _treePrefab;
+    [SerializeField] private GameObject _stonePrefab;
+    [SerializeField] private GameObject _logPrefab;
+
 
     [Header("총알 설정")]
     public GameObject bulletPrefab; // 인스펙터에서 총알 프리팹을 할당하세요
@@ -44,6 +49,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _dustEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _slashEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _boxPool = new Queue<GameObject>();
+    private Queue<GameObject> _thrownPool = new Queue<GameObject>();
     #endregion
 
 
@@ -107,6 +113,22 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             _slashEffectPool.Enqueue(obj); // 리스트에 추가
         }
 
+        // thrown pool 생성
+        for (int i = 0; i < 4; ++i) 
+        {
+            GameObject obj1 = Instantiate(_treePrefab, this.transform);
+            GameObject obj2 = Instantiate(_stonePrefab, this.transform);
+            GameObject obj3 = Instantiate(_logPrefab, this.transform);
+
+            obj1.SetActive(false);
+            obj2.SetActive(false);
+            obj3.SetActive(false);
+
+            _thrownPool.Enqueue(obj1);
+            _thrownPool.Enqueue(obj2);
+            _thrownPool.Enqueue(obj3);
+        }
+
         // box Pool 생성
         for (int i = 0; i < 20; ++i)
         {
@@ -114,7 +136,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.SetActive(false);
             _boxPool.Enqueue(obj);
         }
-
     }
 
 #region MonsterPop
@@ -132,6 +153,33 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
         return null;
     }
+    #endregion
+
+    #region Thrown
+
+    public GameObject ThrownPop() 
+    {
+        if (_thrownPool.Count > 0)
+        {
+            int randomInt = Random.Range(0, 5);
+
+            for (int i = 0; i < randomInt; ++i)
+            {
+                GameObject go = _thrownPool.Dequeue();
+                _thrownPool.Enqueue(go);
+            }
+
+            GameObject obj = _thrownPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+
+        return null;
+
+    }
+
+
+
     #endregion
 
     #region Base
@@ -235,6 +283,20 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     }
     #endregion
 
+    #region Thrown
+
+    public void ThrownPush(GameObject obj)
+    {
+        if(obj == null) return;
+
+        obj.SetActive(false);
+        _thrownPool.Enqueue(obj);
+
+    }
+
+
+
+    #endregion
     #region Monster(bird, base, darkWolf)
 
     // 몬스터를 다시 풀에 반환하는 함수

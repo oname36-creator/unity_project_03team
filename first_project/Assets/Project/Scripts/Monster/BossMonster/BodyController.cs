@@ -18,10 +18,12 @@ public class BodyController : MonoBehaviour
     
 
     private bool _isDead = false;
+    private int _phase = 1;
 
     private Rigidbody2D _rigidbody2D;
     private MonsterStateMachine _monsterMachine;
     private Transform _ownerTransform;
+    private Transform _playerTransform;
     private SpriteRenderer _sprite;
 
     
@@ -32,6 +34,7 @@ public class BodyController : MonoBehaviour
     public bool Chase { get { return Boss.Chase; } }
 
     public bool Create { get; set; }
+    public bool Throw { get; set; } = false;
 
     public float MoveSpeed 
     {
@@ -41,6 +44,19 @@ public class BodyController : MonoBehaviour
     public float YCenter { get; private set;  }
 
     public int TentacleCycle { get; set; }
+
+    public int ThrowCycle { get; set; } = 10;
+
+    public int Phase { get { return _phase; } }
+
+    public float Distance 
+    {
+        get 
+        {
+            return _playerTransform.position.x - _ownerTransform.position.x;
+        }
+    }
+
 
     private void OnEnable()
     {
@@ -66,6 +82,7 @@ public class BodyController : MonoBehaviour
         _monsterMachine = MonsterAiBrain.MakeMachine("BossBody", this);
         _ownerTransform = GetComponent<Transform>();
         _sprite = GetComponent<SpriteRenderer>();
+        _playerTransform = Boss.Player.transform;
 
         YCenter = _ownerTransform.position.y;
         //Move = false;
@@ -94,7 +111,8 @@ public class BodyController : MonoBehaviour
 
     private void HandlePhaseChanged(int newPhase)
     {
-        if(newPhase == 2) 
+        _phase = newPhase;
+        if (newPhase == 2) 
         {
             TentacleCycle = 5;
         }
