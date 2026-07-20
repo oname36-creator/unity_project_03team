@@ -1,21 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 아이템 가중치 데이터
-[System.Serializable]
-public struct ItemWeightData
-{
-    public ItemData item;
+//// 아이템 가중치 데이터
+//[System.Serializable]
+//public struct ItemWeightData
+//{
+//    public ItemData item;
 
-    [Tooltip("1페이즈 Drop 가중치")]
-    public int phaseOWeight;
+//    [Tooltip("1페이즈 Drop 가중치")]
+//    public int phaseOWeight;
 
-    [Tooltip("2페이즈 Drop 가중치")]
-    public int phase1Weight;
+//    [Tooltip("2페이즈 Drop 가중치")]
+//    public int phase1Weight;
 
-    [Tooltip("3페이즈 Drop 가중치")]
-    public int phase2Weight;
-}
+//    [Tooltip("3페이즈 Drop 가중치")]
+//    public int phase2Weight;
+//}
 
 [CreateAssetMenu(fileName = "SOBoxSpawnSetting", menuName = "Scriptable Objects/SOBoxSpawnSetting")]
 public class SOBoxSpawnSetting : ScriptableObject
@@ -35,5 +35,5 @@ public class SOBoxSpawnSetting : ScriptableObject
 
     [Header("상자 오픈 시 보상 아이템 목록")]
     [Tooltip("상자를 획득했을 때 이 배열에 있는 아이템 데이터 중 무작위로 하나 지급")]
-    public List<ItemWeightData> rewardItemsWeights;
+    public List<SItemWeightData> rewardItemsWeights;
 }

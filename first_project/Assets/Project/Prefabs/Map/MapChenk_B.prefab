@@ -917,7 +917,7 @@ GameObject:
   - component: {fileID: 3594698515158088569}
   - component: {fileID: 1015467671395589661}
   - component: {fileID: 3786097781232641900}
-  - component: {fileID: 2422173718046068424}
+  - component: {fileID: 4110710447595196034}
   m_Layer: 0
   m_Name: MapChenk_B
   m_TagString: Ground
@@ -962,8 +962,6 @@ MonoBehaviour:
   startPosition: {fileID: 7073038307474420182}
   endPosition: {fileID: 1398808308320012327}
   cameraBoundaryCollider: {fileID: 3786097781232641900}
-  spawnSetting: {fileID: 11400000, guid: 50680bfa16239c74981b70b3166b1c93, type: 2}
-  boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
   margin: 2
 --- !u!61 &3786097781232641900
@@ -1012,7 +1010,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 38, y: 35}
   m_EdgeRadius: 0
---- !u!114 &2422173718046068424
+--- !u!114 &4110710447595196034
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1021,18 +1019,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8916473074194248325}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce35990c9091d2f4a80330983d9ec9bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 555df8276b5cf634783c17911bd834d0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
-  mapData: {fileID: 11400000, guid: acd3aeeb497045c4cab24b0696d9d679, type: 2}
-  TentacletrapSpawnChanes:
-  - 0.3
-  - 0.65
-  - 0.95
-  staggerDelays:
-  - 0.5
-  - 0.3
-  - 0.1
+  m_EditorClassIdentifier: Assembly-CSharp::MapChunkSpawnController
+  spawnSetting: {fileID: 11400000, guid: 1335fc39b83b9334b9ba47c51afee7be, type: 2}
+  hollowTrapData: {fileID: 11400000, guid: e512518799c18724a9312ae3d93d6e3c, type: 2}
+  groundTilemapName: Tilemap
+  minSpawnInterval: 3
+  birdHeightOffset: 3.5
   cameraMargin: 1
 --- !u!1001 &191806618759987609
 PrefabInstance:

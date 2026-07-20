@@ -439,10 +439,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8704448868664121369}
   - component: {fileID: 7148901630841227901}
-  - component: {fileID: 5911856925311398048}
   - component: {fileID: 4893195698825185968}
+  - component: {fileID: 1250181568549747832}
   m_Layer: 0
-  m_Name: MapChenk_D
+  m_Name: MapChenk_Level3_A
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -484,32 +484,8 @@ MonoBehaviour:
   startPosition: {fileID: 6763402707723167686}
   endPosition: {fileID: 472916033784187126}
   cameraBoundaryCollider: {fileID: 4893195698825185968}
-  spawnSetting: {fileID: 11400000, guid: 50680bfa16239c74981b70b3166b1c93, type: 2}
-  boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
   margin: 2
---- !u!114 &5911856925311398048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4005591484691084725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce35990c9091d2f4a80330983d9ec9bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
-  mapData: {fileID: 11400000, guid: 4378c04734bf86342b1c6f0e720f70c1, type: 2}
-  TentacletrapSpawnChanes:
-  - 0.3
-  - 0.65
-  - 0.95
-  staggerDelays:
-  - 0.5
-  - 0.3
-  - 0.1
-  cameraMargin: 1
 --- !u!61 &4893195698825185968
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -556,6 +532,24 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 47.814816, y: 35}
   m_EdgeRadius: 0
+--- !u!114 &1250181568549747832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4005591484691084725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 555df8276b5cf634783c17911bd834d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapChunkSpawnController
+  spawnSetting: {fileID: 11400000, guid: 1335fc39b83b9334b9ba47c51afee7be, type: 2}
+  hollowTrapData: {fileID: 11400000, guid: 9ce94ec32f8b7f54695c3e91e121239a, type: 2}
+  groundTilemapName: Tilemap
+  minSpawnInterval: 3
+  birdHeightOffset: 3.5
+  cameraMargin: 1
 --- !u!1 &4329006572359026784
 GameObject:
   m_ObjectHideFlags: 0

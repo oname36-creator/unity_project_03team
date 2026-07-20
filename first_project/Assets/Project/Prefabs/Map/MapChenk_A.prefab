@@ -788,7 +788,7 @@ GameObject:
   - component: {fileID: 7511406161714308295}
   - component: {fileID: 7490724380618690103}
   - component: {fileID: 3452967155236221581}
-  - component: {fileID: 8587897342377060007}
+  - component: {fileID: 38118555834177091}
   m_Layer: 0
   m_Name: MapChenk_A
   m_TagString: Untagged
@@ -832,8 +832,6 @@ MonoBehaviour:
   startPosition: {fileID: 7680975444880005425}
   endPosition: {fileID: 1433845599762570884}
   cameraBoundaryCollider: {fileID: 3452967155236221581}
-  spawnSetting: {fileID: 11400000, guid: 50680bfa16239c74981b70b3166b1c93, type: 2}
-  boxSpawnSetting: {fileID: 11400000, guid: 1799da78c7be01944a6585e1f5adbd29, type: 2}
   minPlayerDistance: 4
   margin: 2
 --- !u!61 &3452967155236221581
@@ -882,7 +880,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 61.800365, y: 12.185335}
   m_EdgeRadius: 0
---- !u!114 &8587897342377060007
+--- !u!114 &38118555834177091
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -891,13 +889,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8673428918492383135}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce35990c9091d2f4a80330983d9ec9bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 555df8276b5cf634783c17911bd834d0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TentacleTrapSpawner
-  mapData: {fileID: 11400000, guid: 08f6e63993e6f5b42afbd785544712bd, type: 2}
-  trapSpawnChance: 0.6
-  staggerDelay: 5
-  cameraMargin: 3
+  m_EditorClassIdentifier: Assembly-CSharp::MapChunkSpawnController
+  spawnSetting: {fileID: 11400000, guid: ba63377cbbbd361438a2a8b61af5f303, type: 2}
+  hollowTrapData: {fileID: 11400000, guid: bea2e6150848bdd4c907bf514705a510, type: 2}
+  groundTilemapName: Tilemap
+  minSpawnInterval: 3
+  birdHeightOffset: 3.5
+  cameraMargin: 1
 --- !u!1001 &60824186324269026
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1651,6 +1651,14 @@ PrefabInstance:
     - target: {fileID: 685836732652500642, guid: c5c9519b0b78a5044b05e25e63e017da, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6232066220419521790, guid: c5c9519b0b78a5044b05e25e63e017da, type: 3}
+      propertyPath: m_Color.b
+      value: 0.78524387
+      objectReference: {fileID: 0}
+    - target: {fileID: 6232066220419521790, guid: c5c9519b0b78a5044b05e25e63e017da, type: 3}
+      propertyPath: m_Color.g
+      value: 0.78524387
       objectReference: {fileID: 0}
     - target: {fileID: 7503701562073808632, guid: c5c9519b0b78a5044b05e25e63e017da, type: 3}
       propertyPath: m_LocalPosition.x
