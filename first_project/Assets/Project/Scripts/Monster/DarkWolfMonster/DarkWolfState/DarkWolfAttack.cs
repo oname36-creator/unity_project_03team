@@ -22,6 +22,8 @@ public class DarkWolfAttack : IMonsterState
         _animator.SetTrigger(AnimatorHash.IsAttack);
 
         _time = 0f;
+
+        SoundManager.Instance.PlaySFX("DarkWolfAttack");
     }
 
     public void Update()

@@ -43,6 +43,8 @@ public class FlyMonsterAttack : IMonsterState
         _duration = distance / _owner.MaxSpeed;
         Debug.Log($"<color=cyan>[Attack 최초 진입]</color> 시작점: {_originalStartPos} | 최종 목표점(플레이어): {_playerPos} | 총 비행시간: {_duration}초");
         _attackCoroutine = _owner.StartCoroutine(AttackRoutine());
+
+        SoundManager.Instance.PlaySFX("BirdAttack");
     }
 
     public void Update() { }

@@ -6,7 +6,7 @@ public class MonsterDie : IMonsterState
     private Animator _animator;
 
     private GameObject _ownerGameObject;
-
+    private string _name;
 
     // 생성자에서 owner를 직접 받도록 셋업
     public MonsterDie(MonsterController owner)
@@ -14,6 +14,7 @@ public class MonsterDie : IMonsterState
         this._owner = owner;
         _animator = _owner.GetComponent<Animator>();
         _ownerGameObject = _owner.gameObject;
+        _name = _owner.Name;
     }
     public void Enter()
     {
@@ -24,6 +25,15 @@ public class MonsterDie : IMonsterState
         _animator.SetTrigger(AnimatorHash.IsDead);
 
         _owner.Stop();
+
+        if (_name == "Bird")
+        {
+            SoundManager.Instance.PlaySFX("BirdDead");
+        }
+        else if(_name == "DarkWolf") 
+        {
+            SoundManager.Instance.PlaySFX("DarkWolfDead");
+        }
 
     }
 

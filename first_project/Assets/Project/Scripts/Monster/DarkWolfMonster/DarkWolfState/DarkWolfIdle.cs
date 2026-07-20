@@ -27,7 +27,6 @@ public class DarkWolfIdle : IMonsterState
 
         _time = 0f;
 
-        //ToDo 사운드
         if (_owner.IsWalk)
         {
             _owner.Stop();
