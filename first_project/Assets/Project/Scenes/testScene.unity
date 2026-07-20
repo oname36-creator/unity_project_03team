@@ -176,27 +176,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
---- !u!1 &344190670 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4561971662583454659, guid: 80151f43ca283334787438987adea72e, type: 3}
-  m_PrefabInstance: {fileID: 2648258110961907362}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &344190678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 344190670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 199d0c9cc88bc1a45be4da20d7d9449f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DarkWolfSound
-  _idleClip: {fileID: 8300000, guid: 7d83a65df435caf4ab3b3ff9815b3ef0, type: 3}
-  _attackClip: {fileID: 8300000, guid: 23a3e65d3f74aa646ab11ccb3b9b8e39, type: 3}
-  _hurtClip: {fileID: 8300000, guid: 62f09ed83ab239a4cb37e7b459510bf7, type: 3}
-  _deadClip: {fileID: 8300000, guid: 32203b3bff7cbf1498b9c6e55d312fc7, type: 3}
 --- !u!1 &482486713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2839,10 +2818,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4561971662583454659, guid: 80151f43ca283334787438987adea72e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 344190678}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80151f43ca283334787438987adea72e, type: 3}
 --- !u!1001 &2722728650154278150
 PrefabInstance:
@@ -2852,18 +2828,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3865213378436406717, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: _deadClip
-      value: 
-      objectReference: {fileID: 8300000, guid: bd07f1d5d19431f40859dbaca882ee62, type: 3}
-    - target: {fileID: 3865213378436406717, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: _hurtClip
-      value: 
-      objectReference: {fileID: 8300000, guid: dee8ad9bc4c2d8e4f9b077db0d4352f0, type: 3}
-    - target: {fileID: 3865213378436406717, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: _attackClip
-      value: 
-      objectReference: {fileID: 8300000, guid: fe9b4b15cde71794d8a5f2bdccfcba3f, type: 3}
     - target: {fileID: 4616938763592375938, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: Player
       value: 
@@ -2874,7 +2838,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8951697291475702414, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_LocalPosition.x
