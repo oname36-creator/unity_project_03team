@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -39,6 +40,7 @@ public class BossController : MonoBehaviour
 
     #endregion
 
+    public event Action<int> OnPhaseChanged;
 
     #region Private Fields
     private int _hp;
@@ -46,6 +48,8 @@ public class BossController : MonoBehaviour
     private int _searchRange; // 탐색 깊이
     private int _attackRange; // 공격 가능 거리
     private int _force; // 힘
+
+    private int _phase = 1;
 
     private float _angle;   // 탐색 각도
     private float _cosValue; // 각도의 cos 값
@@ -104,9 +108,24 @@ public class BossController : MonoBehaviour
     public float MoveSpeed
     {
         get { return _speed; }
+        set { _speed = value; }
     }
 
     public bool IsAttackTentacle { get; set; }
+
+    public int Phase
+    {
+        get { return _phase; }
+        set
+        {
+            if (_phase != value)
+            {
+                _phase = value;
+                OnPhaseChanged?.Invoke(_phase); 
+            }
+        }
+    }
+
 
     public Vector3 Front 
     {

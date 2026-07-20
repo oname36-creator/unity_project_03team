@@ -33,9 +33,31 @@ public class BodyController : MonoBehaviour
 
     public bool Create { get; set; }
 
-    public float MoveSpeed { get; private set; }
+    public float MoveSpeed 
+    {
+        get {  return Boss.MoveSpeed; }   
+    }
 
     public float YCenter { get; private set;  }
+
+    public int TentacleCycle { get; set; }
+
+    private void OnEnable()
+    {
+        // 이벤트 구독
+        if (Boss != null)
+        {
+            Boss.OnPhaseChanged += HandlePhaseChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (Boss != null)
+        {
+            Boss.OnPhaseChanged -= HandlePhaseChanged;
+        }
+    }
 
     void Start()
     {
@@ -45,11 +67,11 @@ public class BodyController : MonoBehaviour
         _ownerTransform = GetComponent<Transform>();
         _sprite = GetComponent<SpriteRenderer>();
 
-        MoveSpeed = Boss.MoveSpeed;
         YCenter = _ownerTransform.position.y;
         //Move = false;
         Move = true;
         Create = false;
+        TentacleCycle = 7;
         //Create = true;
     }
 
@@ -69,5 +91,15 @@ public class BodyController : MonoBehaviour
         _rigidbody2D.linearVelocity = Vector3.zero;
     }
 
+
+    private void HandlePhaseChanged(int newPhase)
+    {
+        if(newPhase == 2) 
+        {
+            TentacleCycle = 5;
+        }
+
+
+    }
 
 }

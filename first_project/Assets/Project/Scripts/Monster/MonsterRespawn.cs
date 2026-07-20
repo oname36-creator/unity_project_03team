@@ -45,7 +45,7 @@ public class MonsterRespawn : MonoBehaviour
         }
         else if(name == "DarkWolf") 
         {
-
+            monster = ObjectPoolManager.Instance.MonsterDarkWolfPop();
         }
 
         if (monster == null) { return null; }
