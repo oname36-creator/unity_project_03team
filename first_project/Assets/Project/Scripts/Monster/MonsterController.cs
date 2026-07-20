@@ -23,7 +23,8 @@ public class MonsterController : MonoBehaviour
     public GameObject QuestionMark;
     public GameObject ExclamationMark;
 
-
+    [Header("Sprite Settings")]
+    public bool isDefaultSpriteFacingLeft = false; 
     #endregion
 
 
@@ -108,6 +109,9 @@ public class MonsterController : MonoBehaviour
         set { isAttackable = value; }
     }
 
+    public bool IsWalk { get; set; } = false;
+    public bool IsChase { get; set; } = false;
+
     public bool IsDead
     {
         get { return isDead; }
@@ -177,9 +181,9 @@ public class MonsterController : MonoBehaviour
         set
         {
             if (_frontVector == value) return;  // 방향이 바뀌지 않았다면 리턴
-            onFlip = !onFlip;                  // 방향이 바뀌면 true -> false,  false -> true로 바꾸고 
-            _renderer.flipX = onFlip;          // flip 해주기
+
             _frontVector = value;
+            UpdateFlipState(); // 방향이 바뀌면 플립 상태 갱신
         }
     }
     public Vector2 GetMToP // 몬스터에서 플레이어 방향의 유닛 벡터 Get
@@ -222,12 +226,11 @@ public class MonsterController : MonoBehaviour
         if (gameObject.CompareTag("Untagged"))
         {
             gameObject.tag = "Monster";
-            gameObject.layer = LayerMask.GetMask("Monster");
+            gameObject.layer = LayerMask.NameToLayer("Monster");
         }
-        if (!onFlip && _renderer != null) 
+        if (_renderer != null)
         {
-            onFlip = true;
-            _renderer.flipX = onFlip;
+            UpdateFlipState();
         }
         _hp = MonsterData.hp;
 
@@ -269,8 +272,7 @@ public class MonsterController : MonoBehaviour
 
         _cosValue = Mathf.Cos(_angle * Mathf.Deg2Rad);
         _frontVector = new Vector2Int(-1, 0);
-        onFlip = true;
-        _renderer.flipX = onFlip;
+        UpdateFlipState();
 
 
         _playerTransform = Player.GetComponent<Transform>();
@@ -447,6 +449,40 @@ public class MonsterController : MonoBehaviour
         ObjectPoolManager.Instance.MonsterPush(this.gameObject);
     }
 
+    // 앞에 땅이 있는지 판단
+    public bool CheckGroundAhead()
+    {
 
+        Vector2 origin = transform.position;
+
+        float dirX = _frontVector.x > 0 ? 1f : -1f;
+
+        float baseLength = 0.5f;
+        float height = 1.0f;
+
+        Vector2 rayVector = new Vector2(dirX * baseLength, -height);
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, rayVector.normalized, rayVector.magnitude, _obstacleLayer);
+
+        Debug.DrawRay(origin, rayVector, Color.cyan);
+        bool isGroundAhead = hit.collider != null && hit.collider.CompareTag("Ground");
+
+        return isGroundAhead;
+    }
+
+
+    private void UpdateFlipState()
+    {
+        if (_renderer == null) return;
+
+        if (_frontVector.x > 0)
+        {
+            _renderer.flipX = isDefaultSpriteFacingLeft ? true : false;
+        }
+        else if (_frontVector.x < 0)
+        {
+            _renderer.flipX = isDefaultSpriteFacingLeft ? false : true;
+        }
+    }
 
 }

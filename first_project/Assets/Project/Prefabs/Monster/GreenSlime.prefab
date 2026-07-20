@@ -112,7 +112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3004961820942051756
 Transform:
   m_ObjectHideFlags: 0
@@ -349,6 +349,7 @@ MonoBehaviour:
     m_Bits: 8
   QuestionMark: {fileID: 6069669257076461440}
   ExclamationMark: {fileID: 3169123706465840078}
+  isDefaultSpriteFacingLeft: 0
 --- !u!1 &6069669257076461440
 GameObject:
   m_ObjectHideFlags: 0
