@@ -29,6 +29,11 @@ public class BodyCreateArchTentacle : IMonsterState
 
     public void Exit()
     {
+        if (_createCoroutine != null)
+        {
+            _owner.StopCoroutine(_createCoroutine);
+            _createCoroutine = null;
+        }
     }
 
     private IEnumerator CreateArchTentacleRoutine()
@@ -46,5 +51,7 @@ public class BodyCreateArchTentacle : IMonsterState
         _owner.CreateArch = false;
         _createCoroutine = null;
         yield return null;
+
+        _createCoroutine = null;
     }
 }

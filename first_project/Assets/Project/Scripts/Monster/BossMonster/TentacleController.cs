@@ -226,9 +226,6 @@ public class TentacleController : MonoBehaviour
 
         _lineRend.positionCount = segmentLength;
 
-        IsAttackTentacle = false;
-        Attack = false;
-
         tentacleRoot = Boss.transform;
         if (tentacleRoot != null && !Target)
         {

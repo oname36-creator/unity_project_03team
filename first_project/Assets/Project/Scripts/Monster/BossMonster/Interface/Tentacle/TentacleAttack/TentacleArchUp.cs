@@ -20,6 +20,7 @@ public class TentacleArchUp : IMonsterState
     public void Enter()
     {
         Debug.Log("TentacleArchUP");
+        _owner.segmentDistance = 0.5f;
         
         // 포물선 제어 모드 활성화 (isArch 유지)
         _owner.isArch = true;

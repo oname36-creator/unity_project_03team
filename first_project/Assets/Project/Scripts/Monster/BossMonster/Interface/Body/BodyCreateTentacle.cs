@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class BodyCreateTentacle : IMonsterState
@@ -30,7 +30,11 @@ public class BodyCreateTentacle : IMonsterState
 
     public void Exit()
     {
-
+        if (_createCoroutine != null)
+        {
+            _owner.StopCoroutine(_createCoroutine);
+            _createCoroutine = null;
+        }
     }
 
     private IEnumerator CreateTentacleRoutine()
@@ -40,15 +44,13 @@ public class BodyCreateTentacle : IMonsterState
 
         TentacleController tentacleController = tentacle.GetComponent<TentacleController>();
         tentacleController.IsDead = false;
-        tentacleController.IsAttackTentacle = _owner.Boss.IsAttackTentacle;
+        tentacleController.IsAttackTentacle = true;
 
         Debug.Log("IsAttackTentacle : " + tentacleController.IsAttackTentacle);
 
         
-        yield return new WaitUntil(() => !tentacleController.IsAttackTentacle);
+        yield return null;
 
-
-        tentacleController.IsAttackTentacle = true;
         _owner.Create = false;
     }
 }

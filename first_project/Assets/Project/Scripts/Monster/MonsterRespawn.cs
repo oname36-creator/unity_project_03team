@@ -66,6 +66,10 @@ public class MonsterRespawn : MonoBehaviour
         GameObject obj = ObjectPoolManager.Instance.TentaclePop(true);
         TentacleController tentacleController = obj.GetComponent<TentacleController>();
         obj.SetActive(true);
+        if (!up) 
+        {
+            rootPos.y += 40;
+        }
         tentacleController.SetRootPos(rootPos);
         tentacleController.Up = up;
         
