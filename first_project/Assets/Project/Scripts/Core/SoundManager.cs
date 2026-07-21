@@ -30,10 +30,6 @@ public class SoundManager : Singleton<SoundManager>
 {
 
     [Header("BGM")]
-    [SerializeField] private AudioClip _startSceneBGM;
-    [SerializeField] private AudioClip _gameSceneBGM;
-    [SerializeField] private AudioClip _endingSceneBGM;
-    [SerializeField] private AudioClip _creditBGM;
     [SerializeField] private List<AudioClipPair> _audioList;
 
     [Header("Master Volume")]
