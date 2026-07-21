@@ -63,7 +63,7 @@ public class MapChunkSpawnController : MonoBehaviour
                     float scheduledTime = Mathf.Max(Time.time, _nextTrapSpawnTime);
                     float delay = scheduledTime - Time.time;
                     _hasTrap[i] = true;
-                    StartCoroutine(SpawnTrapWithDelay(node.worldPosition, delay));
+                    StartCoroutine(SpawnTrapWithDelay(node.worldPosition, hollowTrapData.isTrapDirectionUp, delay));
                     _nextTrapSpawnTime = scheduledTime + staggerDelay;
                 }
                 else
@@ -297,10 +297,10 @@ public class MapChunkSpawnController : MonoBehaviour
 
 
     #region Courtin
-    private System.Collections.IEnumerator SpawnTrapWithDelay(Vector3 spawnPosition, float delay)
+    private System.Collections.IEnumerator SpawnTrapWithDelay(Vector3 spawnPosition, bool isUp, float delay)
     {
         if (delay > 0f) yield return new WaitForSeconds(delay);
-        MapEvent.onRequestTrapSpawn?.Invoke(spawnPosition, (trapObj) =>
+        MapEvent.onRequestTrapSpawn?.Invoke(spawnPosition, isUp, (trapObj) =>
         {
             if (trapObj != null) _spawnedTraps.Add(trapObj);
         });

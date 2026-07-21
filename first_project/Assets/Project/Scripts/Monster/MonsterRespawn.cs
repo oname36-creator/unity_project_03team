@@ -24,9 +24,9 @@ public class MonsterRespawn : MonoBehaviour
     #endregion
 
     #region HandleTrapSpawnRequest
-    private void HandleTrapSpawnRequest(Vector2 rootPos, Action<GameObject> onSpawned)
+    private void HandleTrapSpawnRequest(Vector2 rootPos, bool isUp, Action<GameObject> onSpawned)
     {
-        GameObject trap = RespawnTrap(rootPos);
+        GameObject trap = RespawnTrap(rootPos, isUp);
         onSpawned?.Invoke(trap);
     }
     #endregion
@@ -66,6 +66,10 @@ public class MonsterRespawn : MonoBehaviour
         GameObject obj = ObjectPoolManager.Instance.TentaclePop(true);
         TentacleController tentacleController = obj.GetComponent<TentacleController>();
         obj.SetActive(true);
+        if (!up) 
+        {
+            rootPos.y += 30;
+        }
         tentacleController.SetRootPos(rootPos);
         tentacleController.Up = up;
         

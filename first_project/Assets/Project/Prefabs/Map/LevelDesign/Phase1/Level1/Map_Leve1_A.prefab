@@ -23317,7 +23317,7 @@ MonoBehaviour:
   cameraBoundaryCollider: {fileID: 2929103209872975138}
   minPlayerDistance: 4
   margin: 2
-  enableYTracking: 0
+  enableYTracking: 1
 --- !u!61 &2929103209872975138
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -23382,6 +23382,7 @@ MonoBehaviour:
   minSpawnInterval: 3
   birdHeightOffset: 3.5
   cameraMargin: 1
+  minSpawnStartXOffset: 5
 --- !u!1 &9059230220037045251
 GameObject:
   m_ObjectHideFlags: 0

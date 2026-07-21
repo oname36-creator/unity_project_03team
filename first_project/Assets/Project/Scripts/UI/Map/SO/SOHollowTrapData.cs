@@ -13,4 +13,7 @@ public class SOHollowTrapData : ScriptableObject
 {
     [Header("촉수 함정 생성 위치 데이터")]
     public List<SHoolowTrapSapwnData> hollowTrapList = new List<SHoolowTrapSapwnData>();
+
+    [Header("촉수 함정 스폰 방향")]
+    public bool isTrapDirectionUp = true;
 }
