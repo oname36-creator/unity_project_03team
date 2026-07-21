@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Searcher;
 using UnityEngine;
@@ -543,6 +543,7 @@ public class MonsterAiBrain
         IMonsterState idle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
         IMonsterState create = new BodyCreateTentacle(owner);
+        IMonsterState createArch = new BodyCreateArchTentacle(owner);
         IMonsterState throwObject = new BodyThrowStone(owner);
 
         // 보스룸 상태 추가할 예정
@@ -587,7 +588,16 @@ public class MonsterAiBrain
                         return (owner.Phase > 1) && (owner.Distance > 100);
                     },
                     targetState: throwObject
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return ((owner.Phase > 2) && owner.CreateArch) || owner.CreatedArch;
+                    },
+                    targetState:createArch
                     )
+
             };
 
         transitionMap[create] = new List<Transition>
@@ -603,9 +613,20 @@ public class MonsterAiBrain
                 new Transition(
                     condition : () =>
                     {
-                        return (owner.Phase > 1) && (owner.Distance > 100);
+                        return (owner.Phase > 1)&& (owner.Distance > 100);
                     },
                     targetState: throwObject
+                    )
+            };
+
+        transitionMap[createArch] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.CreateArch && !owner.CreatedArch;
+                    },
+                    targetState:move
                     )
             };
 
@@ -648,12 +669,21 @@ public class MonsterAiBrain
         IMonsterState trapIdle = new TentacleTrap(owner);
         IMonsterState trapAction = new TentacleTrapAction(owner);
         IMonsterState re = new TentacleReturn(owner);
+        IMonsterState archUp = new TentacleArchUp(owner);
+        IMonsterState archAttack = new TentacleArchAttack(owner);
 
         initialState = idle;
 
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
             {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.isArch;
+                    },
+                    targetState:archUp
+                    ),
             new Transition(
                     condition: () =>
                     {
@@ -729,6 +759,28 @@ public class MonsterAiBrain
                         return !owner.Attack;
                     },
                     targetState:attach
+                    )
+            };
+
+        transitionMap[archUp] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Attack;
+                    },
+                    targetState:archAttack
+                    )
+            };
+
+        transitionMap[archAttack] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.isArch;
+                    },
+                    targetState:idle
                     )
             };
         transitionMap[trapIdle] = new List<Transition>

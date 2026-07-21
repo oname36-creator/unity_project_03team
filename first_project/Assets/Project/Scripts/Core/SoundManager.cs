@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-// 1. 개별 사운드의 설정값을 담을 컨테이너 클래스 생성
+
+[Serializable]
 public class SoundData
 {
     public AudioClip Clip;
@@ -16,13 +18,19 @@ public class SoundData
     }
 }
 
+[Serializable]
+public struct AudioClipPair 
+{
+    public string Key;
+    public SoundData SoundData;
+
+}
+
 public class SoundManager : Singleton<SoundManager>
 {
+
     [Header("BGM")]
-    [SerializeField] private AudioClip _startSceneBGM;
-    [SerializeField] private AudioClip _gameSceneBGM;
-    [SerializeField] private AudioClip _endingSceneBGM;
-    [SerializeField] private AudioClip _creditBGM;
+    [SerializeField] private List<AudioClipPair> _audioList;
 
     [Header("SFX")]
     [SerializeField] private AudioClip _gunAttackSFX;
@@ -74,14 +82,11 @@ public class SoundManager : Singleton<SoundManager>
 
     private void SetBGM()
     {
-        // BGM은 기본 볼륨 1.0f로 세팅
-        _bgmDic = new Dictionary<string, SoundData>
+
+        foreach (AudioClipPair pair in _audioList) 
         {
-            { StartSceneBGM, new SoundData(_startSceneBGM) },
-            { GameSceneBGM, new SoundData(_gameSceneBGM) },
-            { EndingSceneBGM, new SoundData(_endingSceneBGM) },
-            { CreditBGM, new SoundData(_creditBGM) }
-        };
+            _bgmDic.Add(pair.Key, pair.SoundData);
+        }
     }
 
     private void SetSfx()

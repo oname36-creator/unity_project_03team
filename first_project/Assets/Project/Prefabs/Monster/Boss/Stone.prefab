@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 26.94, y: -1.16, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3198980520642758426}
@@ -175,7 +175,6 @@ MonoBehaviour:
   _throwDistance: 20
   _chargeTime: 3
   _throwPower: 20
-  _startAudio: {fileID: 8300000, guid: fe9b4b15cde71794d8a5f2bdccfcba3f, type: 3}
   _boomAudio: {fileID: 8300000, guid: 6f36bc5d299c50b4fa9513b8f4f61fdd, type: 3}
   _name: Stone
   _impulseSource: {fileID: 2350401580376007880}
@@ -241,12 +240,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 5905793553176714999}
     m_Modifications:
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.964043
+      value: -7.01
       objectReference: {fileID: 0}
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.35618
+      value: 4.42
       objectReference: {fileID: 0}
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.z
