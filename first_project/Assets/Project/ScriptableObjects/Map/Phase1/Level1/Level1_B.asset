@@ -12,4 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
   m_Name: Level1_B
   m_EditorClassIdentifier: Assembly-CSharp::SOMapData
-  gimmicList: []
+  gimmicList:
+  - gimmickType: 0
+    position: {x: 34.10006, y: -6.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 29.10006, y: -6.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 23.10006, y: -6.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 20.10006, y: -6.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 10.1000595, y: -2.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 7.1000595, y: -2.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 38.10006, y: -6.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 15.1000595, y: -2.56498, z: 0}
+    prefabIndex: 0

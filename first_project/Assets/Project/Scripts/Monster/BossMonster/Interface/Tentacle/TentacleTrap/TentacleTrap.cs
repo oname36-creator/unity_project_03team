@@ -44,11 +44,20 @@ public class TentacleTrap : IMonsterState
         _owner.UpdateSegmentLength(1);
         _owner.segmentDistance = 0.1f;
 
+        float dy;
+        if (_owner.Up)
+        {
+            dy = 12.5f;
+        }
+        else 
+        {
+            dy = -12.5f;
+        }
 
         if (_warningEffect != null)
         {
             // 이펙트를 처음 시작 위치(_rootPos)에 둡니다.
-            _warningEffect.transform.position = new Vector3(_rootPos.x, _rootPos.y + 12.5f, 0);
+            _warningEffect.transform.position = new Vector3(_rootPos.x, _rootPos.y + dy, 0);
             
             _warningEffect.gameObject.SetActive(true);
 

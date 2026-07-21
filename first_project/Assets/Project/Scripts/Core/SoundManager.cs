@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-// 1. 개별 사운드의 설정값을 담을 컨테이너 클래스 생성
+
+[Serializable]
 public class SoundData
 {
     public AudioClip Clip;
@@ -16,16 +18,22 @@ public class SoundData
     }
 }
 
+[Serializable]
+public struct AudioClipPair 
+{
+    public string Key;
+    public SoundData SoundData;
+
+}
+
 public class SoundManager : Singleton<SoundManager>
 {
+
     [Header("BGM")]
-    [SerializeField] private AudioClip _startSceneBGM;
-    [SerializeField] private AudioClip _gameSceneBGM;
-    [SerializeField] private AudioClip _endingSceneBGM;
-    [SerializeField] private AudioClip _creditBGM;
+    [SerializeField] private List<AudioClipPair> _audiobgmList;
 
     [Header("SFX")]
-    [SerializeField] private AudioClip _gunAttackSFX;
+    [SerializeField] private List<AudioClipPair> _audioSfxList;
 
     [Header("Master Volume")]
     [Range(0f, 1f)] public float masterBgmVolume = 1.0f;
@@ -37,6 +45,7 @@ public class SoundManager : Singleton<SoundManager>
     public const string GameSceneBGM = "GameSceneBGM";
     public const string EndingSceneBGM = "EndingSceneBGM";
     public const string CreditBGM = "CreditBGM";
+
     public const string GunAttackSFX = "GunAttackSFX";
 
     private Dictionary<string, SoundData> _bgmDic = new Dictionary<string, SoundData>();
@@ -74,24 +83,21 @@ public class SoundManager : Singleton<SoundManager>
 
     private void SetBGM()
     {
-        // BGM은 기본 볼륨 1.0f로 세팅
-        _bgmDic = new Dictionary<string, SoundData>
+
+        foreach (AudioClipPair pair in _audiobgmList) 
         {
-            { StartSceneBGM, new SoundData(_startSceneBGM) },
-            { GameSceneBGM, new SoundData(_gameSceneBGM) },
-            { EndingSceneBGM, new SoundData(_endingSceneBGM) },
-            { CreditBGM, new SoundData(_creditBGM) }
-        };
+            _bgmDic.Add(pair.Key, pair.SoundData);
+        }
     }
 
     private void SetSfx()
     {
-        _sfxDic = new Dictionary<string, SoundData>
+        foreach (AudioClipPair pair in _audioSfxList)
         {
-            //{ ButtonClickSfx, new SoundData(_buttonClickSFX, 0.8f) }
-            {GunAttackSFX, new SoundData(_gunAttackSFX, 1.0f)}
-        };
+            _sfxDic.Add(pair.Key, pair.SoundData);
+        }
     }
+
 
 
     public void AddSfx(string key, AudioClip clip, float volume = 1f, float pitch = 1f)

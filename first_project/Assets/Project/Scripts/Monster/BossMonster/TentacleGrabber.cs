@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class TentacleGrabber : MonoBehaviour
 {
@@ -28,6 +28,8 @@ public class TentacleGrabber : MonoBehaviour
         {
             // 이미 무언가를 잡고 끌고 오는 중(IsAttach == true)이라면 중복 충돌 무시
             // (자신의 Trigger와 EdgeCollider에 동시에 닿아도 여기서 안전하게 걸러집니다)
+            if (Tentacle.isArch) return; // 아치(포물선) 패턴 중에는 끌고가기 무시        
+            
             if (Tentacle.IsAttach) return;
 
             GameObject hitObj = other.gameObject;
@@ -64,7 +66,10 @@ public class TentacleGrabber : MonoBehaviour
             GameObject obj = ObjectPoolManager.Instance.DustEffectPop();
             obj.transform.position = hitPoint;
 
-
+            if (Tentacle.isArch)
+            {
+                Tentacle.IsGroundHit = true;
+            }
         }
     }
 }

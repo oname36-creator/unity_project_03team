@@ -94,6 +94,11 @@ public class MapChunkSpawnController : MonoBehaviour
             {
                 prohibitedColliders.AddRange(child.GetComponentsInChildren<Collider2D>(true));
             }
+
+            if(child.name.Contains("NoSpawnZone"))
+            {
+                prohibitedColliders.AddRange(child.GetComponentsInChildren<Collider2D>(true));
+            }
         }
         SpikeTrap[] spikeTraps = GetComponentsInChildren<SpikeTrap>(true);
         foreach (var spike in spikeTraps)
@@ -307,6 +312,26 @@ public class MapChunkSpawnController : MonoBehaviour
             Vector3 worldPos = transform.TransformPoint(gimmick.position);
             Gizmos.DrawSphere(worldPos, 0.5f);
             Gizmos.DrawLine(worldPos + Vector3.down * 1.5f, worldPos + Vector3.up * 1.5f);
+        }
+
+        Gizmos.color = new Color(1.0f, 0.92f, 0.012f, 0.3f);
+        foreach(Transform child in transform)
+        {
+            if(child.name.Contains("NoSpawnZone"))
+            {
+                BoxCollider2D boxCol = child.GetComponent<BoxCollider2D>();
+                if(boxCol != null)
+                {
+                    Matrix4x4 rotationMatrix = Matrix4x4.TRS(child.position, child.rotation, child.lossyScale);
+                    Gizmos.matrix = rotationMatrix;
+
+                    Gizmos.DrawCube((Vector3)boxCol.offset, (Vector3)boxCol.size);
+                    Gizmos.color = new Color(1.0f, 0.92f, 0.012f, 0.8f);
+
+                    Gizmos.DrawWireCube((Vector3)boxCol.offset, (Vector3)boxCol.size);
+                    Gizmos.matrix = Matrix4x4.identity;
+                }
+            }
         }
     }
 #endif

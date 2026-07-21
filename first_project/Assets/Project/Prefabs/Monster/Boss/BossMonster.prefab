@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2774532474509234083
 Transform:
   m_ObjectHideFlags: 0
@@ -211,6 +211,7 @@ MonoBehaviour:
   HoverFrequency: 2
   Boss: {fileID: 5153171314910747342}
   ReleaseDistance: 3
+  CreatedArch: 0
 --- !u!1 &7507414855285883472
 GameObject:
   m_ObjectHideFlags: 0
