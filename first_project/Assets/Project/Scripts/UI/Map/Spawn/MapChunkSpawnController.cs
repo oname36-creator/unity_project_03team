@@ -22,6 +22,8 @@ public class MapChunkSpawnController : MonoBehaviour
     [SerializeField] private float birdHeightOffset = 3.5f;
     [SerializeField] private float cameraMargin = 1.0f;
 
+    [SerializeField] private float minSpawnStartXOffset = 5.0f;
+
     private MapChunk _chunk;
 
     private List<GameObject> _spawnedMonsters = new List<GameObject>();
@@ -179,6 +181,11 @@ public class MapChunkSpawnController : MonoBehaviour
         {
             foreach (Vector3 candidatePos in validPositions)
             {
+                if(candidatePos.x - startAnchorPos.x < minSpawnStartXOffset)
+                {
+                    continue;
+                }
+
                 if (spawnedMonsterCount >= spawnSetting.maxMonsterCount) break;
                 if (Random.value > spawnSetting.monsterSpawnChane) continue;
                 bool tooClose = false;

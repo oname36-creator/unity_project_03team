@@ -463,8 +463,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: 3, y: 2}
-  speed: 6
-  waitTime: 0.2
+  speed: 5
+  waitTime: 1.5
 --- !u!1 &921576750308722795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,7 +1730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: 4, y: -4}
   speed: 6
-  waitTime: 1
+  waitTime: 1.5
 --- !u!1 &6025712386911922641
 GameObject:
   m_ObjectHideFlags: 0
@@ -2170,6 +2170,7 @@ MonoBehaviour:
   minSpawnInterval: 3
   birdHeightOffset: 4.5
   cameraMargin: 1
+  minSpawnStartXOffset: 5
 --- !u!1 &6161090137479195750
 GameObject:
   m_ObjectHideFlags: 0
