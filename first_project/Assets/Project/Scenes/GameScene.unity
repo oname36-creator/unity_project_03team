@@ -2519,10 +2519,13 @@ MonoBehaviour:
   _monsterBulletPrefab: {fileID: 6056222576123966378, guid: 8213b841399588845866b2ef22a9a395, type: 3}
   _monsterBirdPrefab: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
   _monsterBasePrefab: {fileID: 4832580084656564143, guid: 0bf7d512637474a469d2f606976f1bcb, type: 3}
-  _monsterDarkWolfPrefab: {fileID: 0}
+  _monsterDarkWolfPrefab: {fileID: 4561971662583454659, guid: 80151f43ca283334787438987adea72e, type: 3}
   _tentaclePrefab: {fileID: 397495312301300401, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
   _dustEffectPrefab: {fileID: 554923577598959919, guid: 3b4597ce7c1f90b478aa18a45852d644, type: 3}
   _slashEffectPrefab: {fileID: 8325854951134378804, guid: daf69e69310cde04da98fda7cb37ceb3, type: 3}
+  _treePrefab: {fileID: 8405602355770170162, guid: 77a3d8cbd8b5830458a5e3b7b1944e76, type: 3}
+  _stonePrefab: {fileID: 9212046736434543353, guid: 2ee77a6c3afb514428f2dc87fe0a2d39, type: 3}
+  _logPrefab: {fileID: 351893557158601668, guid: 4360440bbd7357644ab28912de9cd032, type: 3}
   bulletPrefab: {fileID: 3659256970342430975, guid: 264cbe8faece70542868e1963988aefb, type: 3}
   poolSize: 20
 --- !u!4 &1985983258

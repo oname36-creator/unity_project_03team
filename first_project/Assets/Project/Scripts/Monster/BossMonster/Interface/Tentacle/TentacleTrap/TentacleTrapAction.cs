@@ -29,7 +29,19 @@ public class TentacleTrapAction : IMonsterState
         Debug.Log("TentacleTrap Action");
         _rootPos = _owner.RootPos;
         _targetPos = _rootPos;
-        _targetPos.y += 20f;
+
+        float dy;
+        if (_owner.Up) 
+        {
+            dy = 20;
+        }
+        else 
+        {
+            dy = -20;
+        }
+
+
+        _targetPos.y += dy;
 
         _owner.UpdateSegmentLength(20);
         _owner.segmentDistance = 1f;

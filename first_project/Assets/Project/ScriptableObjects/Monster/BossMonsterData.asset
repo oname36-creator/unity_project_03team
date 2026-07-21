@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterData
   hp: 0
   damage: 0
-  Speed: 5
+  Speed: 0
   MaxSpeed: 10
   Force: 0
   Name: Boss

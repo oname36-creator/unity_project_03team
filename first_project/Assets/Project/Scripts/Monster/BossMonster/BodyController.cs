@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -15,7 +15,11 @@ public class BodyController : MonoBehaviour
     [Header("Boss")]
     public BossController Boss;
     public float ReleaseDistance = 3f;
-    
+
+    [Header("Test")]
+    public bool CreatedArch = false;
+
+
 
     private bool _isDead = false;
     private int _phase = 1;
@@ -34,6 +38,7 @@ public class BodyController : MonoBehaviour
     public bool Chase { get { return Boss.Chase; } }
 
     public bool Create { get; set; }
+    public bool CreateArch { get; set; }
     public bool Throw { get; set; } = false;
 
     public float MoveSpeed 
