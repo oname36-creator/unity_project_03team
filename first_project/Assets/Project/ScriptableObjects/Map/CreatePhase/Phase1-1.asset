@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SOMapPalette
   chunkPrefabs:
   - {fileID: 6274353744460760677, guid: 181f35652728cb7499f7c4d1b326a067, type: 3}
+  - {fileID: 7426470745710193944, guid: 8329b350d4b8fba4f9d37dce3497207c, type: 3}
