@@ -27,6 +27,8 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Effect Prefab")]
     [SerializeField] private GameObject _dustEffectPrefab;
     [SerializeField] private GameObject _slashEffectPrefab;
+    [SerializeField] private GameObject _smokeEffectPrefab;
+    [SerializeField] private GameObject _smokeBurstEffectPrefab;
 
     [Header("Being Thrown")]
     [SerializeField] private GameObject _treePrefab;
@@ -48,6 +50,8 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
     private Queue<GameObject> _dustEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _slashEffectPool = new Queue<GameObject>();
+    private Queue<GameObject> _smokeEffectPool = new Queue<GameObject>();
+    private Queue<GameObject> _smokeBurstEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _boxPool = new Queue<GameObject>();
     private Queue<GameObject> _thrownPool = new Queue<GameObject>();
     #endregion
@@ -106,11 +110,25 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             _dustEffectPool.Enqueue(obj); // 리스트에 추가
         }
         // slash Effect 생성
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 500; i++)
         {
             GameObject obj = Instantiate(_slashEffectPrefab, this.transform);
             obj.SetActive(false); // 비활성화 상태로 대기
             _slashEffectPool.Enqueue(obj); // 리스트에 추가
+        }
+        // smoke burst Effect 생성
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject obj = Instantiate(_smokeBurstEffectPrefab, this.transform);
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _smokeBurstEffectPool.Enqueue(obj); // 리스트에 추가
+        }
+        // smoke Effect 생성
+        for (int i = 0; i < 30; i++)
+        {
+            GameObject obj = Instantiate(_smokeEffectPrefab, this.transform);
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _smokeEffectPool.Enqueue(obj); // 리스트에 추가
         }
 
         // thrown pool 생성
@@ -242,7 +260,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     }
     #endregion
 
-    #region TetacleTrap
+    #region Effect
     public GameObject DustEffectPop()
     {
         if (_dustEffectPool.Count > 0)
@@ -264,6 +282,30 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         }
         return null;
     }
+
+    public GameObject SmokeEffectPop() 
+    {
+        if(_smokeEffectPool.Count > 0) 
+        {
+            GameObject obj = _smokeEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+
+    public GameObject SmokeBurstEffectPop() 
+    {
+        if (_smokeBurstEffectPool.Count > 0)
+        {
+            GameObject obj = _smokeBurstEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+
+
     #endregion
 
     #endregion
@@ -331,7 +373,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     }
     #endregion
 
-    #region TentacleTrap
+    #region Effect
     public void DustEffectPush(GameObject obj)
     {
         if (obj == null) return;
@@ -345,10 +387,25 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         obj.SetActive(false);
         _slashEffectPool.Enqueue(obj);
     }
+
+    public void SmokeEffectPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _smokeEffectPool.Enqueue(obj);
+    }
+    public void SmokeBurstEffectPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _smokeBurstEffectPool.Enqueue(obj);
+    }
+
+
     #endregion
     #endregion
 
-#region Init
+    #region Init
     // 게임 시작 시 풀을 미리 채워둡니다.
     private void InitializePool()
     {

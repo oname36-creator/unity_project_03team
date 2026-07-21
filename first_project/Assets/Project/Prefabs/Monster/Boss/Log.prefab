@@ -174,9 +174,9 @@ MonoBehaviour:
   _throwDistance: 20
   _chargeTime: 1
   _throwPower: 10
-  _startAudio: {fileID: 8300000, guid: fe9b4b15cde71794d8a5f2bdccfcba3f, type: 3}
   _boomAudio: {fileID: 8300000, guid: 2c458a4d266cd424f8c023d673dd330d, type: 3}
   _name: Log
+  _impulseSource: {fileID: 0}
 --- !u!1001 &8284175418473897183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -186,12 +186,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 937738954587516870}
     m_Modifications:
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -30.346804
+      value: -19.4
       objectReference: {fileID: 0}
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.787266
+      value: -3.6
       objectReference: {fileID: 0}
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.z
