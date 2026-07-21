@@ -22,7 +22,7 @@ public class MapChunkBoundaryTrigger : MonoBehaviour
             if(parentChunk != null && parentChunk.cameraBoundaryCollider != null)
             {
                 // 플레이어가 진입한 맵 청크의 카메라 경계 콜라이더를 매니저에 전달합니다.
-                CameraConfinerManager.Instance.UpdateBoundary(parentChunk.cameraBoundaryCollider);
+                CameraConfinerManager.Instance.UpdateBoundary(parentChunk.cameraBoundaryCollider, parentChunk.enableYTracking);
             }
             else
             {

@@ -233,7 +233,25 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             _currentPlatformTransform = null;
         }
     }
+    #region 인트로용 플레이어 조작
 
+    public void SetInputActive(bool active)
+    {
+        if(active)
+        {
+            controls?.Player.Enable();
+        }
+        else
+        {
+            controls?.Player.Disable();
+            moveInput = Vector2.zero;
+            if(rb != null)
+            {
+                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            }
+        }    
+    }
+    #endregion
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();

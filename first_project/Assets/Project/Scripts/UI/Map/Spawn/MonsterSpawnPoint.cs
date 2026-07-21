@@ -5,7 +5,7 @@ public enum MonsterType
 {
     Base,
     Bird,
-    // 슬라임
+    DarkWolf
 }
 public class MonsterSpawnPoint : MonoBehaviour
 {

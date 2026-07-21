@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f0f8edcb89cdb43abd6b60df299709, type: 3}
   m_Name: Phase1-2
   m_EditorClassIdentifier: Assembly-CSharp::SOMapPhaseSpawnSetting
-  spawnableMonsterTypes: 
-  monsterSpawnChane: 0
-  maxMonsterCount: 0
-  boxSpawnChane: 0
-  rewardItemsWeights: []
-  maxBoxCount: 0
-  tentacleTrapSpawnChane: 0
-  tentacleStaggerDelay: 0
+  spawnableMonsterTypes: 01000000
+  monsterSpawnChane: 0.5
+  maxMonsterCount: 2
+  boxSpawnChane: 0.75
+  rewardItemsWeights:
+  - item: {fileID: 11400000, guid: e1ec7f7533a2cff4697314ac3c1f7f28, type: 2}
+    weight: 70
+  - item: {fileID: 11400000, guid: 5e93f98d1d8fb574eb2b8cf31736f5c3, type: 2}
+    weight: 40
+  - item: {fileID: 11400000, guid: b428fab07e48c85479394f572b430913, type: 2}
+    weight: 1
+  maxBoxCount: 2
+  tentacleTrapSpawnChane: 0.01
+  tentacleStaggerDelay: 10

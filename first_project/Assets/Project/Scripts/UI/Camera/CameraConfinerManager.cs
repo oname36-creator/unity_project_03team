@@ -23,6 +23,8 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
     // 현재 설정된 바운더리 콜라이더를 캐싱하여 중복 처리를 방지합니다.
     private Collider2D _currentBoundary;
+
+    public bool IsYTrackingActive { get; private set; } = false;
     #endregion
     public override void Awake()
     {
@@ -60,7 +62,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// <summary>
     ///  카메라 제한 영역 콜라이더 변경
     /// </summary>
-    public void UpdateBoundary(Collider2D newBoundary)
+    public void UpdateBoundary(Collider2D newBoundary, bool enableYTracking)
     {
         if(confinerA == null || confinerB == null)
         {
@@ -81,6 +83,8 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
         _currentBoundary = newBoundary;
 
+        IsYTrackingActive = enableYTracking;
+
         Debug.Log($"[UpdateBoundary] 호출됨. 새로운 바운더리: {newBoundary.gameObject.name}, 현재 사용중인 카메라: {(_isUsingCameraA ? "Camera A" : "Camera B")}");
 
         if(_isUsingCameraA)
@@ -94,7 +98,8 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 // 전환되어 사용할 카메라 B의 Y축 데드존을 항상 영구 고정 상태로 지정
                 if(positionComposerB != null)
                 {
-                    SetDeadZoneY(positionComposerB, 1.0f);
+                    float targetDeadZoneY = enableYTracking ? 0.2f : 0.8f;
+                    SetDeadZoneY(positionComposerB, targetDeadZoneY);
                 }
 
                 // 우선순위를 전환하여 CinemachineBrain이 두 가상 카메라 간의 Blending을 수행하도록 유도
@@ -127,7 +132,8 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
                 // 전환되어 사용할 카메라 B의 Y축 데드존을 항상 영구 고정 상태로 지정
                 if (positionComposerA != null)
                 {
-                    SetDeadZoneY(positionComposerA, 1.0f);
+                    float targetDeadZoneY = enableYTracking ? 0.2f : 0.8f;
+                    SetDeadZoneY(positionComposerA, targetDeadZoneY);
                 }
 
                 // 우선순위를 전환하여 A로 Blending

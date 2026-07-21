@@ -19,6 +19,9 @@ public class MapChunk : MonoBehaviour
     [Header("진입 영역 마진")]
     public float margin = 2f;
 
+    [Header("카메라 Y축 옵션")]
+    public bool enableYTracking = false;
+
     private MapChunkSpawnController _spawnController;
     
     #endregion

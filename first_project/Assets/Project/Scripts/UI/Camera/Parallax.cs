@@ -70,7 +70,9 @@ public class Parallax : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 camMoveDistance = cam.position - startCamPos;
-        bool isYParallaxActive = mapManager != null && mapManager.CurrentLogicalPhase >= 1;
+        bool isYParallaxActive = (mapManager != null 
+                                  && CameraConfinerManager.Instance != null
+                                  && CameraConfinerManager.Instance.IsYTrackingActive);
 
         // 원근감 최종 오프셋 계산
         float distX = camMoveDistance.x * (1 - parallaxEffectX);

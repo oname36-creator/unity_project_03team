@@ -275,28 +275,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Mossy - MossyHills_9
-      rect:
-        serializedVersion: 2
-        x: 1444
-        y: 123
-        width: 9
-        height: 12
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bd0a66bd9775b3d20800000000000000
-      internalID: 3259294936216281307
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Mossy - MossyHills_10
       rect:
         serializedVersion: 2
