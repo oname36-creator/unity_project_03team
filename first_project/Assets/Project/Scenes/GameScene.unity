@@ -186,10 +186,6 @@ PrefabInstance:
       propertyPath: hitStopDuration
       value: 0.07
       objectReference: {fileID: 0}
-    - target: {fileID: 2247244940205066773, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
-      propertyPath: effectDestroyTime
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 4602153000674934412, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_Name
       value: Player
@@ -198,6 +194,10 @@ PrefabInstance:
       propertyPath: hitStopManager
       value: 
       objectReference: {fileID: 1631045391}
+    - target: {fileID: 7648235234800890911, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
+      propertyPath: hitStopDuration
+      value: 0.07
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2701,7 +2701,7 @@ MonoBehaviour:
   creditCanvasGroup: {fileID: 1807983825}
   creditContent: {fileID: 1926203721}
   blackBackground: {fileID: 27088200}
-  finishButtonsGroup: {fileID: 0}
+  finishButtonsGroup: {fileID: 1807983825}
   scrollSpeed: 40
   endYPosition: 1200
   fadeDuration: 1.5
