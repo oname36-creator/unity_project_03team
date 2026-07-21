@@ -57,7 +57,6 @@ public class FlyMonsterSearch : IMonsterState
 
         while (true)
         {
-  
             timer += Time.fixedDeltaTime;
 
             if (timer >= _directionChangeInterval)
@@ -71,11 +70,13 @@ public class FlyMonsterSearch : IMonsterState
             }
 
             Vector2 currentPos = _ownerTransform.position;
-            Vector2 moveDir = (targetPosition - currentPos).normalized;
 
             if (Vector2.Distance(currentPos, targetPosition) > 0.1f)
             {
-                _owner.Move(moveDir);
+
+                Vector2 nextPosition = Vector2.MoveTowards(currentPos, targetPosition, _flySpeed * Time.fixedDeltaTime);
+
+                _owner.MoveToPosition(nextPosition);
             }
 
             yield return new WaitForFixedUpdate();

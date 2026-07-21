@@ -18,10 +18,12 @@ public class BodyController : MonoBehaviour
     
 
     private bool _isDead = false;
+    private int _phase = 1;
 
     private Rigidbody2D _rigidbody2D;
     private MonsterStateMachine _monsterMachine;
     private Transform _ownerTransform;
+    private Transform _playerTransform;
     private SpriteRenderer _sprite;
 
     
@@ -32,10 +34,46 @@ public class BodyController : MonoBehaviour
     public bool Chase { get { return Boss.Chase; } }
 
     public bool Create { get; set; }
+    public bool Throw { get; set; } = false;
 
-    public float MoveSpeed { get; private set; }
+    public float MoveSpeed 
+    {
+        get {  return Boss.MoveSpeed; }   
+    }
 
     public float YCenter { get; private set;  }
+
+    public int TentacleCycle { get; set; }
+
+    public int ThrowCycle { get; set; } = 10;
+
+    public int Phase { get { return _phase; } }
+
+    public float Distance 
+    {
+        get 
+        {
+            return _playerTransform.position.x - _ownerTransform.position.x;
+        }
+    }
+
+
+    private void OnEnable()
+    {
+        // 이벤트 구독
+        if (Boss != null)
+        {
+            Boss.OnPhaseChanged += HandlePhaseChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (Boss != null)
+        {
+            Boss.OnPhaseChanged -= HandlePhaseChanged;
+        }
+    }
 
     void Start()
     {
@@ -44,12 +82,13 @@ public class BodyController : MonoBehaviour
         _monsterMachine = MonsterAiBrain.MakeMachine("BossBody", this);
         _ownerTransform = GetComponent<Transform>();
         _sprite = GetComponent<SpriteRenderer>();
+        _playerTransform = Boss.Player.transform;
 
-        MoveSpeed = Boss.MoveSpeed;
         YCenter = _ownerTransform.position.y;
         //Move = false;
         Move = true;
         Create = false;
+        TentacleCycle = 7;
         //Create = true;
     }
 
@@ -69,5 +108,16 @@ public class BodyController : MonoBehaviour
         _rigidbody2D.linearVelocity = Vector3.zero;
     }
 
+
+    private void HandlePhaseChanged(int newPhase)
+    {
+        _phase = newPhase;
+        if (newPhase == 2) 
+        {
+            TentacleCycle = 5;
+        }
+
+
+    }
 
 }

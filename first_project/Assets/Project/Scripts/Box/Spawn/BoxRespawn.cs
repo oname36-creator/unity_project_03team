@@ -15,14 +15,14 @@ public class BoxRespawn : MonoBehaviour
     #endregion
 
     #region CreateBox
-    private void HandleSpawnRequest(Vector3 pos, ItemData[] items, Action<GameObject> onSpawned)
+    private void HandleSpawnRequest(Vector3 pos, SOMapPhaseSpawnSetting setting, Action<GameObject> onSpawned)
     {
-        GameObject box = Respawn(pos, items);
+        GameObject box = Respawn(pos, setting);
         onSpawned?.Invoke(box);
     }
     #endregion
 
-    private GameObject Respawn(Vector3 pos, ItemData[] items)
+    private GameObject Respawn(Vector3 pos, SOMapPhaseSpawnSetting setting)
     {
         
         GameObject box = ObjectPoolManager.Instance.BoxPop();
@@ -34,7 +34,7 @@ public class BoxRespawn : MonoBehaviour
         // 상자 내부 컴포넌트에 아이템 리스트 세팅
         if(box.TryGetComponent<BoxObject>(out var boxObject))
         {
-            boxObject.SetRewardItems(items);
+            boxObject.SetSpawnSetting(setting);
         }
         box.SetActive(true);
         return box;

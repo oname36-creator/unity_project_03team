@@ -12,5 +12,5 @@ public static class MapEvent
     public static Action<Vector2, Action<GameObject>> onRequestTrapSpawn;
 
     // 상자 스폰 생성(좌표, 보상아이템 목록, 콜백)
-    public static Action<Vector3, ItemData[], Action<GameObject>> onRequestBoxSpawn;
+    public static Action<Vector3, SOMapPhaseSpawnSetting, Action<GameObject>> onRequestBoxSpawn;
 }

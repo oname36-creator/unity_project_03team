@@ -11,21 +11,27 @@ public class LoadingPanel : MonoBehaviour
     [Header("인게임 UI 설정")]
     [SerializeField] private GameObject inGameUI;
     [SerializeField] private GameObject DistanceUI;
+    [SerializeField] private GameObject ControlGuideUI;
     private CanvasGroup _canvasGroup;
+    private CanvasGroup _canvasGuideUI;
+
 
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
-
+        _canvasGuideUI = GetComponent<CanvasGroup>();
         // 시작 시에는 로딩 화면이 완전히 불투명하게 보이도록 설정
         _canvasGroup.alpha = 1f;
+        //_canvasGuideUI.alpha = 1f;
         _canvasGroup.blocksRaycasts = true; // 로딩 중 클릭 차단
+        //_canvasGuideUI.blocksRaycasts = true;
 
         // 시작 시 인게임 플레이어 UI는 보이지 않도록 비활성화
         if(inGameUI != null)
         {
             inGameUI.SetActive(false);
             DistanceUI.SetActive(false);
+            //ControlGuideUI.SetActive(false);
         }
     }
 
@@ -49,6 +55,7 @@ public class LoadingPanel : MonoBehaviour
         {
             inGameUI.SetActive(true);
             DistanceUI.SetActive(true);
+            // ControlGuideUI.SetActive(true);
             SoundManager.Instance.PlayBGM("GameSceneBGM");
         }
         StartCoroutine(CoFadeOutRoutine());
