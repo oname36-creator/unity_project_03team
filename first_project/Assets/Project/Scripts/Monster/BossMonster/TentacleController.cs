@@ -19,6 +19,15 @@ public class TentacleController : MonoBehaviour
     [Range(0f, 180f)]
     public float maxBendAngle = 25f; // 각 마디 사이의 최대 꺾임 각도 (작을수록 뻣뻣해짐)
 
+    [Header("Elbow Constraint")]
+    [Range(-180f, 180f)]
+    public float minBendAngle = 0f;
+    [Range(-180f, 180f)]
+    public float elbowMaxBendAngle = 180f;
+
+    [Header("Whip Physics")]
+    public float tailGravity = 30f;
+
 
     [Header("Components")]
     public Transform tentacleRoot;        // 촉수가 시작되는 위치 (보스 몸통 등)
@@ -32,8 +41,15 @@ public class TentacleController : MonoBehaviour
     [Header("Arch")]
     public bool isArch = false;
 
+    [Header("Parabola Attack (Arch)")]
+    public bool isParabola = false;
+    public float parabolaA = 0.05f; // y = ax^2 의 a 값
+    public float parabolaAngle = 0f; // 회전 각도 (도 단위)
+
     [Header("Trap")]
     public bool isTrap = false;
+
+
 
 
     private LineRenderer _lineRend;
@@ -52,21 +68,21 @@ public class TentacleController : MonoBehaviour
 
     public BossController GetBoss
     {
-        get { return Boss; } 
+        get { return Boss; }
     }
-    public BodyController GetBody 
+    public BodyController GetBody
     {
         get { return Body; }
     }
 
-    public Transform GetGrabber 
+    public Transform GetGrabber
     {
-        get { return  grabberHead; }
+        get { return grabberHead; }
     }
 
     public int PrevSegmentLength { get; set; }
 
-    public float TentacleLength 
+    public float TentacleLength
     {
         get { return segmentLength * segmentDistance; }
     }
@@ -77,27 +93,36 @@ public class TentacleController : MonoBehaviour
         set { _isAttach = value; }
     }
 
-    public bool IsSearch 
+    public bool IsSearch
     {
         get { return _isSearch; }
         set { _isSearch = value; }
     }
 
-    public bool IsDead 
+    public bool IsDead
     {
         get { return _isDead; }
         set { _isDead = value; }
     }
 
+    public bool Up { get; set; } = true;
+
+
     public bool IsAttackTentacle { get; set; }
 
     public bool Attack { get; set; }
 
+    public bool IsArchAttack { get; set; }
+
     public bool IsReturn { get; set; } = false;
 
-    public Vector2 RootPos {  get; set; } = Vector2.zero;
+    public Vector2 RootPos { get; set; } = Vector2.zero;
 
     public GameObject Target { get; set; }
+
+    public float? GroundLimitY { get; set; } = null;
+    
+    public bool IsGroundHit { get; set; } = false;
 
 
     private void OnEnable()
@@ -108,21 +133,81 @@ public class TentacleController : MonoBehaviour
         _isSearch = false;
         IsAttackTentacle = false;
         Attack = false;
+        IsArchAttack = false;
         IsReturn = false;
 
-        // 마디 좌표들 현재 소환된 RootPos로 순간 이동
-        if(isTrap)
+        // OnEnable(), OnDisable() 내부
+        isParabola = false;
+        parabolaAngle = 0f;
+
+        Target = null;
+        isArch = false;
+        IsGroundHit = false;
+
+        if (warningEffectRenderer_1 != null) warningEffectRenderer_1.gameObject.SetActive(false);
+        if (warningEffectRenderer_2 != null) warningEffectRenderer_2.gameObject.SetActive(false);
+        if (warningEffectRenderer_Arch != null) warningEffectRenderer_Arch.gameObject.SetActive(false);
+
+        if (Boss != null)
         {
-            for(int i=0; i<segmentLength; ++i)
+            tentacleRoot = Boss.transform;
+        }
+
+        // 마디 좌표들 현재 소환된 RootPos로 순간 이동
+        if (isTrap)
+        {
+            for (int i = 0; i < segmentLength; ++i)
             {
-                if(_segmentPos != null && i < _segmentPos.Length)
+                if (_segmentPos != null && i < _segmentPos.Length)
                 {
                     _segmentPos[i] = RootPos;
                 }
             }
             IkTargetPosition = RootPos;
         }
+        else if (tentacleRoot != null)
+        {
+            for (int i = 0; i < segmentLength; ++i)
+            {
+                if (_segmentPos != null && i < _segmentPos.Length)
+                {
+                    _segmentPos[i] = tentacleRoot.position;
+                }
+            }
+            IkTargetPosition = tentacleRoot.position;
+        }
+
+        // 상태 머신 재초기화
+        _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
+
+    private void OnDisable()
+    {
+        // 반환 시 초기화
+        Target = null;
+        isArch = false;
+        isParabola = false;
+        parabolaAngle = 0f;
+        isTrap = false;
+        Up = true;
+        // OnEnable(), OnDisable() 내부
+        isParabola = false;
+        parabolaAngle = 0f;
+
+
+        RootPos = Vector2.zero;
+
+        if (warningEffectRenderer_1 != null) warningEffectRenderer_1.gameObject.SetActive(false);
+        if (warningEffectRenderer_2 != null) warningEffectRenderer_2.gameObject.SetActive(false);
+        if (warningEffectRenderer_Arch != null) warningEffectRenderer_Arch.gameObject.SetActive(false);
+
+        // 길이를 원래대로 복구
+        if (segmentLength != PrevSegmentLength && PrevSegmentLength > 0)
+        {
+            UpdateSegmentLength(PrevSegmentLength);
+        }
+    }
+
     void Awake()
     {
         _lineRend = GetComponent<LineRenderer>();
@@ -137,16 +222,12 @@ public class TentacleController : MonoBehaviour
 
     void Start()
     {
-
         Debug.Log("Tentacle Start");
 
         _lineRend.positionCount = segmentLength;
 
-
         IsAttackTentacle = false;
         Attack = false;
-
-
 
         tentacleRoot = Boss.transform;
         if (tentacleRoot != null && !Target)
@@ -158,9 +239,6 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
-
-        
-        _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
     void Update()
@@ -184,6 +262,9 @@ public class TentacleController : MonoBehaviour
     void LateUpdate()
     {
         if (_isDead) return;
+
+
+
         UpdateIK();
         UpdateColliders();
     }
@@ -210,45 +291,88 @@ public class TentacleController : MonoBehaviour
 
     private void UpdateIK()
     {
+        Vector2 targetPos = IkTargetPosition;
+        int mid = segmentLength / 2;
 
-        Vector2 targetPos = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
+        if (isArch)
+        {
+            Vector2 basePosition = (Vector2)tentacleRoot.position;
+            _segmentPos[segmentLength - 1] = basePosition; // 루트 위치 고정
+
+            float currentX = 0f;
+            for (int i = segmentLength - 2; i >= 0; i--)
+            {
+                float prevX = currentX;
+                // y = ax^2 곡선 위에서 거리가 segmentDistance가 되도록 x를 증가
+                float dx = segmentDistance / Mathf.Sqrt(1f + 4f * parabolaA * parabolaA * prevX * prevX);
+                currentX += dx;
+
+                float currentY = parabolaA * currentX * currentX;
+
+                // 로컬 좌표 (1사분면)
+                Vector2 localPos = new Vector2(currentX, currentY);
+
+                Quaternion rotation = Quaternion.Euler(0, 0, parabolaAngle);
+                Vector2 rotatedPos = rotation * localPos;
+
+                _segmentPos[i] = basePosition + rotatedPos;
+            }
+
+
+            for (int i = 0; i < segmentLength; i++)
+            {
+                _lineRend.SetPosition(i, _segmentPos[i]);
+            }
+            if (grabberHead != null)
+            {
+                grabberHead.position = _segmentPos[0];
+            }
+
+            return;
+        }
 
 
         for (int iter = 0; iter < iterations; iter++)
         {
+
             // ==========================================
             // [Phase 1] Backward Reaching (끝단 -> 루트 방향)
             // ==========================================
-
-            // 끝단(0번 인덱스)을 목표 위치(targetPos)에 강제로 맞춥니다.
             _segmentPos[0] = targetPos;
+            if (GroundLimitY.HasValue)
+            {
+                _segmentPos[0].y = Mathf.Max(_segmentPos[0].y, GroundLimitY.Value);
+            }
 
             for (int i = 1; i < segmentLength; i++)
             {
-                // 현재 마디가 앞 마디(목표 쪽)를 향하는 방향 벡터
                 Vector2 dir = (_segmentPos[i] - _segmentPos[i - 1]).normalized;
 
-                // 앞 마디에서 지정된 간격(segmentDistance)만큼 떨어진 곳으로 현재 마디 이동
                 _segmentPos[i] = _segmentPos[i - 1] + dir * segmentDistance;
 
+                if (GroundLimitY.HasValue)
+                {
+                    _segmentPos[i].y = Mathf.Max(_segmentPos[i].y, GroundLimitY.Value);
+                }
             }
+
             // ==========================================
             // [Phase 2] Forward Reaching (루트 -> 끝단 방향)
             // ==========================================
             Vector2 basePosition = isTrap ? RootPos : (Vector2)tentacleRoot.position;
-
-            // Phase 1을 거치면 마지막 마디(루트)가 원래 있어야 할 위치(tentacleRoot)에서 벗어납니다.
-            // 따라서 마지막 마디를 다시 텐타클의 진짜 루트 위치에 강제로 맞춥니다.
             _segmentPos[segmentLength - 1] = basePosition;
 
-            // 역방향으로 다시 간격을 맞춰줍니다.
             for (int i = segmentLength - 2; i >= 0; i--)
             {
-                // 현재 마디가 뒤 마디(루트 쪽)를 향하는 방향 벡터
                 Vector2 dir = (_segmentPos[i] - _segmentPos[i + 1]).normalized;
 
-                // 뒤 마디에서 지정된 간격(segmentDistance)만큼 떨어진 곳으로 현재 마디 이동
                 _segmentPos[i] = _segmentPos[i + 1] + dir * segmentDistance;
+
+                if (GroundLimitY.HasValue)
+                {
+                    _segmentPos[i].y = Mathf.Max(_segmentPos[i].y, GroundLimitY.Value);
+                }
+
             }
         }
 
@@ -258,91 +382,17 @@ public class TentacleController : MonoBehaviour
             _lineRend.SetPosition(i, _segmentPos[i]);
         }
 
-        // 3. Grabber 오브젝트(끝단) 위치 동기화
+        // 3. Grabber 오브젝트(끝단 또는 중간) 위치 동기화
         if (grabberHead != null)
         {
-            grabberHead.position = _segmentPos[0];
-        }
-    }
-
-    private Vector2 ConstrainAngle(Vector2 prevDir, Vector2 currentDir, float maxAngle)
-    {
-        float angle = Vector2.SignedAngle(prevDir, currentDir);
-
-        if (Mathf.Abs(angle) > maxAngle)
-        {
-            float clampedAngle = Mathf.Clamp(angle, -maxAngle, maxAngle);
-            return Quaternion.Euler(0, 0, clampedAngle) * prevDir;
-        }
-
-        return currentDir;
-    }
-
-
-    private void UpdateForcedArchIK()
-    {
-        // 1. 끝단 스무딩 처리된 타겟 설정
-        Vector2 targetPos = Vector2.SmoothDamp(_segmentPos[0], IkTargetPosition, ref _segmentVelocity[0], smoothSpeed);
-
-        for (int iter = 0; iter < iterations; iter++)
-        {
-            // ==========================================
-            // [Phase 1] Backward Reaching (끝단 -> 루트 방향)
-            // ==========================================
-            // 단순 FABRIK: 끝단을 목표에 맞추고 역방향으로 정렬
-            _segmentPos[0] = targetPos;
-
-            for (int i = 1; i < segmentLength; i++)
+            if (IsArchAttack)
             {
-                Vector2 dir = (_segmentPos[i] - _segmentPos[i - 1]).normalized;
-                _segmentPos[i] = _segmentPos[i - 1] + dir * segmentDistance;
+                grabberHead.position = _segmentPos[segmentLength / 2];
             }
-
-            // ==========================================
-            // [Phase 2] Forward Reaching (루트 -> 끝단 방향)
-            // ==========================================
-            // 핵심: 무조건 아치를 형성하도록 
-
-            Vector2 basePosition = isTrap ? RootPos : (Vector2)tentacleRoot.position;
-            _segmentPos[segmentLength - 1] = basePosition;
-
-            // 두 번째 마디 (기준 방향이 없으므로 제약 없이 배치)
-            if (segmentLength > 1)
+            else
             {
-                Vector2 dir = (_segmentPos[segmentLength - 2] - _segmentPos[segmentLength - 1]).normalized;
-                _segmentPos[segmentLength - 2] = _segmentPos[segmentLength - 1] + dir * segmentDistance;
+                grabberHead.position = _segmentPos[0];
             }
-
-            // 세 번째 마디부터 '이전 마디의 방향'을 기준으로 '강제 굽힘' 적용
-            for (int i = segmentLength - 3; i >= 0; i--)
-            {
-                // 다이어그램의 '이전 방향(prevDir)'
-                Vector2 prevDir = (_segmentPos[i + 1] - _segmentPos[i + 2]).normalized;
-                // 다이어그램의 '현재 방향(currentDir)'
-                Vector2 currentDir = (_segmentPos[i] - _segmentPos[i + 1]).normalized;
-
-                // [핵심 로직] 이전 방향에 '강제 아치 바이어스'를 섞어줍니다.
-                // maxBendAngle은 인스펙터에서 15~30도 정도로 낮게 설정하는 것이 좋습니다.
-                float forcedArchAngle = maxBendAngle; // 양수로 왼쪽으로 꺾임을 의미
-
-                // 이전 마디 방향을 기준으로 무조건 오른쪽으로 maxBendAngle만큼 꺾인 방향을 계산합니다.
-                Vector2 constrainedDir = Quaternion.Euler(0, 0, forcedArchAngle) * prevDir;
-
-                // [강력한 아치 형성] FABRIK의 원래 계산 방향(currentDir)을 무시하고, 
-                // 계산된 '아치형 방향(constrainedDir)'을 사용하여 마디를 배치합니다.
-                _segmentPos[i] = _segmentPos[i + 1] + constrainedDir * segmentDistance;
-            }
-        }
-
-        // 2. 렌더러 및 Grabber 업데이트
-        for (int i = 0; i < segmentLength; i++)
-        {
-            _lineRend.SetPosition(i, _segmentPos[i]);
-        }
-
-        if (grabberHead != null)
-        {
-            grabberHead.position = _segmentPos[0];
         }
     }
 
@@ -395,18 +445,27 @@ public class TentacleController : MonoBehaviour
         _segmentVelocity = newVel;
     }
 
-    public void SlashAnimation(bool up = false) 
+    public Vector2 GetSegmentPos(int index)
+    {
+        if (_segmentPos != null && index >= 0 && index < segmentLength)
+        {
+            return _segmentPos[index];
+        }
+        return tentacleRoot != null ? (Vector2)tentacleRoot.position : Vector2.zero;
+    }
+
+    public void SlashAnimation(bool up = false)
     {
         int count = 0;
-        for(int i = 0; i < segmentLength; i++)
+        for (int i = 0; i < segmentLength; i++)
         {
             ++count;
-            if(count%3 == 0)
+            if (count % 3 == 0)
             {
                 GameObject obj = ObjectPoolManager.Instance.SlashEffectPop();
-                if(obj == null) { return; }
+                if (obj == null) { return; }
                 obj.transform.position = _segmentPos[i];
-                if (up) 
+                if (up)
                 {
                     obj.transform.rotation = Quaternion.Euler(0, 0, 90);
                 }

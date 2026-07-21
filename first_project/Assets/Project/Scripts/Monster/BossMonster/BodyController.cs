@@ -15,7 +15,11 @@ public class BodyController : MonoBehaviour
     [Header("Boss")]
     public BossController Boss;
     public float ReleaseDistance = 3f;
-    
+
+    [Header("Test")]
+    public bool CreatedArch = false;
+
+
 
     private bool _isDead = false;
     private int _phase = 1;

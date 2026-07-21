@@ -558,13 +558,6 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return owner.CreateArch;
-                    },
-                    targetState:createArch
-                    ),
-                new Transition(
-                    condition: () =>
-                    {
                         return owner.Move;
                     },
                     targetState:move
@@ -595,7 +588,16 @@ public class MonsterAiBrain
                         return (owner.Phase > 1) && (owner.Distance > 100);
                     },
                     targetState: throwObject
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return ((owner.Phase > 2) && owner.CreateArch) || owner.CreatedArch;
+                    },
+                    targetState:createArch
                     )
+
             };
 
         transitionMap[create] = new List<Transition>
@@ -622,7 +624,7 @@ public class MonsterAiBrain
                 new Transition(
                     condition: () =>
                     {
-                        return !owner.CreateArch;
+                        return !owner.CreateArch && !owner.CreatedArch;
                     },
                     targetState:move
                     )

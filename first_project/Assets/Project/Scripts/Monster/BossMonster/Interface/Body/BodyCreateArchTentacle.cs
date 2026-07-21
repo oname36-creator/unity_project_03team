@@ -13,6 +13,7 @@ public class BodyCreateArchTentacle : IMonsterState
 
     public void Enter()
     {
+        Debug.Log("BodyCreateArch");
         if (_createCoroutine != null)
         {
             _owner.CreateArch = false;
