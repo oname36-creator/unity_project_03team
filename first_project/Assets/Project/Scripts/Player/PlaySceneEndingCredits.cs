@@ -1,124 +1,154 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PlaySceneEndingCredits : MonoBehaviour
 {
+    [Header("Cutscene Image (새로 추가)")]
+    [Tooltip("크레딧 직전에 띄울 연출 이미지 (Image 컴포넌트)")]
+    public Image cutsceneImage;
+    [Tooltip("이미지 페이드 인 -> 대기 -> 페이드 아웃에 걸리는 총 시간 (기본 8초)")]
+    public float cutsceneTotalDuration = 8.0f;
+
     [Header("UI References")]
-    [Tooltip("엔딩 크레딧 전체를 담고 있는 최상위 부모 오브젝트")]
     public GameObject creditCanvasGroup;
-    [Tooltip("실제 올라갈 텍스트들의 부모(CreditContent) RectTransform")]
     public RectTransform creditContent;
-    [Tooltip("배경 검은 화면 (페이드인 연출용)")]
-    public UnityEngine.UI.Image blackBackground;
+    public Image blackBackground;
 
     [Header("Post-Credit UI (크레딧 종료 후 띄울 버튼들)")]
-    [Tooltip("크레딧이 끝난 뒤 활성화할 버튼 그룹 (다시하기/종료 등)")]
     public GameObject finishButtonsGroup;
 
     [Header("Movement Settings")]
-    [Tooltip("글자가 올라가는 속도")]
     public float scrollSpeed = 40f;
-    [Tooltip("이 Y 좌표까지 올라가면 크레딧이 끝납니다.")]
     public float endYPosition = 1200f;
 
     [Header("Fade Settings")]
-    [Tooltip("검은 화면이 서서히 어두워지는 시간(초)")]
     public float fadeDuration = 1.5f;
 
     private bool isPlaying = false;
-    private bool isFinished = false;
-    private float currentFadeTime = 0f;
 
     void Start()
     {
-        // 시작할 때는 엔딩 크레딧과 버튼들을 확실히 꺼둡니다.
         if (creditCanvasGroup != null) creditCanvasGroup.SetActive(false);
         if (finishButtonsGroup != null) finishButtonsGroup.SetActive(false);
+        if (cutsceneImage != null) cutsceneImage.gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// 3분 타이머 등에서 호출하여 크레딧 연출을 시작합니다.
-    /// </summary>
     public void StartEndingCredits()
     {
         if (isPlaying) return;
         isPlaying = true;
 
-        if (creditCanvasGroup != null) creditCanvasGroup.SetActive(true);
-        if (finishButtonsGroup != null) finishButtonsGroup.SetActive(false);
+        Time.timeScale = 0f; // 게임 일시정지
 
-        // 자막 위치 및 배경 초기화
-        if (creditContent != null)
-        {
-            creditContent.anchoredPosition = new Vector2(creditContent.anchoredPosition.x, 0f);
-        }
-
-        if (blackBackground != null)
-        {
-            Color color = blackBackground.color;
-            color.a = 0f;
-            blackBackground.color = color;
-        }
-
-        // 💡 물리/몬스터 시스템 등을 일시정지 시킵니다.
-        Time.timeScale = 0f;
+        // 전체 코루틴 프로세스 시작
+        StartCoroutine(EndingSequenceRoutine());
     }
 
-    void Update()
-    {
-        if (!isPlaying || isFinished) return;
 
-        // 1. 검은 배경 페이드인
-        if (blackBackground != null && blackBackground.color.a < 1f)
+    private IEnumerator EndingSequenceRoutine()
+    {
+        // -----------------------------------------------------------
+        // 1단계: 컷씬 이미지 페이드 인 & 유지 (페이드 아웃 제거)
+        // -----------------------------------------------------------
+        if (cutsceneImage != null)
         {
-            currentFadeTime += Time.unscaledDeltaTime;
-            float alpha = Mathf.Clamp01(currentFadeTime / fadeDuration);
-            Color color = blackBackground.color;
-            color.a = alpha;
-            blackBackground.color = color;
+            cutsceneImage.gameObject.SetActive(true);
+            cutsceneImage.transform.SetAsLastSibling(); // 최상단으로 이동
+
+            Color imgColor = cutsceneImage.color;
+            imgColor.a = 0f;
+            cutsceneImage.color = imgColor;
+
+            float fadeInDuration = 1.5f;
+            float holdDuration = 6.5f; // 총 8초 중 페이드 인 1.5초 + 유지 6.5초
+
+            // 1-1. Cutscene Image Fade In (0 -> 1)
+            float timer = 0f;
+            while (timer < fadeInDuration)
+            {
+                timer += Time.unscaledDeltaTime;
+                imgColor.a = Mathf.Clamp01(timer / fadeInDuration);
+                cutsceneImage.color = imgColor;
+                yield return null;
+            }
+
+            // 1-2. 이미지 그대로 유지 (6.5초 대기)
+            yield return new WaitForSecondsRealtime(holdDuration);
         }
 
-        // 2. 자막 올리기 (unscaledDeltaTime 사용으로 일시정지 상태에서도 움직임)
+        // -----------------------------------------------------------
+        // 2단계: 이미지 위로 검은 배경(또는 크레딧)을 바로 페이드 인으로 덮기
+        // -----------------------------------------------------------
+        if (creditCanvasGroup != null) creditCanvasGroup.SetActive(true);
+
+        // 자막 초기 위치 설정
         if (creditContent != null)
         {
-            creditContent.anchoredPosition += Vector2.up * scrollSpeed * Time.unscaledDeltaTime;
+            creditContent.anchoredPosition = new Vector2(creditContent.anchoredPosition.x, -300f);
+        }
 
-            // 3. 목표 위치 도달 시 종료 연출 실행
-            if (creditContent.anchoredPosition.y >= endYPosition)
+        // 검은 배경을 컷씬 이미지 위로 페이드 인 시켜 자연스럽게 전환
+        if (blackBackground != null)
+        {
+            // 검은 배경의 Canvas/UI 레이어를 컷씬 이미지보다 앞으로 가져옴
+            blackBackground.transform.SetAsLastSibling();
+
+            float timer = 0f;
+            Color bgCol = blackBackground.color;
+            bgCol.a = 0f; // 투명하게 시작
+            blackBackground.color = bgCol;
+
+            while (timer < fadeDuration)
             {
-                isFinished = true;
-                OnCreditsFinished();
+                timer += Time.unscaledDeltaTime;
+                bgCol.a = Mathf.Clamp01(timer / fadeDuration);
+                blackBackground.color = bgCol;
+                yield return null;
             }
         }
+
+        // 검은 배경 뒤에 숨은 컷씬 이미지는 굳이 보이지 않으므로 비활성화 정리
+        if (cutsceneImage != null)
+        {
+            cutsceneImage.gameObject.SetActive(false);
+        }
+
+        // -----------------------------------------------------------
+        // 3단계: 자막 스크롤 시작
+        // -----------------------------------------------------------
+        if (creditContent != null)
+        {
+            // 글자 UI를 맨 앞으로 끌어올림
+            creditContent.transform.SetAsLastSibling();
+
+            while (creditContent.anchoredPosition.y < endYPosition)
+            {
+                creditContent.anchoredPosition += Vector2.up * scrollSpeed * Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+
+
+        OnCreditsFinished();
     }
 
     private void OnCreditsFinished()
     {
-        Debug.Log("엔딩 크레딧 종료! 선택 버튼들을 화면에 표시합니다.");
-
-        // 씬을 이동하는 대신, 화면 중앙에 [다시 하기 / 종료] 버튼을 띄웁니다.
+        Debug.Log("엔딩 연출 완료! 버튼 표시");
         if (finishButtonsGroup != null)
         {
             finishButtonsGroup.SetActive(true);
         }
     }
 
-    // ----------------------------------------------------
-    // 버튼 연결용 함수들 (인스펙터의 Button -> OnClick에 연결해서 사용하세요!)
-    // ----------------------------------------------------
-
-    /// <summary>
-    /// 게임을 처음부터 다시 시작합니다. (현재 씬 재로드)
-    /// </summary>
     public void OnClickRestart()
     {
-        Time.timeScale = 1f; // 일시정지 해제 필수!
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    /// <summary>
-    /// 빌드된 게임인 경우 게임을 완전히 종료합니다.
-    /// </summary>
     public void OnClickQuit()
     {
 #if UNITY_EDITOR

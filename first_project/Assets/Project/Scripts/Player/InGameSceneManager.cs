@@ -6,6 +6,7 @@ public class InGameSceneManager : MonoBehaviour
     [Header("이 씬에 배치된 일시정지 UI 오브젝트")]
     public GameObject localPauseMenuUI;
     public GameObject localGameOverUI;
+    public GameObject localFinishGameUI;
 
     void Start()
     {
@@ -13,6 +14,8 @@ public class InGameSceneManager : MonoBehaviour
         {
             SceneManagerEx.Instance.pauseMenuUI = localPauseMenuUI;
             SceneManagerEx.Instance.gameOverUI = localGameOverUI;
+            SceneManagerEx.Instance.gameFinishUI = localFinishGameUI;
+           
             if (localPauseMenuUI != null)
             {
                 localPauseMenuUI.SetActive(false);
@@ -20,6 +23,10 @@ public class InGameSceneManager : MonoBehaviour
             if (localGameOverUI != null)
             {
                 localGameOverUI.SetActive(false);
+            }
+            if (localFinishGameUI != null)
+            {
+                localFinishGameUI.SetActive(false);
             }
         }
     }
