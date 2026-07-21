@@ -24,7 +24,9 @@ public class MonsterController : MonoBehaviour
     public GameObject ExclamationMark;
 
     [Header("Sprite Settings")]
-    public bool isDefaultSpriteFacingLeft = false; 
+    public bool isDefaultSpriteFacingLeft = false;
+
+    
     #endregion
 
 
