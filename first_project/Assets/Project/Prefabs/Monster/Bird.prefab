@@ -195,8 +195,9 @@ GameObject:
   - component: {fileID: 6301555137212194624}
   - component: {fileID: 6626749263745653531}
   - component: {fileID: 2478126253568356769}
-  - component: {fileID: 4616938763592375938}
   - component: {fileID: 4529147896441430149}
+  - component: {fileID: 4616938763592375938}
+  - component: {fileID: 3865213378436406717}
   m_Layer: 9
   m_Name: Bird
   m_TagString: Monster
@@ -375,25 +376,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4.580055, y: 5.2000003}
   m_EdgeRadius: 0
---- !u!114 &4616938763592375938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8260278777675039609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2654fb223e6f6346b2483603be927c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
-  MonsterData: {fileID: 11400000, guid: 9897ac33af925624a8a5872e12d3443c, type: 2}
-  Player: {fileID: 0}
-  _obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  QuestionMark: {fileID: 6128156756579016845}
-  ExclamationMark: {fileID: 5083543790418922066}
 --- !u!58 &4529147896441430149
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -430,3 +412,38 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -1}
   m_Radius: 1
+--- !u!114 &4616938763592375938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8260278777675039609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2654fb223e6f6346b2483603be927c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  MonsterData: {fileID: 11400000, guid: 9897ac33af925624a8a5872e12d3443c, type: 2}
+  Player: {fileID: 0}
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  QuestionMark: {fileID: 6128156756579016845}
+  ExclamationMark: {fileID: 5083543790418922066}
+  isDefaultSpriteFacingLeft: 0
+--- !u!114 &3865213378436406717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8260278777675039609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05eea7d868b2c3e40a6fbc53faa3de35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlyMonsterSound
+  _attackClip: {fileID: 8300000, guid: fe9b4b15cde71794d8a5f2bdccfcba3f, type: 3}
+  _hurtClip: {fileID: 8300000, guid: dee8ad9bc4c2d8e4f9b077db0d4352f0, type: 3}
+  _deadClip: {fileID: 8300000, guid: bd07f1d5d19431f40859dbaca882ee62, type: 3}

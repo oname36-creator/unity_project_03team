@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,6 +19,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Monster Prefab")]
     [SerializeField] private GameObject _monsterBirdPrefab;
     [SerializeField] private GameObject _monsterBasePrefab;
+    [SerializeField] private GameObject _monsterDarkWolfPrefab;
 
     [Header("Tentacle Prefab")]
     [SerializeField] private GameObject _tentaclePrefab;
@@ -26,6 +27,11 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     [Header("Effect Prefab")]
     [SerializeField] private GameObject _dustEffectPrefab;
     [SerializeField] private GameObject _slashEffectPrefab;
+
+    [Header("Being Thrown")]
+    [SerializeField] private GameObject _treePrefab;
+    [SerializeField] private GameObject _stonePrefab;
+    [SerializeField] private GameObject _logPrefab;
 
 
     [Header("총알 설정")]
@@ -38,10 +44,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _monsterBulletPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBirdPool = new Queue<GameObject>();
     private Queue<GameObject> _monsterBasePool = new Queue<GameObject>();
+    private Queue<GameObject> _monsterDarkWolfPool = new Queue<GameObject>();
     private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
     private Queue<GameObject> _dustEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _slashEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _boxPool = new Queue<GameObject>();
+    private Queue<GameObject> _thrownPool = new Queue<GameObject>();
     #endregion
 
 
@@ -73,6 +81,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.SetActive(false); // 비활성화 상태로 대기
             _monsterBirdPool.Enqueue(obj); // 리스트에 추가
         }
+        // DarkWolf 몬스터 생성
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject obj = Instantiate(_monsterDarkWolfPrefab, this.transform);
+            obj.GetComponent<MonsterController>().Player = Player;
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _monsterDarkWolfPool.Enqueue(obj); // 리스트에 추가
+        }
         // Tentacle 생성
         for (int i = 0; i < 20; i++)
         {
@@ -97,6 +113,22 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             _slashEffectPool.Enqueue(obj); // 리스트에 추가
         }
 
+        // thrown pool 생성
+        for (int i = 0; i < 4; ++i) 
+        {
+            GameObject obj1 = Instantiate(_treePrefab, this.transform);
+            GameObject obj2 = Instantiate(_stonePrefab, this.transform);
+            GameObject obj3 = Instantiate(_logPrefab, this.transform);
+
+            obj1.SetActive(false);
+            obj2.SetActive(false);
+            obj3.SetActive(false);
+
+            _thrownPool.Enqueue(obj1);
+            _thrownPool.Enqueue(obj2);
+            _thrownPool.Enqueue(obj3);
+        }
+
         // box Pool 생성
         for (int i = 0; i < 20; ++i)
         {
@@ -104,7 +136,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.SetActive(false);
             _boxPool.Enqueue(obj);
         }
-
     }
 
 #region MonsterPop
@@ -122,6 +153,33 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
         return null;
     }
+    #endregion
+
+    #region Thrown
+
+    public GameObject ThrownPop() 
+    {
+        if (_thrownPool.Count > 0)
+        {
+            int randomInt = Random.Range(0, 5);
+
+            for (int i = 0; i < randomInt; ++i)
+            {
+                GameObject go = _thrownPool.Dequeue();
+                _thrownPool.Enqueue(go);
+            }
+
+            GameObject obj = _thrownPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+
+        return null;
+
+    }
+
+
+
     #endregion
 
     #region Base
@@ -147,6 +205,21 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (_monsterBirdPool.Count > 0)
         {
             GameObject obj = _monsterBirdPool.Dequeue();
+            return obj;
+        }
+
+        return null;
+    }
+    #endregion
+
+    #region DarkWolf
+    // 풀에서 Bird 몬스터 가져오는 함수
+    public GameObject MonsterDarkWolfPop()
+    {
+
+        if (_monsterDarkWolfPool.Count > 0)
+        {
+            GameObject obj = _monsterDarkWolfPool.Dequeue();
             return obj;
         }
 
@@ -210,7 +283,21 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     }
     #endregion
 
-    #region Monster(bird, base)
+    #region Thrown
+
+    public void ThrownPush(GameObject obj)
+    {
+        if(obj == null) return;
+
+        obj.SetActive(false);
+        _thrownPool.Enqueue(obj);
+
+    }
+
+
+
+    #endregion
+    #region Monster(bird, base, darkWolf)
 
     // 몬스터를 다시 풀에 반환하는 함수
     public void MonsterPush(GameObject obj)
@@ -222,9 +309,13 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         {
             _monsterBasePool.Enqueue(obj);
         }
-        else
+        else if (obj.GetComponent<MonsterController>().Name == "Bird")
         {
             _monsterBirdPool.Enqueue(obj);
+        }
+        else if (obj.GetComponent<MonsterController>().Name == "DarkWolf")
+        {
+            _monsterDarkWolfPool.Enqueue(obj);
         }
 
     }
