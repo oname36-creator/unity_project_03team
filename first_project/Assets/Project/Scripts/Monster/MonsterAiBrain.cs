@@ -6,12 +6,12 @@ using UnityEngine;
 public class MonsterAiBrain
 {
 
-    public static MonsterStateMachine MakeMachine(string name, MonsterController owner) 
+    public static MonsterStateMachine MakeMachine(string name, MonsterController owner)
     {
-        
+
 
         IMonsterState initialState = null;
- 
+
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
         if (name == "Base")
@@ -25,7 +25,7 @@ public class MonsterAiBrain
 
 
             initialState = search;
-  
+
             transitionMap[search] = new List<Transition>
             {
             new Transition(
@@ -182,7 +182,7 @@ public class MonsterAiBrain
 
 
             initialState = search;
-             transitionMap[search] = new List<Transition>
+            transitionMap[search] = new List<Transition>
             {
             new Transition(
                     condition: () =>
@@ -211,7 +211,7 @@ public class MonsterAiBrain
                     )
             };
 
-   
+
 
             transitionMap[attack] = new List<Transition>
             {
@@ -276,11 +276,18 @@ public class MonsterAiBrain
                     },
                     targetState: die
                     ),
-      
+
                 new Transition(
                     condition: () =>
                     {
                         return !owner.IsHurt && owner.IsAttack;
+                    },
+                    targetState:attack
+                    ),
+            new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsHurt && !owner.IsBack;
                     },
                     targetState:re
                     ),
@@ -306,6 +313,192 @@ public class MonsterAiBrain
             };
 
 
+        }
+
+        else if (name == "DarkWolf")
+        {
+
+            Debug.Log(name);
+            IMonsterState idle = new DarkWolfIdle(owner);
+            IMonsterState walk = new DarkWolfWalk(owner);
+            IMonsterState chase = new DarkWolfChase(owner);
+            IMonsterState attack = new DarkWolfAttack(owner);
+
+            IMonsterState hurt = new MonsterHurt(owner);
+            IMonsterState die = new MonsterDie(owner);
+
+            initialState = idle;
+
+            transitionMap[idle] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.CheckGroundAhead();
+                    },
+                    targetState:walk
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.InRange && owner.InAngle;
+                    },
+                    targetState: chase
+                    )
+            };
+
+            transitionMap[walk] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+                new Transition( 
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.CheckGroundAhead();
+                    },
+                    targetState:idle
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.InRange && owner.InAngle;
+                    },
+                    targetState: chase
+                    )
+            };
+
+            transitionMap[chase] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+                new Transition( 
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.InRange || !owner.InAngle;
+                    },
+                    targetState: walk
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                       return owner.InAttackRange && owner.InAngle;
+                    },
+                    targetState: attack
+                    )
+
+            };
+
+            transitionMap[attack] = new List<Transition>
+            {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+                new Transition( // attack -> hurt
+                    condition: () =>
+                    {
+                        return owner.IsHurt;
+                    },
+                    targetState: hurt
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                      return !owner.InAttackRange || !owner.InAngle;
+                    },
+                    targetState: chase
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.InRange || !owner.InAngle;
+                    },
+                    targetState: walk
+                    )
+            };
+
+
+            transitionMap[hurt] = new List<Transition>
+            {
+            new Transition(
+                    condition: () =>
+                    {
+                        return owner.IsDead;
+                    },
+                    targetState: die
+                    ),
+
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsHurt;
+                    },
+                    targetState:idle
+                    )
+            };
+
+            transitionMap[die] = new List<Transition>
+            {
+                new Transition(
+                    condition: () =>
+                    {
+                        return !owner.IsDead;
+                    },
+                    targetState:idle
+                    )
+            };
         }
 
         initialState.Enter();
@@ -348,9 +541,9 @@ public class MonsterAiBrain
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
         IMonsterState idle = new BodyIdle(owner);
-        IMonsterState attackIdle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
         IMonsterState create = new BodyCreateTentacle(owner);
+        IMonsterState throwObject = new BodyThrowStone(owner);
 
         // 보스룸 상태 추가할 예정
 
@@ -361,14 +554,6 @@ public class MonsterAiBrain
         // 나중에 상태 추가
         transitionMap[idle] = new List<Transition>
             {
-            new Transition(
-                    condition: () =>
-                    {
-                        return owner.Boss.Attack;
-                    },
-                    targetState:attackIdle
-                    ),
-
                 new Transition(
                     condition: () =>
                     {
@@ -394,6 +579,14 @@ public class MonsterAiBrain
                         return owner.Create;
                     },
                     targetState: create
+                    ),
+
+                new Transition(
+                    condition : () =>
+                    {
+                        return (owner.Phase > 1) && (owner.Distance > 100);
+                    },
+                    targetState: throwObject
                     )
             };
 
@@ -405,18 +598,34 @@ public class MonsterAiBrain
                         return !owner.Create;
                     },
                     targetState:move
+                    ),
+              
+                new Transition(
+                    condition : () =>
+                    {
+                        return (owner.Phase > 1) && (owner.Distance > 100);
+                    },
+                    targetState: throwObject
                     )
             };
 
-        transitionMap[attackIdle] = new List<Transition>
+        transitionMap[throwObject] = new List<Transition>
             {
-            //new Transition(
-            //        condition: () =>
-            //        {
-            //            return owner.Boss.Attack;
-            //        },
-            //        targetState:attackIdle
-            //        )
+                new Transition(
+                    condition: () =>
+                    {
+                        return owner.Throw;
+                    },
+                    targetState:move
+                    ),
+
+                new Transition(
+                    condition : () =>
+                    {
+                        return owner.Create;
+                    },
+                    targetState: create
+                    )
             };
 
         initialState.Enter();

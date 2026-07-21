@@ -37,11 +37,6 @@ public class BodyMove : IMonsterState
 
     public void Exit()
     {
-        if (_movingCoroutine != null)
-        {
-            _owner.StopCoroutine(_movingCoroutine);
-            _movingCoroutine = null; // 참조 초기화
-        }
     }
 
     IEnumerator Move()
@@ -59,7 +54,7 @@ public class BodyMove : IMonsterState
 
             _rigidbody2D.linearVelocity = forwardVelocity + sineVelocity;
 
-            if (_timeCounter > 5f + _prevCounter)
+            if (_timeCounter > _owner.TentacleCycle + _prevCounter)
             {
                 _owner.Create = true;
                 _prevCounter = _timeCounter;

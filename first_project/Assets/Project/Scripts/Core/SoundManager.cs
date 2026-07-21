@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 1. 개별 사운드의 설정값을 담을 컨테이너 클래스 생성

@@ -220,6 +220,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  attackCooldown: 0.5
   attackHitboxObj: {fileID: 1438914450262349504}
   swordAttackHitboxObj: {fileID: 8235964391736735294}
   attackDuration: 0.5
@@ -613,9 +614,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   hitStopManager: {fileID: 0}
-  hitStopDuration: 1
+  hitStopDuration: 0.07
   hitEffectPrefab: {fileID: 3610882451772401995, guid: daeb7e02dd9aa924580f0c98d7cf6373, type: 3}
-  effectDestroyTime: 1
+  effectDestroyTime: 0.5
 --- !u!1 &9091928177771913221
 GameObject:
   m_ObjectHideFlags: 0

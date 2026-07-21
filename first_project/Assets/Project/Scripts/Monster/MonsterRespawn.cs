@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 public class MonsterRespawn : MonoBehaviour
 {
@@ -43,7 +43,12 @@ public class MonsterRespawn : MonoBehaviour
         {
             monster = ObjectPoolManager.Instance.MonsterBirdPop();
         }
-        if(monster == null) { return null; }
+        else if(name == "DarkWolf") 
+        {
+            monster = ObjectPoolManager.Instance.MonsterDarkWolfPop();
+        }
+
+        if (monster == null) { return null; }
         MonsterController monsterController = monster.GetComponent<MonsterController>();
         
         monster.transform.position = pos;
