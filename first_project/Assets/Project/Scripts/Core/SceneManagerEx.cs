@@ -9,6 +9,8 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
     public GameObject pauseMenuUI;
     [HideInInspector]
     public GameObject gameOverUI;
+    [HideInInspector]
+    public GameObject gameFinishUI;
 
     public override void Awake()
     {

@@ -32,6 +32,9 @@ public class SoundManager : Singleton<SoundManager>
     [Header("BGM")]
     [SerializeField] private List<AudioClipPair> _audioList;
 
+    [Header("SFX")]
+    [SerializeField] private AudioClip _gunAttackSFX;
+
     [Header("Master Volume")]
     [Range(0f, 1f)] public float masterBgmVolume = 1.0f;
     [Range(0f, 1f)] public float masterSfxVolume = 1.0f;
@@ -42,7 +45,7 @@ public class SoundManager : Singleton<SoundManager>
     public const string GameSceneBGM = "GameSceneBGM";
     public const string EndingSceneBGM = "EndingSceneBGM";
     public const string CreditBGM = "CreditBGM";
-
+    public const string GunAttackSFX = "GunAttackSFX";
 
     private Dictionary<string, SoundData> _bgmDic = new Dictionary<string, SoundData>();
     private Dictionary<string, SoundData> _sfxDic = new Dictionary<string, SoundData>();
@@ -72,6 +75,9 @@ public class SoundManager : Singleton<SoundManager>
 
         SetBGM();
         SetSfx();
+
+        masterBgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
+        masterSfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
     }
 
     private void SetBGM()
@@ -88,6 +94,7 @@ public class SoundManager : Singleton<SoundManager>
         _sfxDic = new Dictionary<string, SoundData>
         {
             //{ ButtonClickSfx, new SoundData(_buttonClickSFX, 0.8f) }
+            {GunAttackSFX, new SoundData(_gunAttackSFX, 1.0f)}
         };
     }
 
@@ -174,5 +181,39 @@ public class SoundManager : Singleton<SoundManager>
             }
         }
         return null; // 모든 소스가 재생 중일 경우
+    }
+
+
+    public void SetMasterBgmVolume(float volume)
+    {
+        masterBgmVolume = volume;
+
+        // 현재 재생 중인 BGM에도 즉시 볼륨 반영
+        if (_bgmSource != null)
+        {
+            _bgmSource.volume = masterBgmVolume;
+        }
+
+        PlayerPrefs.SetFloat("BGMVolume", volume);
+    }
+
+ 
+    public void SetMasterSfxVolume(float volume)
+    {
+        masterSfxVolume = volume;
+
+        // 현재 재생 중인 모든 SFX 채널에도 즉시 반영
+        if (_sfxAudioSources != null)
+        {
+            foreach (var source in _sfxAudioSources)
+            {
+                if (source != null)
+                {
+                    source.volume = masterSfxVolume;
+                }
+            }
+        }
+
+        PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 }
