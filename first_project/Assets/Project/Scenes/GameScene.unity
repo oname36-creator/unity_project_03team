@@ -2645,6 +2645,7 @@ MonoBehaviour:
   _monsterBulletPrefab: {fileID: 6056222576123966378, guid: 8213b841399588845866b2ef22a9a395, type: 3}
   _monsterBirdPrefab: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
   _monsterBasePrefab: {fileID: 4832580084656564143, guid: 0bf7d512637474a469d2f606976f1bcb, type: 3}
+  _monsterDarkWolfPrefab: {fileID: 0}
   _tentaclePrefab: {fileID: 397495312301300401, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
   _dustEffectPrefab: {fileID: 554923577598959919, guid: 3b4597ce7c1f90b478aa18a45852d644, type: 3}
   _slashEffectPrefab: {fileID: 8325854951134378804, guid: daf69e69310cde04da98fda7cb37ceb3, type: 3}

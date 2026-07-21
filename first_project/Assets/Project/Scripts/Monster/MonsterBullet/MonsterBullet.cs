@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 
@@ -34,7 +34,7 @@ public class MonsterBullet : MonoBehaviour
 
     public void Start()
     {
-        SoundManager.Instance.AddSfx("SlimBoom", _boomClip);
+        SoundManager.Instance.AddSfx("SlimBoom", _boomClip, 0.2f);
     }
 
 
