@@ -64,6 +64,9 @@ public class SoundManager : Singleton<SoundManager>
 
         SetBGM();
         SetSfx();
+
+        masterBgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
+        masterSfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
     }
 
     private void SetBGM()
@@ -169,5 +172,39 @@ public class SoundManager : Singleton<SoundManager>
             }
         }
         return null; // 모든 소스가 재생 중일 경우
+    }
+
+
+    public void SetMasterBgmVolume(float volume)
+    {
+        masterBgmVolume = volume;
+
+        // 현재 재생 중인 BGM에도 즉시 볼륨 반영
+        if (_bgmSource != null)
+        {
+            _bgmSource.volume = masterBgmVolume;
+        }
+
+        PlayerPrefs.SetFloat("BGMVolume", volume);
+    }
+
+ 
+    public void SetMasterSfxVolume(float volume)
+    {
+        masterSfxVolume = volume;
+
+        // 현재 재생 중인 모든 SFX 채널에도 즉시 반영
+        if (_sfxAudioSources != null)
+        {
+            foreach (var source in _sfxAudioSources)
+            {
+                if (source != null)
+                {
+                    source.volume = masterSfxVolume;
+                }
+            }
+        }
+
+        PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 }
