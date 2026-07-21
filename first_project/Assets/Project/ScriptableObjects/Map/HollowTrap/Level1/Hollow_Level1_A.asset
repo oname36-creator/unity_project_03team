@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: Hollow_Level1_A
   m_EditorClassIdentifier: Assembly-CSharp::SOHollowTrapData
   hollowTrapList:
-  - position: {x: -4.995411, y: -12.47822, z: 0}
-  - position: {x: -0.49539185, y: -12.47822, z: 0}
-  - position: {x: 13.0044365, y: -12.47822, z: 0}
-  - position: {x: 16.504383, y: -12.47822, z: 0}
-  - position: {x: 20.504322, y: -12.47822, z: 0}
-  - position: {x: 24.504261, y: -12.47822, z: 0}
-  - position: {x: 28.004208, y: -12.47822, z: 0}
+  - position: {x: 26.04002, y: -14.5432, z: 0}
+  - position: {x: 30.340034, y: -14.5432, z: 0}
+  - position: {x: 34.34005, y: -14.5432, z: 0}
+  - position: {x: 38.340065, y: -14.5432, z: 0}
+  - position: {x: 42.34008, y: -14.5432, z: 0}
+  - position: {x: 46.340096, y: -14.5432, z: 0}
+  - position: {x: 50.34005, y: -14.5432, z: 0}
+  - position: {x: 54.33999, y: -14.5432, z: 0}
+  - position: {x: 58.339928, y: -14.5432, z: 0}
+  - position: {x: 63.239853, y: -14.5432, z: 0}

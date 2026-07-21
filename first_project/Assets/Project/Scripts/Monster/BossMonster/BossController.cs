@@ -35,6 +35,11 @@ public class BossController : MonoBehaviour
     [SerializeField] private AudioClip _bossTrapAttackSound;
     [SerializeField] private AudioClip _bossAttack;
 
+    [Header("Intro CutScene Settings")]
+    public bool isIntro = false;
+    public float introSpeedMultiplier = 0.25f;
+    public float introSafeDistance = 5f;
+
 
 
 
