@@ -15,14 +15,14 @@ public class BoxRespawn : MonoBehaviour
     #endregion
 
     #region CreateBox
-    private void HandleSpawnRequest(Vector3 pos, SOBoxSpawnSetting setting, Action<GameObject> onSpawned)
+    private void HandleSpawnRequest(Vector3 pos, SOMapPhaseSpawnSetting setting, Action<GameObject> onSpawned)
     {
         GameObject box = Respawn(pos, setting);
         onSpawned?.Invoke(box);
     }
     #endregion
 
-    private GameObject Respawn(Vector3 pos, SOBoxSpawnSetting setting)
+    private GameObject Respawn(Vector3 pos, SOMapPhaseSpawnSetting setting)
     {
         
         GameObject box = ObjectPoolManager.Instance.BoxPop();

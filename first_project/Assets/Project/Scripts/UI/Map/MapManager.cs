@@ -73,6 +73,7 @@ public class MapManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     #region Start
     void Start()
     {
@@ -90,6 +91,8 @@ public class MapManager : MonoBehaviour
 
         // 1페이즈 맵들로 셔플 백 채우기
         StartCoroutine(CoPhaseTimerRoutine());
+
+        CameraConfinerManager.Instance?.InitizlizeYTracking();
     }
 
 
@@ -120,9 +123,6 @@ public class MapManager : MonoBehaviour
         {
             currentLogicalPhase = newLogicalPhase;
             Debug.Log("[MapManager] : 논리적 페이즈 변경됨");
-
-            // 페이즈 변경 시점에 맞춰 카메라의 Y축 추적 모드를 변경
-            CameraConfinerManager.Instance?.SetCameraYTrackingByPhase(currentLogicalPhase);
         }
     }
     #endregion
