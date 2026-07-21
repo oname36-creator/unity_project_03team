@@ -30,10 +30,10 @@ public class SoundManager : Singleton<SoundManager>
 {
 
     [Header("BGM")]
-    [SerializeField] private List<AudioClipPair> _audioList;
+    [SerializeField] private List<AudioClipPair> _audiobgmList;
 
     [Header("SFX")]
-    [SerializeField] private AudioClip _gunAttackSFX;
+    [SerializeField] private List<AudioClipPair> _audioSfxList;
 
     [Header("Master Volume")]
     [Range(0f, 1f)] public float masterBgmVolume = 1.0f;
@@ -45,6 +45,7 @@ public class SoundManager : Singleton<SoundManager>
     public const string GameSceneBGM = "GameSceneBGM";
     public const string EndingSceneBGM = "EndingSceneBGM";
     public const string CreditBGM = "CreditBGM";
+
     public const string GunAttackSFX = "GunAttackSFX";
 
     private Dictionary<string, SoundData> _bgmDic = new Dictionary<string, SoundData>();
@@ -83,7 +84,7 @@ public class SoundManager : Singleton<SoundManager>
     private void SetBGM()
     {
 
-        foreach (AudioClipPair pair in _audioList) 
+        foreach (AudioClipPair pair in _audiobgmList) 
         {
             _bgmDic.Add(pair.Key, pair.SoundData);
         }
@@ -91,12 +92,12 @@ public class SoundManager : Singleton<SoundManager>
 
     private void SetSfx()
     {
-        _sfxDic = new Dictionary<string, SoundData>
+        foreach (AudioClipPair pair in _audioSfxList)
         {
-            //{ ButtonClickSfx, new SoundData(_buttonClickSFX, 0.8f) }
-            {GunAttackSFX, new SoundData(_gunAttackSFX, 1.0f)}
-        };
+            _sfxDic.Add(pair.Key, pair.SoundData);
+        }
     }
+
 
 
     public void AddSfx(string key, AudioClip clip, float volume = 1f, float pitch = 1f)
