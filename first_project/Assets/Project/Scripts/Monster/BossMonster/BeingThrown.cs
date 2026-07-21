@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class BeingThrown : MonoBehaviour
@@ -26,14 +27,15 @@ public class BeingThrown : MonoBehaviour
     private Rigidbody2D _rigidBody;
     private SpriteRenderer _warringRenderer;
     private SpriteRenderer _myRenderer;
-    
-   
+
+    private Coroutine _fadeCoroutine;
 
     private bool _isThrown = false;
 
     private bool _first = true;
 
     private float _localScaleY;
+    private float _fadeDuration = 3f;
 
     private string startKey;
     private string boomKey;
@@ -47,7 +49,6 @@ public class BeingThrown : MonoBehaviour
 
         if (_myRenderer != null)
         {
-            _warringObject.transform.localScale = _myRenderer.bounds.size / 4;
             _localScaleY = _warringObject.transform.localScale.y;
         }
 
@@ -107,6 +108,13 @@ public class BeingThrown : MonoBehaviour
             SoundManager.Instance.PlaySFX(boomKey);
             _first = false;
         }
+
+        
+        Vector2 contactPoint = collision.GetContact(0).point;
+
+        SetUpEffect(contactPoint);
+
+
         _rigidBody.gravityScale *= 2;
     }
 
@@ -120,13 +128,38 @@ public class BeingThrown : MonoBehaviour
         StartCoroutine(ChargeAndThrowRoutine(targetPos, _chargeTime));
     }
 
+    private void SetUpEffect(Vector2 position) 
+    {
+
+        GameObject smokeBurst = ObjectPoolManager.Instance.SmokeBurstEffectPop();
+        if (smokeBurst != null)
+        {
+            smokeBurst.transform.position = position;
+        }
+
+        int smokeCount = 6;
+        float spreadRadius = 1.0f; 
+
+        for (int i = 0; i < smokeCount; i++)
+        {
+            GameObject dustSmoke = ObjectPoolManager.Instance.SmokeEffectPop();
+            if (dustSmoke != null)
+            {
+                Vector2 randomOffset = new Vector2(Random.Range(-spreadRadius, spreadRadius), Random.Range(0f, 0.5f));
+                dustSmoke.transform.position = position + randomOffset;
+            }
+        }
+
+    }
+
+
+
     private void SetupWarringEffect(Vector2 targetPos)
     {
         if (_warringObject == null) return;
 
         _warringObject.SetActive(true);
-        _warringObject.transform.position = new Vector2 (targetPos.x, targetPos.y + _localScaleY);
-
+        _warringObject.transform.position = new Vector2(targetPos.x, targetPos.y + _localScaleY);
         _warringObject.transform.rotation = Quaternion.identity;
 
         if (_warringRenderer != null)
@@ -134,6 +167,13 @@ public class BeingThrown : MonoBehaviour
             Color color = _warringRenderer.color;
             color.a = 0f;
             _warringRenderer.color = color;
+
+            if (_fadeCoroutine != null)
+            {
+                StopCoroutine(_fadeCoroutine);
+            }
+
+            _fadeCoroutine = StartCoroutine(FadeInCoroutine());
         }
     }
 
@@ -164,6 +204,11 @@ public class BeingThrown : MonoBehaviour
 
     private void ReturnToPool()
     {
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null;
+        }
         ObjectPoolManager.Instance.ThrownPush(this.gameObject);
     }
 
@@ -193,4 +238,21 @@ public class BeingThrown : MonoBehaviour
         ThrowTo(targetPos);
     }
 
+    private IEnumerator FadeInCoroutine()
+    {
+        float elapsedTime = 0f;
+        Color color = _warringRenderer.color;
+
+        while (elapsedTime < _fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            color.a = Mathf.Lerp(0f, 0.75f, elapsedTime / _fadeDuration);
+            _warringRenderer.color = color;
+
+            yield return null; 
+        }
+
+        _warringRenderer.color = color;
+    }
 }

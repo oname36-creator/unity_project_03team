@@ -10,6 +10,8 @@ public class BodyMove : IMonsterState
     private float _prevCounter = 0f;
     private Coroutine _movingCoroutine;
 
+    private float _time = 0f;
+
     public BodyMove(BodyController owner)
     {
         this._owner = owner;
@@ -32,7 +34,15 @@ public class BodyMove : IMonsterState
 
     public void Update()
     {
-       
+       if(_owner.Phase > 2) 
+        {
+            _time += Time.deltaTime;
+
+            if(_time > 10f) 
+            {
+                _owner.CreateArch = true;
+            }
+        }
     }
 
     public void Exit()
