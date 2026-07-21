@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 2208703988740019828, guid: 1ddd72f1a0ec49d48914613f5d48a261, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -187,5 +187,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   hitStopManager: {fileID: 4562835588813731039, guid: 84035fc0ba7a3bf4c835a4ea4619eaa8, type: 3}
   hitStopDuration: 0.07
-  hitEffectPrefab: {fileID: 3610882451772401995, guid: daeb7e02dd9aa924580f0c98d7cf6373, type: 3}
-  effectDestroyTime: 0.5
+  hitEffectPrefab: {fileID: 699553625519605607, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+  effectDestroyTime: 1

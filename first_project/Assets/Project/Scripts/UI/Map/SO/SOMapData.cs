@@ -9,7 +9,8 @@ public enum EGimmickType
     JumpPad,
     Platform,
     Breakable,
-    HollowTrap
+
+    MaxCounts
 }
 
 [System.Serializable]

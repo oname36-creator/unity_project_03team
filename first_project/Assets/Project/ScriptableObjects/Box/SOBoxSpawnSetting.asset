@@ -16,7 +16,20 @@ MonoBehaviour:
   spawnChance: 0.9
   minSpawnInterval: 1
   maxBoxCount: 2
-  rewardItems:
-  - {fileID: 11400000, guid: 5e93f98d1d8fb574eb2b8cf31736f5c3, type: 2}
-  - {fileID: 11400000, guid: e1ec7f7533a2cff4697314ac3c1f7f28, type: 2}
-  - {fileID: 11400000, guid: e1ec7f7533a2cff4697314ac3c1f7f28, type: 2}
+  rewardItemsWeights:
+  - item: {fileID: 11400000, guid: e1ec7f7533a2cff4697314ac3c1f7f28, type: 2}
+    phaseOWeight: 70
+    phase1Weight: 50
+    phase2Weight: 30
+  - item: {fileID: 11400000, guid: 5e93f98d1d8fb574eb2b8cf31736f5c3, type: 2}
+    phaseOWeight: 40
+    phase1Weight: 50
+    phase2Weight: 60
+  - item: {fileID: 11400000, guid: b428fab07e48c85479394f572b430913, type: 2}
+    phaseOWeight: 20
+    phase1Weight: 30
+    phase2Weight: 40
+  - item: {fileID: 11400000, guid: 0bed37c565408d64c984e7b12ed11222, type: 2}
+    phaseOWeight: 0
+    phase1Weight: 10
+    phase2Weight: 20

@@ -29,6 +29,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     [Tooltip("바닥으로 인식할 레이어(예: Ground)를 선택하세요.")]
     public LayerMask groundLayer;
 
+    [Header("Player Attack Cooldown")]
+    [Tooltip("공격 연속 사용 제한 시간(초)입니다.")]
+    public float attackCooldown = 0.5f;
+    private float lastAttackTime = -99f;
+
     [Header("Player Attack Trigger Settings")]
     public GameObject attackHitboxObj;
     public GameObject swordAttackHitboxObj;
@@ -269,15 +274,23 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         {
             if (status == null || status.isDead) return;
 
+            // 쿨타임 검사 추가
+            if (Time.time < lastAttackTime + attackCooldown)
+            {
+                Debug.Log($"공격 쿨타임 중입니다! 남은 시간: {(lastAttackTime + attackCooldown) - Time.time:F2}초");
+                return; // 쿨타임 안 끝났으면 이하 로직을 실행하지 않고 리턴
+            }
+
+            // 공격이 성공적으로 발동되었으므로 마지막 공격 시간 갱신
+            lastAttackTime = Time.time;
+
             if (status.hasGun)
             {
-                // 애니메이션은 트리거를 즉시 실행하여 선딜레이 모션을 보여줍니다.
                 if (animator != null)
                 {
                     animator.SetTrigger("OnGunAttack");
                 }
 
-                // 0.3초 지연 후 발사하는 코루틴 실행
                 StartCoroutine(GunAttackRoutine());
                 return;
             }
@@ -293,6 +306,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 status.OnSwordAttackExecute();
                 return;
             }
+
             if (animator != null)
             {
                 animator.SetTrigger("OnAttack");

@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public class BoxObject : MonoBehaviour
 {
-    private ItemData[] _rewardItems;
+    private SOMapPhaseSpawnSetting _spawnSetting;
     private Collider2D _triggerCollider;
     private bool _isTriggered = false;
 
@@ -20,9 +22,9 @@ public class BoxObject : MonoBehaviour
         }
     }
     // 스폰 지점에 보상 아이템 목록을 주입받음
-    public void SetRewardItems(ItemData[] Items)
+    public void SetSpawnSetting(SOMapPhaseSpawnSetting setting)
     {
-        _rewardItems = Items;
+        _spawnSetting = setting;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -48,18 +50,53 @@ public class BoxObject : MonoBehaviour
     private void OpenBox()
     {
         #region AddItem
-        if(_rewardItems != null && _rewardItems.Length > 0)
+        if(_spawnSetting != null && _spawnSetting.rewardItemsWeights != null &&
+            _spawnSetting.rewardItemsWeights.Count > 0)
         {
-            // 보상 목록 중 무작위로 아이템 1개 선택
-            ItemData selectedItem = _rewardItems[Random.Range(0, _rewardItems.Length)];
-            if(selectedItem != null)
+            // 현재 페이즈의 가중치 총합 계산
+            int totalWeight = 0;
+           List<SItemWeightData> validItems = _spawnSetting.rewardItemsWeights;
+            foreach (var data in validItems)
             {
-                // DataManager에 아이템 추가
-                DataManager.Instance.AddItem(selectedItem.itemNumber);
-                Debug.Log($"[BoxObject] 상자를 열어 아이템을 획득했습니다! 이름: {selectedItem.itemName} (번호: {selectedItem.itemNumber})");
+                if (data.item == null) continue;
+                totalWeight += data.weight;
+            }
+
+            if(totalWeight > 0)
+            {
+                // 0 ~ (totalWeight - 1) 사이의 무작위 값 추출
+                int randomValue = UnityEngine.Random.Range(0, totalWeight);
+                int accmulatedWeight = 0;
+                ItemData selectedItem = null;
+
+                // 가중치 누적 합 기반으로 아이템 선택
+                foreach(var data in validItems)
+                {
+                    if (data.item == null) continue;
+                    int weight = data.weight;
+                    accmulatedWeight += weight;
+
+                    if(randomValue < accmulatedWeight)
+                    {
+                        selectedItem = data.item;
+                        break;
+                    }
+                }
+
+                if(selectedItem != null)
+                {
+                    // DataManager에 아이템 추가
+                    DataManager.Instance.AddItem(selectedItem.itemNumber);
+                    Debug.Log("[BoxObject] : 아이템 획득!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[BoxObject] : 아이템의 가중치 합이 0이다.");
             }
         }
         #endregion
+
         else 
         {
             Debug.LogWarning("보상 아이템 목록이 없음");
@@ -68,4 +105,6 @@ public class BoxObject : MonoBehaviour
         // 획득 후 오브젝트 풀로 반환
         ObjectPoolManager.Instance.BoxPush(gameObject);
     }
+
+    
 }
