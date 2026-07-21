@@ -942,31 +942,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db722735c8cba94ba1175d002409c2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  _startSceneBGM: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
-  _gameSceneBGM: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
-  _endingSceneBGM: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
-  _creditBGM: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
-  _audioList:
-  - Key: StartSceneBGM
-    SoundData:
-      Clip: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
-      Volume: 1
-      Pitch: 1
-  - Key: GameSceneBGM
-    SoundData:
-      Clip: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
-      Volume: 1
-      Pitch: 1
-  - Key: EndingSceneBGM
-    SoundData:
-      Clip: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
-      Volume: 1
-      Pitch: 1
-  - Key: CreditBGM
-    SoundData:
-      Clip: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
-      Volume: 1
-      Pitch: 1
+  _audiobgmList: []
+  _audioSfxList: []
   masterBgmVolume: 1
   masterSfxVolume: 1
 --- !u!1 &836920352
@@ -1467,14 +1444,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7906963502048047855, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7906963502048047855, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 7906963502048047855, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.62
@@ -3405,10 +3374,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossMonster
       objectReference: {fileID: 0}
-    - target: {fileID: 783070123909900463, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2774532474509234083, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.89
@@ -3530,10 +3495,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimeBullet
       objectReference: {fileID: 0}
-    - target: {fileID: 9020844365575211656, guid: 8213b841399588845866b2ef22a9a395, type: 3}
-      propertyPath: m_FlipX
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3591,10 +3552,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DarkWolf
       objectReference: {fileID: 0}
-    - target: {fileID: 4561971662583454659, guid: 80151f43ca283334787438987adea72e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3615,10 +3572,6 @@ PrefabInstance:
     - target: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_Name
       value: Bird
-      objectReference: {fileID: 0}
-    - target: {fileID: 8260278777675039609, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8951697291475702414, guid: 7f2c6593f883acc449a44619bb7ee0d2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4019,14 +3972,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6973892646736009273, guid: daf69e69310cde04da98fda7cb37ceb3, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6973892646736009273, guid: daf69e69310cde04da98fda7cb37ceb3, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 6973892646736009273, guid: daf69e69310cde04da98fda7cb37ceb3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.74
