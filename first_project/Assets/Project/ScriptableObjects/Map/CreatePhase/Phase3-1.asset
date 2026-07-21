@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72707167d84b50044911a2c5696659c2, type: 3}
+  m_Name: Phase3-1
+  m_EditorClassIdentifier: Assembly-CSharp::SOMapPalette
+  chunkPrefabs:
+  - {fileID: 3410827642731289472, guid: 0271abb0113effe44aaa54f603188e9e, type: 3}
+  - {fileID: 311782116351191392, guid: 5dfb0ca5a521c8a4d9ba3ce8d2048b6c, type: 3}

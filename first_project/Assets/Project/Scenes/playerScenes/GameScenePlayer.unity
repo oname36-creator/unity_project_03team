@@ -261,9 +261,13 @@ MonoBehaviour:
   _monsterBulletPrefab: {fileID: 345861578278468913, guid: d2d71bb5923757d40bc40464e05f6a47, type: 3}
   _monsterBirdPrefab: {fileID: 0}
   _monsterBasePrefab: {fileID: 0}
+  _monsterDarkWolfPrefab: {fileID: 0}
   _tentaclePrefab: {fileID: 0}
   _dustEffectPrefab: {fileID: 0}
   _slashEffectPrefab: {fileID: 0}
+  _treePrefab: {fileID: 0}
+  _stonePrefab: {fileID: 0}
+  _logPrefab: {fileID: 0}
   bulletPrefab: {fileID: 3659256970342430975, guid: 264cbe8faece70542868e1963988aefb, type: 3}
   poolSize: 20
 --- !u!4 &284106635
@@ -286,6 +290,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1658438350270694919, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
   m_PrefabInstance: {fileID: 7115686381010993091}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &441952448
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 699553625519605607, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_Name
+      value: EffectBoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.93323
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.24274
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315881593048517621, guid: d52c190170589cb438438338ea2f70e3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d52c190170589cb438438338ea2f70e3, type: 3}
 --- !u!1 &676519357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2007,3 +2068,4 @@ SceneRoots:
   - {fileID: 1719398702}
   - {fileID: 1139189676}
   - {fileID: 1316366645}
+  - {fileID: 441952448}
