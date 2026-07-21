@@ -24,6 +24,9 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] private AudioClip _endingSceneBGM;
     [SerializeField] private AudioClip _creditBGM;
 
+    [Header("SFX")]
+    [SerializeField] private AudioClip _gunAttackSFX;
+
     [Header("Master Volume")]
     [Range(0f, 1f)] public float masterBgmVolume = 1.0f;
     [Range(0f, 1f)] public float masterSfxVolume = 1.0f;
@@ -34,7 +37,7 @@ public class SoundManager : Singleton<SoundManager>
     public const string GameSceneBGM = "GameSceneBGM";
     public const string EndingSceneBGM = "EndingSceneBGM";
     public const string CreditBGM = "CreditBGM";
-
+    public const string GunAttackSFX = "GunAttackSFX";
 
     private Dictionary<string, SoundData> _bgmDic = new Dictionary<string, SoundData>();
     private Dictionary<string, SoundData> _sfxDic = new Dictionary<string, SoundData>();
@@ -86,6 +89,7 @@ public class SoundManager : Singleton<SoundManager>
         _sfxDic = new Dictionary<string, SoundData>
         {
             //{ ButtonClickSfx, new SoundData(_buttonClickSFX, 0.8f) }
+            {GunAttackSFX, new SoundData(_gunAttackSFX, 1.0f)}
         };
     }
 
