@@ -75,6 +75,18 @@ public class MapBaker : MonoBehaviour
             {
                 if(setting.prefabList.Exists(p => p != null && p.name == cleanName))
                 {
+#if UNITY_EDITOR
+                    // [교정] 이동하려는 오브젝트가 프리팹 인스턴스의 하위 요소인지 확인
+                    if (PrefabUtility.IsPartOfPrefabInstance(child))
+                    {
+                        // 가장 최상위 프리팹 루트를 찾아서 완전히 언팩(Unpack) 처리
+                        GameObject prefabRoot = PrefabUtility.GetOutermostPrefabInstanceRoot(child);
+                        if (prefabRoot != null)
+                        {
+                            PrefabUtility.UnpackPrefabInstance(prefabRoot, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+                        }
+                    }
+#endif
                     child.transform.SetParent(setting.parentTransform);
                     count++;
                     isMoved = true;

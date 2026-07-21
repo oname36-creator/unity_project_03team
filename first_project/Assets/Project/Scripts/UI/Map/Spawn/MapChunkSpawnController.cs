@@ -24,7 +24,9 @@ public class MapChunkSpawnController : MonoBehaviour
 
     private MapChunk _chunk;
 
-    private List<GameObject> _spawnedMonsters,_spawnedBoxes,_spawnedTraps = new List<GameObject>();
+    private List<GameObject> _spawnedMonsters = new List<GameObject>();
+    private List<GameObject> _spawnedBoxes = new List<GameObject>();
+    private List<GameObject> _spawnedTraps = new List<GameObject>();
     private List<SCliffTrapNode> _activeCliffNodes = new List<SCliffTrapNode>();
     private float _nextTrapSpawnTime = 0;
     private bool[] _hasTrap;
@@ -74,6 +76,11 @@ public class MapChunkSpawnController : MonoBehaviour
     public void SpawnAll()
     {
         Physics2D.SyncTransforms();
+        if (_chunk == null)
+        {
+            _chunk = GetComponent<MapChunk>();
+        }
+
         if (spawnSetting == null)
         {
             Debug.LogWarning($"[MapChunkSpawnController] {gameObject.name}의 스폰 설정이 존재하지 않습니다.");
