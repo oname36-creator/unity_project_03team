@@ -124,7 +124,8 @@ public class BossChase : IMonsterState
 
     IEnumerator Phase()
     {
-        WaitForSeconds waitTime = new WaitForSeconds(61f);
+        //WaitForSeconds waitTime = new WaitForSeconds(61f);
+        WaitForSeconds waitTime = new WaitForSeconds(10f);
 
         while (true)
         {
@@ -140,6 +141,7 @@ public class BossChase : IMonsterState
             _owner.MoveSpeed += 2.5f;
 
             ++_owner.Phase;
+            Debug.Log("페이즈 : "  + _owner.Phase);
         }
     }
 }

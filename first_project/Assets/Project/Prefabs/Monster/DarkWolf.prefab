@@ -104,16 +104,15 @@ GameObject:
   - component: {fileID: 1524773107640548521}
   - component: {fileID: 5411556768417771329}
   - component: {fileID: 5925305719911483954}
-  - component: {fileID: 1928859524616181626}
   - component: {fileID: 2850359327736834029}
-  - component: {fileID: 8016259394652390452}
+  - component: {fileID: 6738063757967568049}
   m_Layer: 9
   m_Name: DarkWolf
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2867331500656523251
 Transform:
   m_ObjectHideFlags: 0
@@ -285,8 +284,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!61 &1928859524616181626
-BoxCollider2D:
+--- !u!114 &2850359327736834029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561971662583454659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2654fb223e6f6346b2483603be927c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  MonsterData: {fileID: 11400000, guid: c533aba87031c1940b0071477f0455d7, type: 2}
+  Player: {fileID: 0}
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  QuestionMark: {fileID: 3997325711772203270}
+  ExclamationMark: {fileID: 6088459436467538923}
+  isDefaultSpriteFacingLeft: 1
+--- !u!70 &6738063757967568049
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -319,54 +338,9 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.16}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
-  m_EdgeRadius: 0
---- !u!114 &2850359327736834029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4561971662583454659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2654fb223e6f6346b2483603be927c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterController
-  MonsterData: {fileID: 11400000, guid: c533aba87031c1940b0071477f0455d7, type: 2}
-  Player: {fileID: 0}
-  _obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  QuestionMark: {fileID: 3997325711772203270}
-  ExclamationMark: {fileID: 6088459436467538923}
-  isDefaultSpriteFacingLeft: 1
---- !u!114 &8016259394652390452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4561971662583454659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 199d0c9cc88bc1a45be4da20d7d9449f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DarkWolfSound
-  _idleClip: {fileID: 8300000, guid: 7d83a65df435caf4ab3b3ff9815b3ef0, type: 3}
-  _attackClip: {fileID: 8300000, guid: 23a3e65d3f74aa646ab11ccb3b9b8e39, type: 3}
-  _hurtClip: {fileID: 8300000, guid: 62f09ed83ab239a4cb37e7b459510bf7, type: 3}
-  _deadClip: {fileID: 8300000, guid: 32203b3bff7cbf1498b9c6e55d312fc7, type: 3}
+  m_Offset: {x: -0.005094528, y: -0.13246304}
+  m_Size: {x: 0.40829468, y: 0.6369684}
+  m_Direction: 0
 --- !u!1 &6088459436467538923
 GameObject:
   m_ObjectHideFlags: 0

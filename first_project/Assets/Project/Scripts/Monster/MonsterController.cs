@@ -460,7 +460,7 @@ public class MonsterController : MonoBehaviour
         float dirX = _frontVector.x > 0 ? 1f : -1f;
 
         float baseLength = 0.5f;
-        float height = 1.0f;
+        float height = 1.5f;
 
         Vector2 rayVector = new Vector2(dirX * baseLength, -height);
 

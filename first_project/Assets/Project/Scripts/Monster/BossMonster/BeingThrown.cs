@@ -15,9 +15,6 @@ public class BeingThrown : MonoBehaviour
     [SerializeField] private float _throwPower = 15f;
 
 
-    [Header("Audio Clip")]
-    [SerializeField] private AudioClip _boomAudio;
-
     [Header("Name")]
     [SerializeField] private string _name;
 
@@ -72,10 +69,6 @@ public class BeingThrown : MonoBehaviour
 
     private void Start()
     {
-        startKey = _name + "startKey";
-        boomKey = _name + "boomKey";
-
-        SoundManager.Instance.AddSfx(boomKey, _boomAudio ,0.5f);
 
     }
 

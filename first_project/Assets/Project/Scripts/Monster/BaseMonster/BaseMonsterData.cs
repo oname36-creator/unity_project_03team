@@ -6,8 +6,8 @@ public class BaseMonsterData : ScriptableObject
     [Header("Monster Settings")] // 인스펙터에 제목 표시
     public int hp;
     public int damage;
-    public int Speed;
-    public int MaxSpeed;
+    public float Speed;
+    public float MaxSpeed;
     public int Force;
     public string Name; 
 

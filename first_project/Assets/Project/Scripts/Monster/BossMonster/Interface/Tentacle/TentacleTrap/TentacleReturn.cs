@@ -25,7 +25,6 @@ public class TentacleReturn : IMonsterState
     {
         Debug.Log("TentacleTrap Return");
 
-        _owner.gameObject.layer = LayerMask.NameToLayer("Boss");
         _owner.tag = "Boss";
 
         _rootPos = _owner.RootPos;
