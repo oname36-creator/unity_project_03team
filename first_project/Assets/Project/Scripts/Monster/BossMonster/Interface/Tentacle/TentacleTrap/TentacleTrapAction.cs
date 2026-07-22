@@ -26,7 +26,7 @@ public class TentacleTrapAction : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleTrap Action");
+        //Debug.Log("TentacleTrap Action");
         _rootPos = _owner.RootPos;
         _targetPos = _rootPos;
 

@@ -27,7 +27,7 @@ public class BodyThrowStone : IMonsterState
             _owner.Throw = false;
             return;
         }
-        Debug.Log("Throw");
+        //Debug.Log("Throw");
         _throwCoroutine = _owner.StartCoroutine(ThrowRoutine());
     }
 
@@ -48,7 +48,7 @@ public class BodyThrowStone : IMonsterState
         int groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
 
 
-        Debug.DrawRay(origin, direction * maxDistance, Color.red, 3f);
+        //Debug.DrawRay(origin, direction * maxDistance, Color.red, 3f);
 
 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, maxDistance, groundLayerMask);

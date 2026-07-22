@@ -25,7 +25,7 @@ public class BodyMove : IMonsterState
     public void Enter()
     {
 
-        Debug.Log("BodyMove 진입");
+        //Debug.Log("BodyMove 진입");
 
         if (_movingCoroutine == null)
         {

@@ -13,9 +13,9 @@ public class TentacleUp : IMonsterState
 
     private Camera _camera;
 
-    // 5초 타이머를 위한 변수
+    // 3 타이머를 위한 변수
     private float _timer;
-    private float _duration = 5f;
+    private float _duration = 3f;
 
 
     private Vector2 _targetOffset;
@@ -71,7 +71,7 @@ public class TentacleUp : IMonsterState
         // 시작 시점의 플레이어 위치 저장
         _prevPlayerPos = _playerTransform.position;
 
-        Debug.Log("TentacleUp");
+        //Debug.Log("TentacleUp");
 
         if (_warningEffect != null)
         {
@@ -129,7 +129,7 @@ public class TentacleUp : IMonsterState
         if (_timer >= _duration)
         {
             _owner.Attack = true;
-            Debug.Log("5초 경과! 촉수 공격 준비 완료 (Attack = true)");
+            //Debug.Log("5초 경과! 촉수 공격 준비 완료 (Attack = true)");
 
 
         }

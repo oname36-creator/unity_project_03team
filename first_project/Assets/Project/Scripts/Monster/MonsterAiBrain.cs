@@ -16,7 +16,7 @@ public class MonsterAiBrain
 
         if (name == "Base")
         {
-            Debug.Log(name);
+            //Debug.Log(name);
             IMonsterState search = new BaseMonsterSearch(owner);
             IMonsterState chase = new BaseMonsterChase(owner);
             IMonsterState attack = new BaseMonsterAttack(owner);
@@ -171,7 +171,7 @@ public class MonsterAiBrain
 
         else if (name == "Bird")
         {
-            Debug.Log(name);
+            //Debug.Log(name);
             IMonsterState search = new FlyMonsterSearch(owner);
             IMonsterState attack = new FlyMonsterAttack(owner);
             IMonsterState re = new FlyMonsterReturn(owner);
@@ -318,7 +318,7 @@ public class MonsterAiBrain
         else if (name == "DarkWolf")
         {
 
-            Debug.Log(name);
+            //Debug.Log(name);
             IMonsterState idle = new DarkWolfIdle(owner);
             IMonsterState walk = new DarkWolfWalk(owner);
             IMonsterState chase = new DarkWolfChase(owner);
@@ -506,7 +506,7 @@ public class MonsterAiBrain
     }
     public static MonsterStateMachine MakeMachine(string name, BossController owner)
     {
-        Debug.Log("BossController");
+        //Debug.Log("BossController");
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
@@ -535,7 +535,7 @@ public class MonsterAiBrain
 
     public static MonsterStateMachine MakeMachine(string name, BodyController owner)
     {
-        Debug.Log("Body");
+        //Debug.Log("Body");
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
@@ -629,7 +629,7 @@ public class MonsterAiBrain
 
     public static MonsterStateMachine MakeMachine(string name, TentacleController owner)
     {
-        Debug.Log("TentacleController");
+        //Debug.Log("TentacleController");
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 

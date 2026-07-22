@@ -205,12 +205,12 @@ public class TentacleController : MonoBehaviour
         _segmentPos = new Vector2[MAX_SEGMENTS];
         _segmentVelocity = new Vector2[MAX_SEGMENTS];
         PrevSegmentLength = segmentLength;
-        Debug.Log("생성");
+        //Debug.Log("생성");
     }
 
     void Start()
     {
-        Debug.Log("Tentacle Start");
+        //Debug.Log("Tentacle Start");
 
         _lineRend.positionCount = segmentLength;
 
@@ -261,7 +261,7 @@ public class TentacleController : MonoBehaviour
     {
         if (isTrap)
         {
-            Debug.Log("Tentacle SetRootPos");
+            //Debug.Log("Tentacle SetRootPos");
             // 초기 위치 세팅
             for (int i = 0; i < segmentLength; i++)
             {
@@ -398,7 +398,7 @@ public class TentacleController : MonoBehaviour
         // MAX_SEGMENTS를 초과하는지 체크 (안전 장치)
         if (segmentLength > MAX_SEGMENTS)
         {
-            Debug.LogError($"Tentacle length {segmentLength} exceeds MAX_SEGMENTS {MAX_SEGMENTS}!");
+            //Debug.LogError($"Tentacle length {segmentLength} exceeds MAX_SEGMENTS {MAX_SEGMENTS}!");
             segmentLength = MAX_SEGMENTS;
         }
 

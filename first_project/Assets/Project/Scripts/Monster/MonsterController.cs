@@ -346,17 +346,11 @@ public class MonsterController : MonoBehaviour
     {
         if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
         {
-           
-            // 일단 float -> int로 
-
-
             _hp -= collision.GetComponent<PlayerAttack>().Damage;
-            Debug.Log("Damage : " + collision.GetComponent<PlayerAttack>().Damage + " hp : " + _hp);
 
             if (_hp <= 0)
             {
                 IsDead = true;
-                Debug.Log("isDead :" + IsDead);
             }
             else
             {
@@ -371,14 +365,6 @@ public class MonsterController : MonoBehaviour
 
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    // 벽 부딪힘 체크
-    //    if (collision.gameObject.CompareTag("Untagged")) 
-    //    {
-    //        isHurt = true;
-    //    }
-    //}
 
     private void CaculateMonsterToPlayerVector()
     {
@@ -425,9 +411,9 @@ public class MonsterController : MonoBehaviour
         RaycastHit2D hitFeet = Physics2D.Raycast(origin, dirToFeet, distToFeet, _obstacleLayer);
 
 
-        Debug.DrawRay(origin, dirToCenter * distToCenter, Color.green);
-        Debug.DrawRay(origin, dirToHead * distToHead, Color.yellow);
-        Debug.DrawRay(origin, dirToFeet * distToFeet, Color.red);
+        //Debug.DrawRay(origin, dirToCenter * distToCenter, Color.green);
+        //Debug.DrawRay(origin, dirToHead * distToHead, Color.yellow);
+        //Debug.DrawRay(origin, dirToFeet * distToFeet, Color.red);
 
         bool isCenterBlocked = hitCenter.collider != null && hitCenter.collider.CompareTag("Ground");
         bool isHeadBlocked = hitHead.collider != null && hitHead.collider.CompareTag("Ground");

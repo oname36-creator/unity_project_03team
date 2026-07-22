@@ -39,7 +39,7 @@ public class TentacleStretch : IMonsterState
         // 촉수의 IK 타겟을 최종 공격 위치로 설정 (발사)
         _owner.IkTargetPosition = _finalAttackPosition;
 
-        Debug.Log($"TentacleStretch: 발사! 목표({_originalTargetPosition}) -> 랜덤 타겟({_finalAttackPosition})");
+        //Debug.Log($"TentacleStretch: 발사! 목표({_originalTargetPosition}) -> 랜덤 타겟({_finalAttackPosition})");
     }
 
     public void Update()

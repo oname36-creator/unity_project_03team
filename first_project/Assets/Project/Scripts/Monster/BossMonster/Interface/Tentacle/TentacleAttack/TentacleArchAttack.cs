@@ -23,7 +23,7 @@ public class TentacleArchAttack : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleArchAttack");
+        //Debug.Log("TentacleArchAttack");
         _owner.isParabola = true;
         _startAngle = _owner.parabolaAngle;
         

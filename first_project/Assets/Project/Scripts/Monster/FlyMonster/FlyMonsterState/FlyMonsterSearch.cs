@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class FlyMonsterSearch : IMonsterState
@@ -27,7 +27,7 @@ public class FlyMonsterSearch : IMonsterState
     {
         _owner.SetExclamationMark(false);
         _owner.SetQuestionMark(true);
-        Debug.Log("Bird : search");
+        //Debug.Log("Bird : search");
 
         _centerPos = _ownerTransform.position;
 
@@ -42,7 +42,7 @@ public class FlyMonsterSearch : IMonsterState
 
     public void Exit()
     {
-        Debug.Log("Bird : searchEnd");
+        //Debug.Log("Bird : searchEnd");
         if (_patrolCoroutine != null)
         {
             _owner.StopCoroutine(_patrolCoroutine);

@@ -25,7 +25,7 @@ public class DarkWolfWalk : IMonsterState
     }
     public void Enter()
     {
-        Debug.Log("DWWalk");
+        //Debug.Log("DWWalk");
         _time = 0f;
         _owner.SetExclamationMark(false);
         _owner.SetQuestionMark(true);
@@ -47,7 +47,7 @@ public class DarkWolfWalk : IMonsterState
         float distance = Vector2.Distance(curPos, _prePos);
         _currentSpeed = distance / Time.deltaTime;
 
-        Debug.Log("속도 : " + _currentSpeed);
+        //Debug.Log("속도 : " + _currentSpeed);
         if (_currentSpeed < 0.01f)
         {
             _time += Time.deltaTime;

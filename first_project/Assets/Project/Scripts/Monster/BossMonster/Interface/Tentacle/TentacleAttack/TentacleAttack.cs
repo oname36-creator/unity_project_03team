@@ -48,7 +48,7 @@ public class TentacleAttack : IMonsterState
 
         if (sqrDistanceToFinalTarget < _reachThreshold * _reachThreshold)
         {
-            Debug.Log("TentacleAttack: 뻗었지만 아무것도 닿지 않음... 회수 시작");
+            //Debug.Log("TentacleAttack: 뻗었지만 아무것도 닿지 않음... 회수 시작");
             _owner.Attack = false;
         }
 

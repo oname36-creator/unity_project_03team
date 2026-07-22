@@ -50,7 +50,7 @@ public class TentacleIdle : IMonsterState
 
         _owner.IkTargetPosition = _owner.tentacleRoot.position;
         _rayDistance = _owner.TentacleLength;
-        Debug.Log("TentacleIdle");
+        //Debug.Log("TentacleIdle");
     }
 
     public void Update()
@@ -79,7 +79,7 @@ public class TentacleIdle : IMonsterState
             _owner.IkTargetPosition = rayOrigin + rayDirection * _fixedLength;
         }
 
-        Debug.DrawRay(rayOrigin, rayDirection * _rayDistance, Color.red);
+        //Debug.DrawRay(rayOrigin, rayDirection * _rayDistance, Color.red);
 
         _raycastTimer += Time.deltaTime;
         if (_raycastTimer >= _raycastInterval)

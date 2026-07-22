@@ -38,7 +38,7 @@ public class TentacleGrabber : MonoBehaviour
             if (Tentacle.Target == hitObj)
             {
                 Tentacle.IsAttach = true;
-                Debug.Log($"TentacleGrabber: 내 타겟 {hitObj.name} 잡기 성공!");
+                //Debug.Log($"TentacleGrabber: 내 타겟 {hitObj.name} 잡기 성공!");
             }
             // 2. 우연히 다른 애를 건드렸는데, 아무도 찜하지 않은 애라면 낚아채기
             else if (!Tentacle.Boss.IsTargeted(hitObj))
@@ -52,7 +52,7 @@ public class TentacleGrabber : MonoBehaviour
                 Tentacle.Boss.AddTarget(hitObj);
 
                 Tentacle.IsAttach = true;
-                Debug.Log($"TentacleGrabber: 지나가다 {hitObj.name} 낚아챔!");
+                //Debug.Log($"TentacleGrabber: 지나가다 {hitObj.name} 낚아챔!");
             }
             // 3. 남이 찜한 애를 건드렸다면 무시하고 통과
         }

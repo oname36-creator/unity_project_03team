@@ -155,7 +155,7 @@ public class BossController : MonoBehaviour
         Application.targetFrameRate = 120;
 
 
-        Debug.Log("BossController Start");
+        //Debug.Log("BossController Start");
         _monsterMachine = MonsterAiBrain.MakeMachine("Boss", this);
     }
 
@@ -193,28 +193,6 @@ public class BossController : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (Chase) { return; }
-
-        if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
-        {
-            IsHurt = true;
-            // 일단 float -> int로 
-
-            PlayerAttack playerAttack = collision.GetComponent<PlayerAttack>();
-            if (playerAttack != null)
-            {
-                _hp -= playerAttack.Damage;
-                Debug.Log("Damage : " + playerAttack.Damage + " hp : " + _hp);
-
-                if (_hp <= 0)
-                {
-                    IsDead = true;
-                }
-            }
-        }
-    }
 
 
 

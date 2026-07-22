@@ -19,7 +19,7 @@ public class TentacleArchUp : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleArchUP");
+        //Debug.Log("TentacleArchUP");
 
         // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거 (레이어 사용 권장)
         _owner.SetLayer(true);

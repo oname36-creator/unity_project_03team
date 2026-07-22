@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// 오브젝트 풀에서 돌(또는 투사체)을 가져와 목표 위치로 던지는 동작을 전담하는 클래스
@@ -56,12 +56,12 @@ public class StoneSpawner : MonoBehaviour
             }
             else
             {
-                Debug.LogError($"[StoneThrower] 가져온 오브젝트({thrown.name})에 BeingThrown 컴포넌트가 없습니다!");
+                //Debug.LogError($"[StoneThrower] 가져온 오브젝트({thrown.name})에 BeingThrown 컴포넌트가 없습니다!");
             }
         }
         else
         {
-            Debug.LogWarning("[StoneThrower] ObjectPoolManager에서 투사체를 가져오지 못했습니다. 풀이 비어있는지 확인하세요.");
+            //Debug.LogWarning("[StoneThrower] ObjectPoolManager에서 투사체를 가져오지 못했습니다. 풀이 비어있는지 확인하세요.");
         }
     }
 }

@@ -23,7 +23,7 @@ public class TentacleReturn : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleTrap Return");
+        //Debug.Log("TentacleTrap Return");
 
         // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거
         _owner.SetLayer(true);

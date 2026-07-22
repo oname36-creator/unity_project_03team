@@ -33,7 +33,7 @@ public class TentacleTrap : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleTrap Enter");
+        //Debug.Log("TentacleTrap Enter");
         _owner.IsReturn = false;
         _owner.Attack = false;
         _owner.IsAttach = false;
