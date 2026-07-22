@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct SCliffTrapNode
+class SCliffTrapNode
 {
     public Vector3 worldPosition;
     public bool isEvaluted;

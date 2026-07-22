@@ -486,6 +486,7 @@ MonoBehaviour:
   cameraBoundaryCollider: {fileID: 4893195698825185968}
   minPlayerDistance: 4
   margin: 2
+  enableYTracking: 0
 --- !u!61 &4893195698825185968
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -520,7 +521,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 7.952505, y: 0}
+  m_Offset: {x: 7.0007, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -530,7 +531,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 47.814816, y: 35}
+  m_Size: {x: 49.718426, y: 35}
   m_EdgeRadius: 0
 --- !u!114 &1250181568549747832
 MonoBehaviour:
@@ -550,6 +551,7 @@ MonoBehaviour:
   minSpawnInterval: 3
   birdHeightOffset: 3.5
   cameraMargin: 1
+  minSpawnStartXOffset: 5
 --- !u!1 &4329006572359026784
 GameObject:
   m_ObjectHideFlags: 0
