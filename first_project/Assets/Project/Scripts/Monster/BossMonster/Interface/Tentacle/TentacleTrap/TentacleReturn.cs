@@ -23,9 +23,10 @@ public class TentacleReturn : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleTrap Return");
+        //Debug.Log("TentacleTrap Return");
 
-        _owner.tag = "Boss";
+        // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거
+        _owner.SetLayer(true);
 
         _rootPos = _owner.RootPos;
         _targetPos = _owner.IkTargetPosition; // 현재 하늘에 있는 촉수 끝 위치에서 시작
@@ -54,10 +55,10 @@ public class TentacleReturn : IMonsterState
         _owner.segmentDistance -= _shrinkSpeed * dt;
 
         // 4. 바닥에 거의 다 내려왔거나, 마디가 완전히 쪼그라들었으면 종료
-        float distanceToRoot = Vector2.Distance(_targetPos, _rootPos);
+        float sqrDistanceToRoot = (_targetPos - _rootPos).sqrMagnitude;
 
         // Debug.Log("rootPos: " + _rootPos + ", targetPos: " + _targetPos + " distance : " + distanceToRoot);
-        if (distanceToRoot < 0.5f || _owner.segmentDistance < 0.1f)
+        if (sqrDistanceToRoot < 0.25f || _owner.segmentDistance < 0.1f)
         {
             _owner.isTrap = false;
         }

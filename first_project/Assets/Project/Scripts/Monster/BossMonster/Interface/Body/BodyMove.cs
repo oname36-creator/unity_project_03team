@@ -5,6 +5,7 @@ public class BodyMove : IMonsterState
 {
     private BodyController _owner;
     private Transform _ownerTransform;
+    private Transform _playerTransform;
     private Rigidbody2D _rigidbody2D;
     private float _timeCounter = 0f;
     private float _prevCounter = 0f;
@@ -18,12 +19,13 @@ public class BodyMove : IMonsterState
         _movingCoroutine = null;
         _ownerTransform = _owner.GetComponent<Transform>();
         _rigidbody2D = _owner.GetComponent<Rigidbody2D>();
+        _playerTransform = _owner.Boss.Player.transform;
     }
 
     public void Enter()
     {
 
-        Debug.Log("BodyMove 진입");
+        //Debug.Log("BodyMove 진입");
 
         if (_movingCoroutine == null)
         {
@@ -52,22 +54,24 @@ public class BodyMove : IMonsterState
 
     IEnumerator Move()
     {
+
+
         while (true)
         {
             _timeCounter += Time.deltaTime;
 
-            Vector2 forwardDir = _owner.Boss.Front;
+            Vector2 forwardDir = ((Vector2)_playerTransform.position - (Vector2)_owner.transform.position).normalized;
+
             Vector2 perpDir = new Vector2(-forwardDir.y, forwardDir.x);
             float currentSpeed = _owner.MoveSpeed;
-            
+
             float sineSpeed = Mathf.Cos(_timeCounter * _owner.SineFrequency) * _owner.SineAmplitude * _owner.SineFrequency;
             Vector2 sineVelocity = perpDir * sineSpeed;
 
-            // 보스의 인트로 연출 상태 예외 처리
-            if(_owner.Boss != null && _owner.Boss.isIntro)
+            if (_owner.Boss != null && _owner.Boss.isIntro)
             {
                 float distanceToPlayer = _owner.Distance;
-                if(distanceToPlayer <= _owner.Boss.introSafeDistance)
+                if (distanceToPlayer <= _owner.Boss.introSafeDistance)
                 {
                     currentSpeed = 0;
                 }
@@ -76,11 +80,14 @@ public class BodyMove : IMonsterState
                     currentSpeed = _owner.MoveSpeed * _owner.Boss.introSpeedMultiplier;
                 }
 
-                // 인트로 중에는 웨이브 차단
                 sineVelocity = Vector2.zero;
             }
-            Vector2 forwardVelocity = forwardDir * _owner.MoveSpeed;
+
+            Vector2 forwardVelocity = forwardDir * currentSpeed;
+
             _rigidbody2D.linearVelocity = forwardVelocity + sineVelocity;
+
+            _timeCounter += Time.deltaTime;
 
             if (_timeCounter > _owner.TentacleCycle + _prevCounter)
             {

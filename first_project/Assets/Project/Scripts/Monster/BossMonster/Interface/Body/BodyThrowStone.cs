@@ -17,6 +17,7 @@ public class BodyThrowStone : IMonsterState
     {
         _owner = owner;
         _playerTransform = _owner.Boss.Player.transform;
+
         _targetPosition = Vector3.zero;
     }
 
@@ -27,7 +28,9 @@ public class BodyThrowStone : IMonsterState
             _owner.Throw = false;
             return;
         }
-        Debug.Log("Throw");
+
+        _targetPosition = _playerTransform.position + new Vector3(20f, 0f, 0f);
+
         _throwCoroutine = _owner.StartCoroutine(ThrowRoutine());
     }
 
@@ -39,35 +42,10 @@ public class BodyThrowStone : IMonsterState
     {
 
     }
-    private void GetGroundObjectRight()
-    {
-        Vector2 origin = (Vector2)_playerTransform.position + Vector2.up * 1.0f;
-        Vector2 direction = ((Vector2)_playerTransform.right + Vector2.down).normalized;
-
-        float maxDistance = 50f;
-        int groundLayerMask = 1 << LayerMask.NameToLayer("Ground");
-
-
-        Debug.DrawRay(origin, direction * maxDistance, Color.red, 3f);
-
-
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, maxDistance, groundLayerMask);
-
-        if (hit.collider != null)
-        {
-            GameObject hitGroundObj = hit.collider.gameObject;
-            _targetPosition = hitGroundObj.transform.position;
-        }
-        else
-        {
-            _targetPosition = Vector3.zero;
-        }
-    }
 
     private IEnumerator ThrowRoutine()
     {
         yield return new WaitForSeconds(_owner.ThrowCycle);
-        GetGroundObjectRight();
 
         if (_targetPosition != Vector3.zero)
         {
@@ -82,5 +60,4 @@ public class BodyThrowStone : IMonsterState
 
         _throwCoroutine = null;
     }
-
 }

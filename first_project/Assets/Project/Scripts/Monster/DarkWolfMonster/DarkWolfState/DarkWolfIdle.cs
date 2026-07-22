@@ -19,7 +19,7 @@ public class DarkWolfIdle : IMonsterState
     }
     public void Enter()
     {
-        Debug.Log("DWIdle");
+        //Debug.Log("DWIdle");
         _owner.SetExclamationMark(false);
         _owner.SetQuestionMark(true);
 

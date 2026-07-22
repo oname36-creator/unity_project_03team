@@ -28,6 +28,9 @@ public class MapManager : MonoBehaviour
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
 
+    [Header("오브젝트 풀 설정")]
+    [SerializeField] private int initialChunkPoolSize = 2;
+
     [SerializeField] private int currentLogicalPhase = -1;
     public int CurrentLogicalPhase => currentLogicalPhase;
     public static System.Action OnMapReady;
@@ -137,7 +140,7 @@ public class MapManager : MonoBehaviour
         nextSpawnPosition = SpawnMap(nextPrefab, nextSpawnPosition);
 
         // 2. 맵 수거 로직(거리 계산X, 화면에 맵 3개 이상 깔려있으면 제일 뒤에것 자르기)
-        if (activeMaps.Count > 3)
+        if (activeMaps.Count > 2)
         {
             RecycleOldMap();
         }
@@ -179,22 +182,42 @@ public class MapManager : MonoBehaviour
     #region InitPool
     private void InitializationPools()
     {
+
         // 안전지대 바구니 생성
-        mapPools.Add(safeZonePrefab, new Queue<GameObject>());
+        CreateAndEnqueuePool(safeZonePrefab, initialChunkPoolSize);
         // 모든 페이즈 맵들을 미리 세팅
         foreach(var phase in phases)
         {
+            if (phase.phasePalette == null || phase.phasePalette.chunkPrefabs == null) continue;
+
             foreach(var prefab in phase.phasePalette.chunkPrefabs)
             {
+                if (prefab == null) return;
                 // 중복 방지
                 if(!mapPools.ContainsKey(prefab))
                 {
-                    mapPools.Add(prefab, new Queue<GameObject>());
+                    CreateAndEnqueuePool(prefab, initialChunkPoolSize);
                 }
             }
         }
     }
     #endregion
+
+    private void CreateAndEnqueuePool(GameObject prefab, int count)
+    {
+        if (!mapPools.ContainsKey(prefab))
+        {
+            mapPools.Add(prefab, new Queue<GameObject>());
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            GameObject mapObj = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            mapObj.name = prefab.name;
+            mapObj.SetActive(false);
+            mapPools[prefab].Enqueue(mapObj);
+        }
+    }
 
     #region Spawn & GetCreate
     // 특정 맵 강제 스폰

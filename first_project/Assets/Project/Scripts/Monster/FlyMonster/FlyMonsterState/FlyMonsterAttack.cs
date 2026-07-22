@@ -27,7 +27,7 @@ public class FlyMonsterAttack : IMonsterState
 
         if (_isPaused)
         {
-            Debug.Log($"<color=orange>[Attack 재개]</color> 멈췄던 위치: {_owner.transform.position} | 남은 시간: {_duration - _timePassed}초");
+            //Debug.Log($"<color=orange>[Attack 재개]</color> 멈췄던 위치: {_owner.transform.position} | 남은 시간: {_duration - _timePassed}초");
             _isPaused = false;
             _attackCoroutine = _owner.StartCoroutine(AttackRoutine());
             return;
@@ -41,7 +41,7 @@ public class FlyMonsterAttack : IMonsterState
 
         float distance = Vector2.Distance(_originalStartPos, _playerPos);
         _duration = distance / _owner.MaxSpeed;
-        Debug.Log($"<color=cyan>[Attack 최초 진입]</color> 시작점: {_originalStartPos} | 최종 목표점(플레이어): {_playerPos} | 총 비행시간: {_duration}초");
+        //Debug.Log($"<color=cyan>[Attack 최초 진입]</color> 시작점: {_originalStartPos} | 최종 목표점(플레이어): {_playerPos} | 총 비행시간: {_duration}초");
         _attackCoroutine = _owner.StartCoroutine(AttackRoutine());
 
         SoundManager.Instance.PlaySFX("BirdAttack");
@@ -56,12 +56,12 @@ public class FlyMonsterAttack : IMonsterState
             _owner.StopCoroutine(_attackCoroutine);
             _attackCoroutine = null;
             _isPaused = true; // 다친 상태로 나갔으므로 일시정지 True
-            Debug.Log($"<color=red>[Attack 중단 (Hurt)]</color> 강제 정지된 위치: {_owner.transform.position} | 목표까지 남은 거리: {Vector2.Distance(_owner.transform.position, _playerPos)}");
+            //Debug.Log($"<color=red>[Attack 중단 (Hurt)]</color> 강제 정지된 위치: {_owner.transform.position} | 목표까지 남은 거리: {Vector2.Distance(_owner.transform.position, _playerPos)}");
         }
         else
         {
             _isPaused = false;
-            Debug.Log($"<color=green>[Attack 완료]</color> 최종 도달 위치: {_owner.transform.position} (오차: {Vector2.Distance(_owner.transform.position, _playerPos)})");
+            //Debug.Log($"<color=green>[Attack 완료]</color> 최종 도달 위치: {_owner.transform.position} (오차: {Vector2.Distance(_owner.transform.position, _playerPos)})");
         }
     }
 
@@ -91,7 +91,7 @@ public class FlyMonsterAttack : IMonsterState
             // [디버그 3] (선택사항) 특정 구간마다 텍스트 로그 출력 (프레임 저하 방지를 위해 10% 단위로 출력)
             if (Mathf.RoundToInt(t * 100) % 10 == 0)
             {
-                 Debug.Log($"[이동 중 {Mathf.RoundToInt(t * 100)}%] 계산된 다음 위치: {nextPos} | 몬스터 실제 위치: {_owner.transform.position}");
+                 //Debug.Log($"[이동 중 {Mathf.RoundToInt(t * 100)}%] 계산된 다음 위치: {nextPos} | 몬스터 실제 위치: {_owner.transform.position}");
             }
 
             yield return new WaitForFixedUpdate();

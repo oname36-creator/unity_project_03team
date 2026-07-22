@@ -189,7 +189,7 @@ Transform:
   m_GameObject: {fileID: 4378881}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.6, y: 2, z: -10}
+  m_LocalPosition: {x: 23.24, y: -3.21, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -314,11 +314,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.6
+      value: 23.24
       objectReference: {fileID: 0}
     - target: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: -3.21
       objectReference: {fileID: 0}
     - target: {fileID: 1776045808466989046, guid: e59c000bc1a23fc41ac492f2c0c4e040, type: 3}
       propertyPath: m_LocalPosition.z
@@ -453,7 +453,7 @@ Transform:
   m_GameObject: {fileID: 435886632}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.6, y: 2, z: -10}
+  m_LocalPosition: {x: 23.24, y: -3.21, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -535,67 +535,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!1001 &1246061700
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 38118555834177091, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: spawnSetting
-      value: 
-      objectReference: {fileID: 11400000, guid: 5fc6a03f1b3406846b95ed9b90855b70, type: 2}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 14.299712
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.63339716
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7511406161714308295, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8673428918492383135, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
-      propertyPath: m_Name
-      value: Level3_A
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8561310d876b590478c613c6f7da2f83, type: 3}
 --- !u!1 &1906901332
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,7 +579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07e3ef01751d904795c71238b548537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapBaker
-  mapData: {fileID: 11400000, guid: db0e03929adf77f4282a7d4d84ba72f3, type: 2}
+  mapData: {fileID: 11400000, guid: cb167f9015e707346ae3a92f51923a2c, type: 2}
   paintedObjectSource: {fileID: 0}
   bakeSettings:
   - groupName: "\uD568\uC815"
@@ -738,4 +677,3 @@ SceneRoots:
   - {fileID: 425215554}
   - {fileID: 1991389318}
   - {fileID: 153791306}
-  - {fileID: 1246061700}

@@ -17,7 +17,7 @@ public class ItemEffectApplicator : MonoBehaviour
     {
         if (data == null) return;
 
-        Debug.Log($"{data.itemName} 효과 발동!");
+        //Debug.Log($"{data.itemName} 효과 발동!");
 
         switch (data.effectType)
         {
@@ -42,7 +42,7 @@ public class ItemEffectApplicator : MonoBehaviour
 
     public void ExecuteItemEffectByID(int itemNumber)
     {
-        Debug.Log($"ItemEffectApplicator: {itemNumber}번 아이템 효과 실행");
+        //Debug.Log($"ItemEffectApplicator: {itemNumber}번 아이템 효과 실행");
 
         switch (itemNumber)
         {
@@ -61,9 +61,8 @@ public class ItemEffectApplicator : MonoBehaviour
             case 3:
                 if (status != null && !status.hasSword)
                 {
-                   
-                    status.EnableSwordBuff(50f, 6);
-                    Debug.Log(" 검 장착 완료! 6회 공격 가능.");
+                    status.EnableSwordBuff(15f, 2.0f, 6);
+                    //Debug.Log("⚔️ 검 장착 완료! 6회 공격 가능.");
                 }
                 break;
 
@@ -71,12 +70,12 @@ public class ItemEffectApplicator : MonoBehaviour
                 if (status != null && !status.hasGun)
                 {
                     status.EnableGunBuff(6);
-                    Debug.Log(" 총기 버프 활성화 완료! 이제 J키로 발사 가능.");
+                    //Debug.Log("🔫 총기 버프 활성화 완료! 이제 J키로 발사 가능.");
                 }
                 break;
 
             default:
-                Debug.LogWarning($"정의되지 않은 아이템 번호입니다: {itemNumber}");
+                //Debug.LogWarning($"정의되지 않은 아이템 번호입니다: {itemNumber}");
                 break;
         }
     }
@@ -101,6 +100,6 @@ public class ItemEffectApplicator : MonoBehaviour
             playerSprite.color = new Color(1f, 1f, 1f, 1f);
         }
 
-        Debug.Log("은신 및 은신 무적 종료!");
+        //Debug.Log("은신 및 은신 무적 종료!");
     }
 }

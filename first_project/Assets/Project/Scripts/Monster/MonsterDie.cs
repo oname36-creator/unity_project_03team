@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class MonsterDie : IMonsterState
 {
@@ -18,7 +18,7 @@ public class MonsterDie : IMonsterState
     }
     public void Enter()
     {
-        Debug.Log("Die 상태");
+        //Debug.Log("Die 상태");
         _ownerGameObject.tag = "Untagged";
         _ownerGameObject.layer = LayerMask.NameToLayer("Default");
         _animator.SetBool(AnimatorHash.Idle, false);

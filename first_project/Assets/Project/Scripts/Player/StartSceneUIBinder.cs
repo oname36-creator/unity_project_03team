@@ -28,7 +28,7 @@ public class StartSceneUIBinder : MonoBehaviour
             }
 
             SoundManager.Instance.PlayBGM("StartSceneBGM");
-            Debug.Log("메인 화면 버튼들이 SceneManagerEx 싱글톤에 코드로 자동 연동되었습니다.");
+            //Debug.Log("메인 화면 버튼들이 SceneManagerEx 싱글톤에 코드로 자동 연동되었습니다.");
         }
         else
         {

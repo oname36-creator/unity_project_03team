@@ -18,4 +18,9 @@ public class PlayerScroll : MonoBehaviour
         _playerTransform.position += Vector3.right * scrollSpeed * Time.deltaTime;
     }
 
+    public void CreditEnd() 
+    {
+        scrollSpeed = 1f;
+    }
+
 }

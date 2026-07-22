@@ -345,7 +345,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             if (Time.time < lastAttackTime + attackCooldown)
             {
-                Debug.Log($"공격 쿨타임 중입니다! 남은 시간: {(lastAttackTime + attackCooldown) - Time.time:F2}초");
+                //Debug.Log($"공격 쿨타임 중입니다! 남은 시간: {(lastAttackTime + attackCooldown) - Time.time:F2}초");
                 return;
             }
 
@@ -370,7 +370,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                     SoundManager.Instance.PlaySFX("_SwordSound");
                     animator.SetTrigger("OnSwordAttack");
                 }
-                Debug.Log("검 공격 발동! (검 히트박스 활성화)");
+                //Debug.Log("검 공격 발동! (검 히트박스 활성화)");
                 StartCoroutine(SwordAttackHitboxRoutine());
                 status.OnSwordAttackExecute();
                 return;
@@ -381,7 +381,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 animator.SetTrigger("OnAttack");
             }
 
-            Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
+            //Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
             StartCoroutine(AttackHitboxRoutine());
             status.OnAttackExecute();
         }
@@ -402,7 +402,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 case "3": DataManager.Instance.UseItemSlot(2); break;
                 case "4": DataManager.Instance.UseItemSlot(3); break;
                 default:
-                    Debug.Log($"지정되지 않은 키 입력: {pressedKey}");
+                    //Debug.Log($"지정되지 않은 키 입력: {pressedKey}");
                     break;
             }
         }
@@ -416,7 +416,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 if (status != null)
                 {
                     status.ChangeHp(50f);
-                    Debug.Log($"빨간포션 사용! 현재 체력: {status.currentHp}");
+                    //Debug.Log($"빨간포션 사용! 현재 체력: {status.currentHp}");
                 }
                 break;
 
@@ -428,7 +428,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 break;
 
             default:
-                Debug.LogWarning($"아직 효과가 정의되지 않은 아이템 번호입니다: {itemNumber}");
+                //Debug.LogWarning($"아직 효과가 정의되지 않은 아이템 번호입니다: {itemNumber}");
                 break;
         }
     }
@@ -479,7 +479,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             status.ChangeHp(-10f);
             if (DataManager.Instance != null) DataManager.Instance.PlayerHp = (int)status.currentHp;
 
-            Debug.Log($" [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
+            //Debug.Log($" [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
 
             if (!status.isDead)
             {
@@ -539,6 +539,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (sr != null) sr.color = Color.white;
 
         status.isInvincible = false;
+        //Debug.Log("무적 상태 종료! 완벽하게 안전화 완료.");
     }
     private System.Collections.IEnumerator AttackHitboxRoutine()
     {
@@ -559,6 +560,8 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         yield return new WaitForSeconds(0.5f);
 
         if (status == null || status.isDead || Time.timeScale == 0f) yield break;
+
+        //Debug.Log("총기 발사!");
 
         Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
         GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);

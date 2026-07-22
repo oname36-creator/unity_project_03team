@@ -100,15 +100,10 @@ public class BeingThrown : MonoBehaviour
 
             SoundManager.Instance.PlaySFX(boomKey);
             _first = false;
+            Vector2 contactPoint = collision.GetContact(0).point;
+
+            SetUpEffect(contactPoint);
         }
-
-        
-        Vector2 contactPoint = collision.GetContact(0).point;
-
-        SetUpEffect(contactPoint);
-
-
-        _rigidBody.gravityScale *= 2;
     }
 
     public void InitializeThrow(Vector2 targetPos)

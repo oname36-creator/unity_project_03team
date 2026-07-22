@@ -44,8 +44,10 @@ public class TentacleController : MonoBehaviour
     private LineRenderer _lineRend;
     private EdgeCollider2D _edgeCollider;
 
+    private const int MAX_SEGMENTS = 30;
     private Vector2[] _segmentPos;
     private Vector2[] _segmentVelocity;
+    private List<Vector2> _colliderPoints = new List<Vector2>();
 
     public Vector2 IkTargetPosition { get; set; }
 
@@ -109,7 +111,6 @@ public class TentacleController : MonoBehaviour
 
     public GameObject Target { get; set; }
 
-    public float? GroundLimitY { get; set; } = null;
     
     public bool IsGroundHit { get; set; } = false;
 
@@ -166,8 +167,6 @@ public class TentacleController : MonoBehaviour
             IkTargetPosition = tentacleRoot.position;
         }
 
-        // 상태 머신 재초기화
-        _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
     private void OnDisable()
@@ -203,15 +202,15 @@ public class TentacleController : MonoBehaviour
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
 
-        _segmentPos = new Vector2[segmentLength];
-        _segmentVelocity = new Vector2[segmentLength];
+        _segmentPos = new Vector2[MAX_SEGMENTS];
+        _segmentVelocity = new Vector2[MAX_SEGMENTS];
         PrevSegmentLength = segmentLength;
-        Debug.Log("생성");
+        //Debug.Log("생성");
     }
 
     void Start()
     {
-        Debug.Log("Tentacle Start");
+        //Debug.Log("Tentacle Start");
 
         _lineRend.positionCount = segmentLength;
 
@@ -225,6 +224,8 @@ public class TentacleController : MonoBehaviour
             }
             IkTargetPosition = tentacleRoot.position;
         }
+
+        _monsterMachine = MonsterAiBrain.MakeMachine("BossTentacle", this);
     }
 
     void Update()
@@ -260,7 +261,7 @@ public class TentacleController : MonoBehaviour
     {
         if (isTrap)
         {
-            Debug.Log("Tentacle SetRootPos");
+            //Debug.Log("Tentacle SetRootPos");
             // 초기 위치 세팅
             for (int i = 0; i < segmentLength; i++)
             {
@@ -286,18 +287,19 @@ public class TentacleController : MonoBehaviour
             _segmentPos[segmentLength - 1] = basePosition; // 루트 위치 고정
 
             float currentX = 0f;
+            float parabolaASqr4 = 4f * parabolaA * parabolaA;
+            Quaternion rotation = Quaternion.Euler(0, 0, parabolaAngle);
+
             for (int i = segmentLength - 2; i >= 0; i--)
             {
                 float prevX = currentX;
                 // y = ax^2 곡선 위에서 거리가 segmentDistance가 되도록 x를 증가
-                float dx = segmentDistance / Mathf.Sqrt(1f + 4f * parabolaA * parabolaA * prevX * prevX);
+                float dx = segmentDistance / Mathf.Sqrt(1f + parabolaASqr4 * prevX * prevX);
                 currentX += dx;
 
                 float currentY = parabolaA * currentX * currentX;
 
                 Vector2 localPos = new Vector2(currentX, currentY);
-
-                Quaternion rotation = Quaternion.Euler(0, 0, parabolaAngle);
                 Vector2 rotatedPos = rotation * localPos;
 
                 _segmentPos[i] = basePosition + rotatedPos;
@@ -324,21 +326,13 @@ public class TentacleController : MonoBehaviour
             // [Phase 1] Backward Reaching (끝단 -> 루트 방향)
             // ==========================================
             _segmentPos[0] = targetPos;
-            if (GroundLimitY.HasValue)
-            {
-                _segmentPos[0].y = Mathf.Max(_segmentPos[0].y, GroundLimitY.Value);
-            }
+
 
             for (int i = 1; i < segmentLength; i++)
             {
                 Vector2 dir = (_segmentPos[i] - _segmentPos[i - 1]).normalized;
 
                 _segmentPos[i] = _segmentPos[i - 1] + dir * segmentDistance;
-
-                if (GroundLimitY.HasValue)
-                {
-                    _segmentPos[i].y = Mathf.Max(_segmentPos[i].y, GroundLimitY.Value);
-                }
             }
 
             // ==========================================
@@ -352,11 +346,6 @@ public class TentacleController : MonoBehaviour
                 Vector2 dir = (_segmentPos[i] - _segmentPos[i + 1]).normalized;
 
                 _segmentPos[i] = _segmentPos[i + 1] + dir * segmentDistance;
-
-                if (GroundLimitY.HasValue)
-                {
-                    _segmentPos[i].y = Mathf.Max(_segmentPos[i].y, GroundLimitY.Value);
-                }
 
             }
         }
@@ -384,13 +373,13 @@ public class TentacleController : MonoBehaviour
     private void UpdateColliders()
     {
         // LineRenderer의 점들을 EdgeCollider2D에 복사하여 몸통 물리 충돌 구현
-        List<Vector2> colliderPoints = new List<Vector2>();
+        _colliderPoints.Clear();
         for (int i = 0; i < segmentLength; i++)
         {
             // 콜라이더는 로컬 좌표 기준이므로 변환 필요
-            colliderPoints.Add(transform.InverseTransformPoint(_segmentPos[i]));
+            _colliderPoints.Add(transform.InverseTransformPoint(_segmentPos[i]));
         }
-        _edgeCollider.SetPoints(colliderPoints);
+        _edgeCollider.SetPoints(_colliderPoints);
     }
 
     public void UpdateSegmentLength(int newLength)
@@ -406,28 +395,18 @@ public class TentacleController : MonoBehaviour
             _lineRend.positionCount = segmentLength;
         }
 
-        // 새 길이의 배열 생성
-        Vector2[] newPos = new Vector2[segmentLength];
-        Vector2[] newVel = new Vector2[segmentLength];
-
-        for (int i = 0; i < segmentLength; i++)
+        // MAX_SEGMENTS를 초과하는지 체크 (안전 장치)
+        if (segmentLength > MAX_SEGMENTS)
         {
-            if (i < oldLength && _segmentPos != null)
-            {
-                // 기존 위치 데이터가 있으면 그대로 복사
-                newPos[i] = _segmentPos[i];
-                newVel[i] = _segmentVelocity[i];
-            }
-            else
-            {
-                // 새로 늘어난 마디들은 루트 위치로 초기화
-                newPos[i] = tentacleRoot != null ? (Vector2)tentacleRoot.position : Vector2.zero;
-            }
+            //Debug.LogError($"Tentacle length {segmentLength} exceeds MAX_SEGMENTS {MAX_SEGMENTS}!");
+            segmentLength = MAX_SEGMENTS;
         }
 
-        // 기존 배열을 새 배열로 덮어쓰기
-        _segmentPos = newPos;
-        _segmentVelocity = newVel;
+        // 새로 늘어난 마디들에 대해서만 위치 초기화
+        for (int i = oldLength; i < segmentLength; i++)
+        {
+            _segmentPos[i] = tentacleRoot != null ? (Vector2)tentacleRoot.position : Vector2.zero;
+        }
     }
 
     public Vector2 GetSegmentPos(int index)
@@ -456,8 +435,22 @@ public class TentacleController : MonoBehaviour
                 }
             }
         }
-
-
     }
+
+    public void SetLayer(bool tentacle) 
+    {
+        //Boss  = 11
+        // Tentacle = 12
+
+        if (tentacle) 
+        {
+            gameObject.layer = 12;
+        }
+        else 
+        {
+            gameObject.layer = 11;
+        }
+    }
+
 
 }

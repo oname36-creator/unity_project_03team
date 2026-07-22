@@ -19,9 +19,12 @@ public class TentacleArchUp : IMonsterState
 
     public void Enter()
     {
-        Debug.Log("TentacleArchUP");
+        //Debug.Log("TentacleArchUP");
 
-        _owner.tag = "Boss";
+        // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거 (레이어 사용 권장)
+        _owner.SetLayer(true);
+
+
 
         _owner.segmentDistance = 0.5f;
         
@@ -31,7 +34,6 @@ public class TentacleArchUp : IMonsterState
         _owner.parabolaA = 0.03f; // 완만한 곡선
         _owner.parabolaAngle = 30f; // 약간 뒤로 젖힌 상태에서 시작
         
-        _owner.GroundLimitY = null;
         _owner.Target = null;
         _owner.Attack = false;
 
@@ -41,23 +43,19 @@ public class TentacleArchUp : IMonsterState
         Vector3 viewportTopRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, 0));
         Vector2 rayStart = new Vector2(viewportTopRight.x, viewportTopRight.y + 5f);
         
-        RaycastHit2D[] hits = Physics2D.RaycastAll(rayStart, Vector2.down, 100f);
+        int groundLayer = LayerMask.GetMask("Ground");
+        RaycastHit2D hit = Physics2D.Raycast(rayStart, Vector2.down, 100f, groundLayer);
         Vector2 targetPos = _owner.Boss.Player.transform.position; // 기본값
         
-        foreach (var hit in hits)
+        if (hit.collider != null)
         {
-            if (hit.collider.CompareTag("Ground"))
-            {
-                targetPos = hit.point + new Vector2(0, 2f);
-                break;
-            }
+            targetPos = hit.point + new Vector2(0, 2f);
         }
 
+        _owner.UpdateSegmentLength(20);
 
         float dist = Vector2.Distance(_owner.tentacleRoot.position, targetPos);
-        int requiredSegments = Mathf.CeilToInt((dist * 1.3f) / _owner.segmentDistance);
-        _owner.UpdateSegmentLength(Mathf.Max(requiredSegments, 35));
-
+        _owner.segmentDistance = (dist * 1.3f) / 20f;
 
         if (_warningEffect != null)
         {
@@ -85,7 +83,8 @@ public class TentacleArchUp : IMonsterState
     {
         _timer += Time.deltaTime;
         float t = Mathf.Clamp01(_timer / _duration);
-        float easeOutT = 1f - Mathf.Pow(1f - t, 3f); 
+        float invT = 1f - t;
+        float easeOutT = 1f - (invT * invT * invT); 
         _owner.parabolaAngle = Mathf.Lerp(45f, -20f, easeOutT);
 
         if (_warningEffect != null && _warningEffect.gameObject.activeSelf)

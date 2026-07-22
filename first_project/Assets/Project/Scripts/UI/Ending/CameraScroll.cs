@@ -19,5 +19,8 @@ public class CameraScrol : MonoBehaviour
         _cameraTransform.position += Vector3.right * scrollSpeed * Time.deltaTime;
     }
 
-
+    public void CreditEnd()
+    {
+        scrollSpeed = 0;
+    }
 }

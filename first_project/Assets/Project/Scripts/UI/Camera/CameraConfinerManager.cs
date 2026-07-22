@@ -10,19 +10,18 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     [SerializeField] private CinemachineCamera virtualCameraA;
     [SerializeField] private CinemachineCamera virtualCameraB;
 
-    [Header("수직 전용")]
-    [SerializeField] private CinemachineCamera virtualCameraC;
-    [SerializeField] private CinemachineCamera virtualCameraD;
+    [Header("Orthographic Size 설정")]
+    [SerializeField] private float normalOrthoSize = 5f;
+    [SerializeField] private float yTrackingOrthoSize = 7.5f;
+    [Header("DeadZone Y 설정")]
+    [SerializeField] private float normalDeadZoneY = 0.8f;
+    [SerializeField] private float yTrackingDeadZoneY = 0.2f;
 
     private CinemachineConfiner2D confinerA;
     private CinemachineConfiner2D confinerB;
-    private CinemachineConfiner2D confinerC;
-    private CinemachineConfiner2D confinerD;
 
     private CinemachinePositionComposer positionComposerA;
     private CinemachinePositionComposer positionComposerB;
-    private CinemachinePositionComposer positionComposerC;
-    private CinemachinePositionComposer positionComposerD;
 
     private Coroutine _yTrackingCoroutineA;  // 처음 y축 보정 제어용 변수
     private Coroutine _yTrackingCoroutineB;
@@ -69,17 +68,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
             confinerB = virtualCameraB.GetComponent<CinemachineConfiner2D>();
             positionComposerB = virtualCameraB.GetComponent<CinemachinePositionComposer>();
         }
-        if (virtualCameraC != null)
-        {
-            confinerC = virtualCameraC.GetComponent<CinemachineConfiner2D>();
-            positionComposerC = virtualCameraC.GetComponent<CinemachinePositionComposer>();
-        }
-
-        if (virtualCameraD != null)
-        {
-            confinerD = virtualCameraD.GetComponent<CinemachineConfiner2D>();
-            positionComposerD = virtualCameraD.GetComponent<CinemachinePositionComposer>();
-        }
+        
     }
     #endregion
 
@@ -89,41 +78,33 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// </summary>
     public void UpdateBoundary(Collider2D newBoundary, bool enableYTracking)
     {
-        if(confinerA == null || confinerB == null || confinerC == null || confinerD == null)
+        if (confinerA == null || confinerB == null)
         {
             InitCameraReferences();
         }
-
-        if(newBoundary == null)
+        if (newBoundary == null)
         {
             Debug.LogWarning("전달된 새로운 카메라 바운더리 콜라이더가 null입니다.");
             return;
         }
-
-        // 중복 호출 방지: 이미 적용된 바운더리와 같다면 처리를 무시합니다.
-        if (newBoundary == _currentBoundary)
-        {
-            return;
-        }
-
+        if (newBoundary == _currentBoundary) return;
         _currentBoundary = newBoundary;
-
         IsYTrackingActive = enableYTracking;
-
-        Debug.Log($"[UpdateBoundary] 호출됨. 새로운 바운더리: {newBoundary.gameObject.name}, 현재 사용중인 카메라: {(_isUsingCameraA ? "Camera A" : "Camera B")}");
-
-        if(enableYTracking)
+        // Y축 옵션 여부에 따라 Ortho Size와 DeadZone Y 결정
+        float targetOrthoSize = enableYTracking ? yTrackingOrthoSize : normalOrthoSize;
+        float targetDeadZoneY = enableYTracking ? yTrackingDeadZoneY : normalDeadZoneY;
+        // A/B 핑퐁 전환
+        if (_isUsingCameraA)
         {
-            TransitionToYCameraGroup(newBoundary);
+            ActivateCameraAndDeactivateOthers(virtualCameraA, confinerA, newBoundary, targetOrthoSize, targetDeadZoneY, positionComposerA);
+            _isUsingCameraA = false;
         }
         else
         {
-            TransitionToNormalCameraGroup(newBoundary);
+            ActivateCameraAndDeactivateOthers(virtualCameraB, confinerB, newBoundary, targetOrthoSize, targetDeadZoneY, positionComposerB);
+            _isUsingCameraA = true;
         }
-        
-        
     }
-
 
     #endregion
 
@@ -133,26 +114,26 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// 우선 순위를 낮춥니다.
     /// </summary>
 
-    private void ActivateCameraAndDeactivateOthers(CinemachineCamera targetCamera, CinemachineConfiner2D targetConfiner, Collider2D boundary, float targetDeadZoneY, CinemachinePositionComposer composer)
+    private void ActivateCameraAndDeactivateOthers(CinemachineCamera targetCamera, CinemachineConfiner2D targetConfiner, Collider2D boundary, float targetOrthoSize, float targetDeadZoneY, CinemachinePositionComposer composer)
     {
         if (targetCamera == null || targetConfiner == null) return;
-        // 대기 중인 카메라의 바운더리만 업데이트
+        // 1. 바운더리 할당
         targetConfiner.BoundingShape2D = boundary;
         targetConfiner.InvalidateBoundingShapeCache();
-
-        // 전환되어 사용할 카메라 B의 Y축 데드존을 항상 영구 고정 상태로 지정
+        // 2. Lens Orthographic Size 설정 (Cinemachine 3.x)
+        var lens = targetCamera.Lens;
+        lens.OrthographicSize = targetOrthoSize;
+        targetCamera.Lens = lens;
+        // 3. Y축 데드존 설정
         if (composer != null)
         {
             SetDeadZoneY(composer, targetDeadZoneY);
         }
-
-        // 우선순위를 전환하여 CinemachineBrain이 두 가상 카메라 간의 Blending을 수행하도록 유도
+        // 4. 우선순위 교차 전환 (targetCamera는 15, 비활성은 10)
         targetCamera.Priority = 15;
-
-        // 우선순위가 낮은 카메라의 바운더리를 해제
         if (virtualCameraA != null && virtualCameraA != targetCamera)
         {
-            virtualCameraA.Priority = 15;
+            virtualCameraA.Priority = 10;
             if (confinerA != null)
             {
                 confinerA.BoundingShape2D = null;
@@ -166,24 +147,6 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
             {
                 confinerB.BoundingShape2D = null;
                 confinerB.InvalidateBoundingShapeCache();
-            }
-        }
-        if (virtualCameraC != null && virtualCameraC != targetCamera)
-        {
-            virtualCameraC.Priority = 10;
-            if (confinerC != null)
-            {
-                confinerC.BoundingShape2D = null;
-                confinerC.InvalidateBoundingShapeCache();
-            }
-        }
-        if (virtualCameraD != null && virtualCameraD != targetCamera)
-        {
-            virtualCameraD.Priority = 10;
-            if (confinerD != null)
-            {
-                confinerD.BoundingShape2D = null;
-                confinerD.InvalidateBoundingShapeCache();
             }
         }
     }
@@ -236,45 +199,6 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
         deadZoneSettings.Size = new Vector2(deadZoneSettings.Size.x, deadZoneY);
         composition.DeadZone = deadZoneSettings;
         composer.Composition = composition;
-    }
-    #endregion
-
-    #region Camera A,B
-    /// <summary>
-    /// 일반 수평 카메라 그룹(A, B)으로 전환하거나 내부에서 블렌딩합니다.
-    /// </summary>
-    private void TransitionToNormalCameraGroup(Collider2D newBoundary)
-    {
-        if (_isUsingCameraA)
-        {
-            // A 카메라 활성화
-            ActivateCameraAndDeactivateOthers(virtualCameraA, confinerA, newBoundary, 0.8f, positionComposerA);
-            _isUsingCameraA = false;
-        }
-        else
-        {
-            // A 카메라 활성화
-            ActivateCameraAndDeactivateOthers(virtualCameraB, confinerB, newBoundary, 0.8f, positionComposerB);
-            _isUsingCameraA = true;
-        }
-        _wasUsingYCameraGroup = false;
-    }
-    #endregion
-
-    #region Camera C,D
-    private void TransitionToYCameraGroup(Collider2D newBoundary)
-    {
-        if(_isUsingCameraC)
-        {
-            ActivateCameraAndDeactivateOthers(virtualCameraC, confinerC, newBoundary, 0.2f, positionComposerC);
-            _isUsingCameraC = false;
-        }
-        else
-        {
-            ActivateCameraAndDeactivateOthers(virtualCameraD, confinerD, newBoundary, 0.2f, positionComposerD);
-            _isUsingCameraC = true;
-        }
-        _wasUsingYCameraGroup = true;
     }
     #endregion
    
