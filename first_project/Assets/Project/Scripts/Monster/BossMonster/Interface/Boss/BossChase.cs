@@ -124,8 +124,8 @@ public class BossChase : IMonsterState
 
     IEnumerator Phase()
     {
-        //WaitForSeconds waitTime = new WaitForSeconds(61f);
-        WaitForSeconds waitTime = new WaitForSeconds(10f);
+        WaitForSeconds waitTime = new WaitForSeconds(61f);
+        //WaitForSeconds waitTime = new WaitForSeconds(10f);
 
         while (true)
         {

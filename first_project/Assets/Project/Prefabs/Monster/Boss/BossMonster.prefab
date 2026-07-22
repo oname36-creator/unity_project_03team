@@ -189,10 +189,9 @@ MonoBehaviour:
   BossDistanceTransform: {fileID: 0}
   BossDistanceText: {fileID: 0}
   Canvas: {fileID: 0}
-  _bossSound: {fileID: 8300000, guid: 9c50a15e16a05b4459b24771528dc482, type: 3}
-  _bossScreechSound: {fileID: 8300000, guid: abb80f47ec2d05d43b4540add26871f4, type: 3}
-  _bossTrapAttackSound: {fileID: 8300000, guid: 030173f4d1749204db153c70da9dd792, type: 3}
-  _bossAttack: {fileID: 8300000, guid: bb903115180b2ea4c916b9e90b2ea0ab, type: 3}
+  isIntro: 0
+  introSpeedMultiplier: 0.25
+  introSafeDistance: 5
 --- !u!114 &2281844050526658213
 MonoBehaviour:
   m_ObjectHideFlags: 0
