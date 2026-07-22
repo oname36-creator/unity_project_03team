@@ -20,6 +20,10 @@ public class TentacleArchUp : IMonsterState
     public void Enter()
     {
         Debug.Log("TentacleArchUP");
+
+        _owner.tag = "Boss";
+
+        _owner.segmentDistance = 0.5f;
         
         // 포물선 제어 모드 활성화 (isArch 유지)
         _owner.isArch = true;
@@ -33,7 +37,7 @@ public class TentacleArchUp : IMonsterState
 
         _timer = 0f;
 
-        // 1. 카메라 가장 오른쪽 Ground 찾기
+
         Vector3 viewportTopRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, 0));
         Vector2 rayStart = new Vector2(viewportTopRight.x, viewportTopRight.y + 5f);
         
@@ -49,16 +53,27 @@ public class TentacleArchUp : IMonsterState
             }
         }
 
-        // 2. 촉수 길이 맞추기 (루트에서 타겟까지의 거리를 기반으로 여유분 1.3배)
+
         float dist = Vector2.Distance(_owner.tentacleRoot.position, targetPos);
         int requiredSegments = Mathf.CeilToInt((dist * 1.3f) / _owner.segmentDistance);
         _owner.UpdateSegmentLength(Mathf.Max(requiredSegments, 35));
 
-        // 3. 경고 이펙트 위치 설정
+
         if (_warningEffect != null)
         {
-            _warningEffect.transform.position = targetPos;
+
+            Vector2 effectPos = (targetPos + (Vector2)_owner.tentacleRoot.position) / 2f;
+            effectPos.x += 10;
+            _warningEffect.transform.position = effectPos;
             
+            float spriteWidth = _warningEffect.sprite.bounds.size.x;
+            if (spriteWidth > 0f)
+            {
+                Vector3 currentScale = _warningEffect.transform.localScale;
+                currentScale.x = (dist)/ spriteWidth;
+                _warningEffect.transform.localScale = currentScale;
+            }
+
             _warningEffect.gameObject.SetActive(true);
             Color color = _warningEffect.color;
             color.a = 0f;
@@ -70,7 +85,7 @@ public class TentacleArchUp : IMonsterState
     {
         _timer += Time.deltaTime;
         float t = Mathf.Clamp01(_timer / _duration);
-        float easeOutT = 1f - Mathf.Pow(1f - t, 3f); // 45도(뒤로 많이 젖혀짐)에서 -20도(앞으로 더 기울어짐)로 연출
+        float easeOutT = 1f - Mathf.Pow(1f - t, 3f); 
         _owner.parabolaAngle = Mathf.Lerp(45f, -20f, easeOutT);
 
         if (_warningEffect != null && _warningEffect.gameObject.activeSelf)

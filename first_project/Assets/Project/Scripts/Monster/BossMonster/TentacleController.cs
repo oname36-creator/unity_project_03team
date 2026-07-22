@@ -16,17 +16,6 @@ public class TentacleController : MonoBehaviour
     // FABRIK 연산 반복 횟수 (보통 2~3회면 충분히 자연스럽게 수렴)
     public int iterations = 3;
 
-    [Range(0f, 180f)]
-    public float maxBendAngle = 25f; // 각 마디 사이의 최대 꺾임 각도 (작을수록 뻣뻣해짐)
-
-    [Header("Elbow Constraint")]
-    [Range(-180f, 180f)]
-    public float minBendAngle = 0f;
-    [Range(-180f, 180f)]
-    public float elbowMaxBendAngle = 180f;
-
-    [Header("Whip Physics")]
-    public float tailGravity = 30f;
 
 
     [Header("Components")]
@@ -43,7 +32,7 @@ public class TentacleController : MonoBehaviour
 
     [Header("Parabola Attack (Arch)")]
     public bool isParabola = false;
-    public float parabolaA = 0.05f; // y = ax^2 의 a 값
+    public float parabolaA = 0.1f; // y = ax^2 의 a 값
     public float parabolaAngle = 0f; // 회전 각도 (도 단위)
 
     [Header("Trap")]
@@ -213,7 +202,7 @@ public class TentacleController : MonoBehaviour
         _lineRend = GetComponent<LineRenderer>();
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
-        // 외부(Boss)에서 SetRootPos 등을 호출하기 전에 배열이 무조건 준비되어 있도록 여기서 생성!
+
         _segmentPos = new Vector2[segmentLength];
         _segmentVelocity = new Vector2[segmentLength];
         PrevSegmentLength = segmentLength;
@@ -225,9 +214,6 @@ public class TentacleController : MonoBehaviour
         Debug.Log("Tentacle Start");
 
         _lineRend.positionCount = segmentLength;
-
-        IsAttackTentacle = false;
-        Attack = false;
 
         tentacleRoot = Boss.transform;
         if (tentacleRoot != null && !Target)
@@ -309,7 +295,6 @@ public class TentacleController : MonoBehaviour
 
                 float currentY = parabolaA * currentX * currentX;
 
-                // 로컬 좌표 (1사분면)
                 Vector2 localPos = new Vector2(currentX, currentY);
 
                 Quaternion rotation = Quaternion.Euler(0, 0, parabolaAngle);

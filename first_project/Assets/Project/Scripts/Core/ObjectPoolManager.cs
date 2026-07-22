@@ -26,6 +26,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
     [Header("Effect Prefab")]
     [SerializeField] private GameObject _dustEffectPrefab;
+    [SerializeField] private GameObject _bigDustEffectPrefab;
     [SerializeField] private GameObject _slashEffectPrefab;
     [SerializeField] private GameObject _smokeEffectPrefab;
     [SerializeField] private GameObject _smokeBurstEffectPrefab;
@@ -49,6 +50,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _monsterDarkWolfPool = new Queue<GameObject>();
     private Queue<GameObject> _tentaclePool = new Queue<GameObject>();
     private Queue<GameObject> _dustEffectPool = new Queue<GameObject>();
+    private Queue<GameObject> _bigDustEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _slashEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _smokeEffectPool = new Queue<GameObject>();
     private Queue<GameObject> _smokeBurstEffectPool = new Queue<GameObject>();
@@ -109,6 +111,15 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             obj.SetActive(false); // 비활성화 상태로 대기
             _dustEffectPool.Enqueue(obj); // 리스트에 추가
         }
+        
+        // Big Dust Effect 생성
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject obj = Instantiate(_bigDustEffectPrefab, this.transform);
+            obj.SetActive(false); // 비활성화 상태로 대기
+            _bigDustEffectPool.Enqueue(obj); // 리스트에 추가
+        }
+
         // slash Effect 생성
         for (int i = 0; i < 500; i++)
         {
@@ -272,6 +283,17 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         return null;
     }
 
+    public GameObject BigDustEffectPop()
+    {
+        if (_bigDustEffectPool.Count > 0)
+        {
+            GameObject obj = _bigDustEffectPool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        return null;
+    }
+
     public GameObject SlashEffectPop()
     {
         if (_slashEffectPool.Count > 0)
@@ -380,6 +402,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         obj.SetActive(false);
         _dustEffectPool.Enqueue(obj);
     }
+
+    public void BigDustEffectPush(GameObject obj)
+    {
+        if (obj == null) return;
+        obj.SetActive(false);
+        _bigDustEffectPool.Enqueue(obj);
+    }
+
 
     public void SlashEffectPush(GameObject obj)
     {

@@ -545,10 +545,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db722735c8cba94ba1175d002409c2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  _startSceneBGM: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
-  _gameSceneBGM: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
-  _endingSceneBGM: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
-  _creditBGM: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
+  _audiobgmList: []
+  _audioSfxList: []
   masterBgmVolume: 1
   masterSfxVolume: 1
 --- !u!1001 &1612265193

@@ -63,13 +63,19 @@ public class TentacleGrabber : MonoBehaviour
             Vector2 hitPoint = other.ClosestPoint(transform.position);
 
             // 2. 이펙트 생성 및 위치 설정
-            GameObject obj = ObjectPoolManager.Instance.DustEffectPop();
-            obj.transform.position = hitPoint;
+            GameObject obj;
+            
 
             if (Tentacle.isArch)
             {
                 Tentacle.IsGroundHit = true;
+                obj = ObjectPoolManager.Instance.BigDustEffectPop();
             }
+            else 
+            {
+                obj = ObjectPoolManager.Instance.DustEffectPop();
+            }
+            obj.transform.position = hitPoint;
         }
     }
 }
