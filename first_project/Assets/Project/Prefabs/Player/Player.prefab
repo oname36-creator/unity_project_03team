@@ -211,7 +211,7 @@ MonoBehaviour:
   jumpCount: 1
   JumpForce: 17
   MoveSpeed: 5
-  footstepInterval: 0.35
+  footstepInterval: 0.5
   aerialDampingAmount: 0.5
   attackBoxSize: {x: 1.5, y: 1}
   enemyTag: Monster
@@ -285,7 +285,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
   baseDamage: 50
-  baseAttackRange: 1.5
   maxHp: 100
   currentHp: 100
   isStealth: 0
@@ -600,7 +599,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 3, y: 3}
   m_EdgeRadius: 0
 --- !u!114 &2247244940205066773
 MonoBehaviour:
@@ -614,7 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63810fb23164791479d54f074ad0848b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  hitStopManager: {fileID: 0}
+  hitStopManager: {fileID: 4562835588813731039, guid: 84035fc0ba7a3bf4c835a4ea4619eaa8, type: 3}
   hitStopDuration: 0.07
   hitEffectPrefab: {fileID: 3610882451772401995, guid: daeb7e02dd9aa924580f0c98d7cf6373, type: 3}
   effectDestroyTime: 0.5
