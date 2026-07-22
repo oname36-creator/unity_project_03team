@@ -15,7 +15,8 @@ public class EndingManager : MonoBehaviour
 
 
     [Header("Ending Image & END Text")]
-    [SerializeField] private float endingImageDuration = 8f; // 엔딩 이미지 유지 시간 (8초)
+    [SerializeField] private float runingDuration = 8f; // 엔딩 이미지 유지 시간 (8초)
+    [SerializeField] private float endingImageDuration = 4f; // 엔딩 이미지 유지 시간 (8초)
     [SerializeField] private float fadeDuration = 1f; // 페이드 인/아웃 시간
 
     [Header("Scene Transition")]
@@ -62,7 +63,7 @@ public class EndingManager : MonoBehaviour
         }
 
         // 2. 크레딧 서서히 사라짐 & 엔딩 이미지 페이드 인
-        yield return new WaitForSeconds(endingImageDuration);
+        yield return new WaitForSeconds(runingDuration);
         yield return StartCoroutine(FadeCanvasGroup(endingImageCanvasGroup, 0f, 1f, fadeDuration));
 
         // 3. 엔딩 이미지 8초간 유지
