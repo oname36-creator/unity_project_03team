@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -228,36 +228,17 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         currentMoveX *= status.speedMultiplier;
 
-
         float platformXVelocity = 0f;
-        float platformYVelocity = 0f;
 
-        if (transform.parent != null && transform.parent.TryGetComponent<MovingPlatform>(out var platform))
+        if (transform.parent != null)
         {
-            platformXVelocity = platform.Velocity.x;
-            platformYVelocity = platform.Velocity.y;
+            if (transform.parent.TryGetComponent<MovingPlatform>(out var platform))
+            {
+                platformXVelocity = platform.Velocity.x;
+            }
         }
 
-        // 기본 X축 속도 처리
-        if (status.isGrounded && transform.parent != null && Mathf.Abs(moveInput.x) < 0.01f)
-        {
-            currentMoveX = platformXVelocity;
-        }
-        else
-        {
-            currentMoveX += platformXVelocity;
-        }
-
-        // Y축 속도 처리: 
-        // 플레이어의 Y 속도가 위쪽을 향하고 있다면(점프를 시작한 상태라면) 발판 Y속도로 덮어씌우지 않고 원래 Y속도(currentVelocityY)를 유지합니다.
-        float finalVelocityY = currentVelocityY;
-
-        if (status.isGrounded && transform.parent != null && currentVelocityY <= 0.1f)
-        {
-            finalVelocityY = platformYVelocity;
-        }
-
-        rb.linearVelocity = new Vector2(currentMoveX, finalVelocityY);
+        rb.linearVelocity = new Vector2(currentMoveX + platformXVelocity, currentVelocityY);
     }
 
     public void SetActivePlatform(MovingPlatform platform)
@@ -303,7 +284,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        
+
         moveInput = context.ReadValue<Vector2>();
     }
 
@@ -620,3 +601,4 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         status.OnGunAttackExecute();
     }
 }
+*/

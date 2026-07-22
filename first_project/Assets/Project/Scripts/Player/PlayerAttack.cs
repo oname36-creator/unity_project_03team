@@ -52,6 +52,7 @@ public class PlayerAttack : MonoBehaviour
             // 2. 피격 이펙트 생성 (이제 히트 스톱 에러에 막히지 않고 무조건 실행됩니다)
             if (hitEffectPrefab != null)
             {
+                SoundManager.Instance.PlaySFX("_AttackSound");
                 Vector2 hitPoint = collision.ClosestPoint(transform.position);
                 GameObject effect = Instantiate(hitEffectPrefab, hitPoint, Quaternion.identity);
                 Destroy(effect, effectDestroyTime);

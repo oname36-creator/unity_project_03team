@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement; 
 
 public class InGameSceneManager : MonoBehaviour
@@ -36,8 +37,16 @@ public class InGameSceneManager : MonoBehaviour
             }
         }
     }
+    void Update()
+    {
+        // New Input System 키보드 감지
+        if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            // 기존에 작성해두신 재시작 버튼 로직을 그대로 실행합니다.
+            Btn_Restart();
+        }
+    }
 
-    
     public void Btn_Resume()
     {
         if (SceneManagerEx.Instance != null)
