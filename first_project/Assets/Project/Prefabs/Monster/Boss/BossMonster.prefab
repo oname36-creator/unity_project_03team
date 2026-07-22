@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2274197408966221438}
   - component: {fileID: 5153171314910747342}
   - component: {fileID: 2281844050526658213}
+  - component: {fileID: 366792973829716425}
   m_Layer: 11
   m_Name: BossMonster
   m_TagString: Boss
@@ -211,6 +212,52 @@ MonoBehaviour:
   Boss: {fileID: 5153171314910747342}
   ReleaseDistance: 3
   CreatedArch: 0
+--- !u!61 &366792973829716425
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783070123909900463}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 1.8923112, y: 0.34405804}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 7.4, y: 7.4}
+    newSize: {x: 7.4, y: 7.4}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.97761035, y: 16.689531}
+  m_EdgeRadius: 0
 --- !u!1 &7507414855285883472
 GameObject:
   m_ObjectHideFlags: 0

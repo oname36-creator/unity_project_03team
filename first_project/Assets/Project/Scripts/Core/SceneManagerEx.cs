@@ -75,6 +75,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         if (gameOverUI != null)
         {
             gameOverUI.SetActive(true); // 사망 창 켜기
+            SoundManager.Instance.PauseBGM();
         }
         Debug.Log("게임 오버 UI 활성화");
     }

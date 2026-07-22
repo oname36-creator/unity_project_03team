@@ -52,10 +52,8 @@ public class TentacleArchUp : IMonsterState
             targetPos = hit.point + new Vector2(0, 2f);
         }
 
-        _owner.UpdateSegmentLength(20);
-
         float dist = Vector2.Distance(_owner.tentacleRoot.position, targetPos);
-        _owner.segmentDistance = (dist * 1.3f) / 20f;
+        _owner.segmentDistance = (dist * 1.3f) / (float)_owner.segmentLength;
 
         if (_warningEffect != null)
         {
