@@ -211,12 +211,13 @@ MonoBehaviour:
   jumpCount: 1
   JumpForce: 17
   MoveSpeed: 5
+  footstepInterval: 0.35
   aerialDampingAmount: 0.5
   attackBoxSize: {x: 1.5, y: 1}
   enemyTag: Monster
   muzzlePoint: {fileID: 3821617474522254589}
   groundCheckPoint: {fileID: 6601625070466968001}
-  groundCheckSize: {x: 0.6, y: 0.1}
+  groundCheckSize: {x: 0.6, y: 0.2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8

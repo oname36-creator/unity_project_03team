@@ -175,7 +175,6 @@ MonoBehaviour:
   _throwDistance: 20
   _chargeTime: 3
   _throwPower: 20
-  _boomAudio: {fileID: 8300000, guid: 6f36bc5d299c50b4fa9513b8f4f61fdd, type: 3}
   _name: Stone
   _impulseSource: {fileID: 2350401580376007880}
 --- !u!114 &2350401580376007880
@@ -199,7 +198,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    ImpulseDuration: 0.4
+    ImpulseDuration: 0.2
     ImpulseType: 0
     DissipationRate: 0.25
     RawSignal: {fileID: 0}
@@ -230,7 +229,7 @@ MonoBehaviour:
     DissipationMode: 2
     DissipationDistance: 100
     PropagationSpeed: 343
-  DefaultVelocity: {x: -1, y: -2, z: 0}
+  DefaultVelocity: {x: 0, y: -1, z: 0}
 --- !u!1001 &2445778689175730585
 PrefabInstance:
   m_ObjectHideFlags: 0

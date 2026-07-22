@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 8605132341848190822}
   - component: {fileID: 7534983489579280427}
   - component: {fileID: 7429868794620763351}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,6 +264,7 @@ MonoBehaviour:
   cameraBoundaryCollider: {fileID: 9055564499590521829}
   minPlayerDistance: 4
   margin: 2
+  enableYTracking: 0
 --- !u!61 &9055564499590521829
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -328,6 +329,7 @@ MonoBehaviour:
   minSpawnInterval: 3
   birdHeightOffset: 3.5
   cameraMargin: 1
+  minSpawnStartXOffset: 5
 --- !u!1 &7069546432705180196
 GameObject:
   m_ObjectHideFlags: 0

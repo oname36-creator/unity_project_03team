@@ -123,6 +123,7 @@ public class MapManager : MonoBehaviour
         {
             currentLogicalPhase = newLogicalPhase;
             Debug.Log("[MapManager] : 논리적 페이즈 변경됨");
+            MapEvent.onRequestPhase?.Invoke(currentLogicalPhase + 1);
         }
     }
     #endregion
