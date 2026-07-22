@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -62,7 +62,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float originalScaleX;
     private float originalScaleY;
-    private readonly Collider2D[] groundCheckResults = new Collider2D[1];
+
     void Start()
     {
     }
@@ -176,10 +176,9 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         if (groundCheckPoint != null)
         {
-            int count = Physics2D.OverlapBoxNonAlloc(groundCheckPoint.position, groundCheckSize, 0f, groundCheckResults, groundLayer);
-            status.isGrounded = count > 0;
+            status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
         }
-        
+
         if (status.isGrounded)
         {
             jumpCount = 0;
@@ -229,36 +228,17 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         currentMoveX *= status.speedMultiplier;
 
-
         float platformXVelocity = 0f;
-        float platformYVelocity = 0f;
 
-        if (transform.parent != null && transform.parent.TryGetComponent<MovingPlatform>(out var platform))
+        if (transform.parent != null)
         {
-            platformXVelocity = platform.Velocity.x;
-            platformYVelocity = platform.Velocity.y;
+            if (transform.parent.TryGetComponent<MovingPlatform>(out var platform))
+            {
+                platformXVelocity = platform.Velocity.x;
+            }
         }
 
-        // 기본 X축 속도 처리
-        if (status.isGrounded && transform.parent != null && Mathf.Abs(moveInput.x) < 0.01f)
-        {
-            currentMoveX = platformXVelocity;
-        }
-        else
-        {
-            currentMoveX += platformXVelocity;
-        }
-
-        // Y축 속도 처리: 
-        // 플레이어의 Y 속도가 위쪽을 향하고 있다면(점프를 시작한 상태라면) 발판 Y속도로 덮어씌우지 않고 원래 Y속도(currentVelocityY)를 유지합니다.
-        float finalVelocityY = currentVelocityY;
-
-        if (status.isGrounded && transform.parent != null && currentVelocityY <= 0.1f)
-        {
-            finalVelocityY = platformYVelocity;
-        }
-
-        rb.linearVelocity = new Vector2(currentMoveX, finalVelocityY);
+        rb.linearVelocity = new Vector2(currentMoveX + platformXVelocity, currentVelocityY);
     }
 
     public void SetActivePlatform(MovingPlatform platform)
@@ -304,7 +284,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        
+
         moveInput = context.ReadValue<Vector2>();
     }
 
@@ -345,7 +325,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
             if (Time.time < lastAttackTime + attackCooldown)
             {
-                //Debug.Log($"공격 쿨타임 중입니다! 남은 시간: {(lastAttackTime + attackCooldown) - Time.time:F2}초");
+                Debug.Log($"공격 쿨타임 중입니다! 남은 시간: {(lastAttackTime + attackCooldown) - Time.time:F2}초");
                 return;
             }
 
@@ -370,7 +350,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                     SoundManager.Instance.PlaySFX("_SwordSound");
                     animator.SetTrigger("OnSwordAttack");
                 }
-                //Debug.Log("검 공격 발동! (검 히트박스 활성화)");
+                Debug.Log("검 공격 발동! (검 히트박스 활성화)");
                 StartCoroutine(SwordAttackHitboxRoutine());
                 status.OnSwordAttackExecute();
                 return;
@@ -381,7 +361,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 animator.SetTrigger("OnAttack");
             }
 
-            //Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
+            Debug.Log("맨손 공격 발동! (기본 히트박스 활성화)");
             StartCoroutine(AttackHitboxRoutine());
             status.OnAttackExecute();
         }
@@ -402,7 +382,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 case "3": DataManager.Instance.UseItemSlot(2); break;
                 case "4": DataManager.Instance.UseItemSlot(3); break;
                 default:
-                    //Debug.Log($"지정되지 않은 키 입력: {pressedKey}");
+                    Debug.Log($"지정되지 않은 키 입력: {pressedKey}");
                     break;
             }
         }
@@ -416,7 +396,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 if (status != null)
                 {
                     status.ChangeHp(50f);
-                    //Debug.Log($"빨간포션 사용! 현재 체력: {status.currentHp}");
+                    Debug.Log($"빨간포션 사용! 현재 체력: {status.currentHp}");
                 }
                 break;
 
@@ -428,7 +408,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
                 break;
 
             default:
-                //Debug.LogWarning($"아직 효과가 정의되지 않은 아이템 번호입니다: {itemNumber}");
+                Debug.LogWarning($"아직 효과가 정의되지 않은 아이템 번호입니다: {itemNumber}");
                 break;
         }
     }
@@ -479,7 +459,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             status.ChangeHp(-10f);
             if (DataManager.Instance != null) DataManager.Instance.PlayerHp = (int)status.currentHp;
 
-            //Debug.Log($" [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
+            Debug.Log($" [진짜 피격] 플레이어 몸통이 피격당함. 현재 HP: {status.currentHp}");
 
             if (!status.isDead)
             {
@@ -505,11 +485,25 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         _currentPlatformTransform = null;
 
+        Collider2D myCollider = GetComponent<Collider2D>();
+        if (myCollider != null)
+        {
+            myCollider.enabled = false;
+        }
+
         if (rb != null)
         {
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
-            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.1f, JumpForce * 0.05f), ForceMode2D.Impulse);
+
+            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.2f, JumpForce * 0.1f), ForceMode2D.Impulse);
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        if (myCollider != null)
+        {
+            myCollider.enabled = true;
         }
 
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
@@ -536,23 +530,55 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
 
-        if (sr != null) sr.color = Color.white;
+        if (sr != null)
+        {
+            sr.color = Color.white;
+        }
 
         status.isInvincible = false;
-        //Debug.Log("무적 상태 종료! 완벽하게 안전화 완료.");
+        Debug.Log("무적 상태 종료! 완벽하게 안전화 완료.");
     }
+
     private System.Collections.IEnumerator AttackHitboxRoutine()
     {
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            true
+        );
+
         if (attackHitboxObj != null) attackHitboxObj.SetActive(true);
+
         yield return new WaitForSeconds(0.3f);
+
         if (attackHitboxObj != null) attackHitboxObj.SetActive(false);
+
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            false
+        );
     }
 
     private System.Collections.IEnumerator SwordAttackHitboxRoutine()
     {
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            true
+        );
+
         if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(true);
+
         yield return new WaitForSeconds(0.3f);
+
         if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(false);
+
+        Physics2D.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Monster"),
+            false
+        );
     }
 
     private System.Collections.IEnumerator GunAttackRoutine()
@@ -561,7 +587,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         if (status == null || status.isDead || Time.timeScale == 0f) yield break;
 
-        //Debug.Log("총기 발사!");
+        Debug.Log("총기 발사!");
 
         Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
         GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
@@ -574,5 +600,5 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.OnGunAttackExecute();
     }
-
 }
+*/
