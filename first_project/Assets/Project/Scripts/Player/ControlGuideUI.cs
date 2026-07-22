@@ -26,7 +26,7 @@ public class ControlGuide : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Guide Canvas Group이 지정되지 않았습니다! 인스펙터를 확인하세요.");
+            //Debug.LogWarning("Guide Canvas Group이 지정되지 않았습니다! 인스펙터를 확인하세요.");
         }
     }
 

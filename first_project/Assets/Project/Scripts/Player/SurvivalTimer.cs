@@ -56,7 +56,7 @@ public class SurvivalTimer : MonoBehaviour
     void TriggerGameClear()
     {
         isGameOver = true;
-        Debug.Log("🎉 3분 버티기 성공! 게임 클리어!");
+        //Debug.Log("🎉 3분 버티기 성공! 게임 클리어!");
 
         //  [안전장치] 플레이어가 클리어 시점에 죽거나 맞지 않도록 안전하게 만듭니다.
         PlayerControll player = FindAnyObjectByType<PlayerControll>();

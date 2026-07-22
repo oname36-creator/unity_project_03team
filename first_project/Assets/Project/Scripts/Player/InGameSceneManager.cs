@@ -51,7 +51,7 @@ public class InGameSceneManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("GameStartScene");
-        Debug.Log("첫 화면 씬으로 이동 완료!");
+        //Debug.Log("첫 화면 씬으로 이동 완료!");
     }
 
     public void Btn_Restart()

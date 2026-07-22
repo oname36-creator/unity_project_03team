@@ -37,7 +37,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Monster"))
         {
-            Debug.Log($"⚔️ [타격 성공] {collision.name}에게 {Damage} 대미지를 꽂았습니다!");
+            //Debug.Log($"⚔️ [타격 성공] {collision.name}에게 {Damage} 대미지를 꽂았습니다!");
 
             // 1. 히트 스톱 실행 (오브젝트가 존재하고, '활성화'되어 있을 때만 실행)
             if (hitStopManager != null && hitStopManager.gameObject.activeInHierarchy)
@@ -46,7 +46,7 @@ public class PlayerAttack : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("HitStopManager가 인스펙터에 없거나 비활성화 상태입니다. 히트스톱을 건너뜁니다.");
+                //Debug.LogWarning("HitStopManager가 인스펙터에 없거나 비활성화 상태입니다. 히트스톱을 건너뜁니다.");
             }
 
             // 2. 피격 이펙트 생성 (이제 히트 스톱 에러에 막히지 않고 무조건 실행됩니다)

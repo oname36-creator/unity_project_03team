@@ -38,14 +38,14 @@ public class Bullet : MonoBehaviour
         // PlayerControll에서 사용한 enemyTag("Monster")와 일치시킵니다.
         if (collision.CompareTag("Monster"))
         {
-            Debug.Log($"총알 적중: {collision.name}");
+            //Debug.Log($"총알 적중: {collision.name}");
 
            
             ObjectPoolManager.Instance.ReturnBullet(gameObject);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Debug.Log("벽이나 바닥에 부딪혀 총알 소멸");
+            //Debug.Log("벽이나 바닥에 부딪혀 총알 소멸");
             ObjectPoolManager.Instance.ReturnBullet(gameObject);
         }
        

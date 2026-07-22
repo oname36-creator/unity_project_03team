@@ -136,7 +136,7 @@ public class PlaySceneEndingCredits : MonoBehaviour
 
     private void OnCreditsFinished()
     {
-        Debug.Log("엔딩 연출 완료! 버튼 표시");
+        //Debug.Log("엔딩 연출 완료! 버튼 표시");
         if (finishButtonsGroup != null)
         {
             finishButtonsGroup.SetActive(true);

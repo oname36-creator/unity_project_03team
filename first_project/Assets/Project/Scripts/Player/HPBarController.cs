@@ -23,7 +23,7 @@ public class HPBarController : MonoBehaviour
             {
                 hpSlider.value = DataManager.Instance.PlayerHp;
                 UpdateHPBarColor();
-                Debug.Log($"[HP UI OnEnable] 씬 로드 즉시 체력 주입: {DataManager.Instance.PlayerHp}");
+                //Debug.Log($"[HP UI OnEnable] 씬 로드 즉시 체력 주입: {DataManager.Instance.PlayerHp}");
             }
         }
     }
