@@ -3069,7 +3069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d09aeb107d85bb44b140605052479ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalTimer
-  targetSurvivalTime: 10
+  targetSurvivalTime: 183
   timerText: {fileID: 218164005}
 --- !u!4 &2099972570
 Transform:
