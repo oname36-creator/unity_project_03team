@@ -5,9 +5,6 @@ using UnityEngine;
 public class MonsterBullet : MonoBehaviour
 {
 
-    [Header("Audio Clip")]
-    [SerializeField] private AudioClip _boomClip;
-
 
     private Vector2 _startPos;
     private Vector2 _moveDir;
@@ -34,7 +31,6 @@ public class MonsterBullet : MonoBehaviour
 
     public void Start()
     {
-        SoundManager.Instance.AddSfx("SlimBoom", _boomClip, 0.2f);
     }
 
 

@@ -10,7 +10,7 @@ public class TentacleArchAttack : IMonsterState
 
 
     private float _startAngle;
-    private float _rotationSpeed = 120f; // 내려찍는 회전 속도
+    private float _rotationSpeed = 60f; // 내려찍는 회전 속도
     private float _shrinkSpeed = 1.5f;   // 수축하는 속도
     private bool _hitGround = false;
     private float _waitTimer = 0f;

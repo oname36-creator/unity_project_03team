@@ -138,7 +138,7 @@ public class BossChase : IMonsterState
             }
 
 
-            //_owner.MoveSpeed += 2.5f;
+            _owner.MoveSpeed += 2.5f;
 
             ++_owner.Phase;
             Debug.Log("페이즈 : "  + _owner.Phase);
