@@ -39,7 +39,6 @@ public class BossController : MonoBehaviour
 
     #endregion
 
-    public event Action<int> OnPhaseChanged;
 
     #region Private Fields
     private int _hp;
@@ -112,18 +111,7 @@ public class BossController : MonoBehaviour
 
     public bool IsAttackTentacle { get; set; }
 
-    public int Phase
-    {
-        get { return _phase; }
-        set
-        {
-            if (_phase != value)
-            {
-                _phase = value;
-                OnPhaseChanged?.Invoke(_phase); 
-            }
-        }
-    }
+
 
 
     public Vector3 Front 

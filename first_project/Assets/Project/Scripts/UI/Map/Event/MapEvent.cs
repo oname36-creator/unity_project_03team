@@ -13,4 +13,7 @@ public static class MapEvent
 
     // 상자 스폰 생성(좌표, 보상아이템 목록, 콜백)
     public static Action<Vector3, SOMapPhaseSpawnSetting, Action<GameObject>> onRequestBoxSpawn;
+
+    // 페이즈 데이터
+    public static Action<int> onRequestPhase;
 }
