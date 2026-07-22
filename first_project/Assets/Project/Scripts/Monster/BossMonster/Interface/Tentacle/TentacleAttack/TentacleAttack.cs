@@ -26,7 +26,7 @@ public class TentacleAttack : IMonsterState
     }
     public void Enter()
     {
-        _owner.UpdateSegmentLength(_owner.PrevSegmentLength + 5);
+        _owner.UpdateSegmentLength(20);
         _targetPos = _playerTransform.position;
         _targetPos.y -= _playerRadius;
 
@@ -44,9 +44,9 @@ public class TentacleAttack : IMonsterState
             return;
         }
 
-        float distanceToFinalTarget = Vector2.Distance(_owner.GetGrabber.position, _targetPos);
+        float sqrDistanceToFinalTarget = (_owner.GetGrabber.position - _targetPos).sqrMagnitude;
 
-        if (distanceToFinalTarget < _reachThreshold)
+        if (sqrDistanceToFinalTarget < _reachThreshold * _reachThreshold)
         {
             Debug.Log("TentacleAttack: 뻗었지만 아무것도 닿지 않음... 회수 시작");
             _owner.Attack = false;

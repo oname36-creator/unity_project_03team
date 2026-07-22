@@ -30,6 +30,7 @@ public class TentacleArchAttack : IMonsterState
         _owner.IsGroundHit = false;
         _hitGround = false;
         _waitTimer = 0f;
+        _owner.SlashAnimation(true);
     }
 
     public void Update()
@@ -39,6 +40,7 @@ public class TentacleArchAttack : IMonsterState
             _waitTimer += Time.deltaTime;
             if (_waitTimer >= 0.5f)
             {
+
                 _owner.segmentDistance -= _shrinkSpeed * Time.deltaTime;
                 
                 if (_owner.segmentDistance < 0.1f)
@@ -55,8 +57,6 @@ public class TentacleArchAttack : IMonsterState
             // 각도를 누적하며 회전 (내려찍기)
             _owner.parabolaAngle -= _rotationSpeed * Time.deltaTime;
 
-            _owner.SlashAnimation(true);
-
             if (_owner.IsGroundHit)
             {
                 _hitGround = true;
@@ -70,6 +70,7 @@ public class TentacleArchAttack : IMonsterState
 
     public void Exit()
     {
+        _owner.SlashAnimation(true);
         _owner.isArch = false;
         _owner.isParabola = false;
     }

@@ -17,6 +17,9 @@ public class TentacleUp : IMonsterState
     private float _timer;
     private float _duration = 5f;
 
+
+    private Vector2 _targetOffset;
+
     private float _playerRadius;
 
     // 움직임 보간을 위한 위치 변수
@@ -31,7 +34,8 @@ public class TentacleUp : IMonsterState
 
     private float _CameraWidth;
     private float _orthoSize;
-
+    private float length;
+    float facingDir;
 
     public TentacleUp(TentacleController owner)
     {
@@ -56,6 +60,11 @@ public class TentacleUp : IMonsterState
         _owner.Attack = false; // 시작할 때 Attack 상태 초기화
 
         _timer = 0f;
+
+        length = _owner.TentacleLength;
+        facingDir = Mathf.Sign(_owner.transform.lossyScale.x);
+
+        _targetOffset = new Vector2(length * -0.3f * facingDir, length * 0.7f);
 
         _startOffset = _owner.IkTargetPosition - (Vector2)_owner.tentacleRoot.position;
 
@@ -83,17 +92,14 @@ public class TentacleUp : IMonsterState
         // 1. 5초 동안 목표 위치를 향해 부드럽게 이동 (0 ~ 1 사이의 비율)
         float t = Mathf.Clamp01(_timer / _duration);
 
-        float easeOutT = 1f - Mathf.Pow(1f - t, 3f);
-        float length = _owner.TentacleLength;
-        float facingDir = Mathf.Sign(_owner.transform.lossyScale.x);
+        float invT = 1f - t;
+        float easeOutT = 1f - (invT * invT * invT);
 
-        Vector2 targetOffset = new Vector2(length * -0.3f * facingDir, length * 0.7f);
 
-        _targetPos = (Vector2)_owner.tentacleRoot.position + targetOffset;
+        _targetPos = (Vector2)_owner.tentacleRoot.position + _targetOffset;
 
-        Vector2 currentLerpOffset = Vector2.Lerp(_startOffset, targetOffset, easeOutT);
+        Vector2 currentLerpOffset = Vector2.Lerp(_startOffset, _targetOffset, easeOutT);
 
-        //currentLerpOffset.y -= _playerRadius;
 
         _owner.IkTargetPosition = (Vector2)_owner.tentacleRoot.position + currentLerpOffset;
 

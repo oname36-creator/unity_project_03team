@@ -1,4 +1,3 @@
-﻿using Unity.VisualScripting;
 using UnityEngine;
 
 public class TentacleIdle : IMonsterState
@@ -6,16 +5,30 @@ public class TentacleIdle : IMonsterState
     private TentacleController _owner;
     private float _rayDistance;
     private LayerMask _targetLayer;
+    private int _tentacleLayer; // 레이어 캐싱
 
     private float _sweepAngle = 45f;
+    private float _sweepAngleRad; // 삼각함수 연산을 위한 라디안 값 캐싱
     private float _sweepSpeed = 2f;
     private float _time = 0f;
+
     private float _fixedLength = 5f;
+    private float _sqrRecoveryDistance; // 거리 비교를 위한 제곱값 캐싱
+
+    private float _raycastTimer = 0f;
+    private float _raycastInterval = 0.05f;
 
     public TentacleIdle(TentacleController owner)
     {
         _owner = owner;
         _targetLayer = LayerMask.GetMask("Player", "Monster");
+
+        _tentacleLayer = LayerMask.NameToLayer("Tentacle");
+
+        _sweepAngleRad = _sweepAngle * Mathf.Deg2Rad;
+
+        float recoveryDist = _fixedLength + 1f;
+        _sqrRecoveryDistance = recoveryDist * recoveryDist;
     }
 
     public void Enter()
@@ -25,14 +38,16 @@ public class TentacleIdle : IMonsterState
         _owner.IsAttach = false;
         _owner.Attack = false;
 
-        _owner.gameObject.layer = LayerMask.NameToLayer("Tentacle");
-        _owner.tag = "Tentacle";
+
+        _owner.gameObject.layer = _tentacleLayer;
+
+        _owner.SetLayer(false);
 
         _owner.Target = null;
         _owner.UpdateSegmentLength(_owner.PrevSegmentLength);
         _owner.segmentDistance = 0.5f;
 
-        // 촉수가 Root 근처로 회수된 상태로 대기하도록 초기 목표 설정
+
         _owner.IkTargetPosition = _owner.tentacleRoot.position;
         _rayDistance = _owner.TentacleLength;
         Debug.Log("TentacleIdle");
@@ -41,41 +56,48 @@ public class TentacleIdle : IMonsterState
     public void Update()
     {
         _time += Time.deltaTime * _sweepSpeed;
-        float currentAngle = Mathf.Sin(_time) * _sweepAngle;
 
-        Vector2 rayDirection = Quaternion.Euler(0, 0, currentAngle) * Vector2.right;
+
+        float currentAngleRad = Mathf.Sin(_time) * _sweepAngleRad;
+        Vector2 rayDirection;
+        rayDirection.x = Mathf.Cos(currentAngleRad);
+        rayDirection.y = Mathf.Sin(currentAngleRad);
+
+
         Vector2 rayOrigin = _owner.tentacleRoot.position;
 
-        // 대기 상태일 때는 촉수가 탐색 방향으로 부드럽게 뻗어 있게 합니다. (회수 중일 땐 Root로 가고, 회수되면 흔들림)
-        float distanceToRoot = Vector2.Distance(_owner.GetGrabber.position, rayOrigin);
-        if (distanceToRoot > _fixedLength + 1f) // 아직 회수 중
+
+        Vector2 grabberPos = _owner.GetGrabber.position;
+        float sqrDistToRoot = (grabberPos - rayOrigin).sqrMagnitude;
+
+        if (sqrDistToRoot > _sqrRecoveryDistance) 
         {
             _owner.IkTargetPosition = rayOrigin;
         }
-        else // 회수 완료, 탐색 흔들림 시작
+        else 
         {
             _owner.IkTargetPosition = rayOrigin + rayDirection * _fixedLength;
         }
 
         Debug.DrawRay(rayOrigin, rayDirection * _rayDistance, Color.red);
 
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection, _rayDistance, _targetLayer);
-
-        if (hit.collider != null)
+        _raycastTimer += Time.deltaTime;
+        if (_raycastTimer >= _raycastInterval)
         {
+            _raycastTimer = 0f;
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection, _rayDistance, _targetLayer);
 
-            _owner.IsSearch = true; // StateMachine에서 Shot으로 넘어가도록 유도
-            GameObject hitObj = hit.collider.gameObject;
-
-
-            if (!_owner.Boss.IsTargeted(hitObj))
+            if (hit.collider != null)
             {
-                _owner.Boss.AddTarget(hitObj); // 보스에 타겟 등록
-                _owner.Target = hitObj;        // 내 전용 타겟으로 할당
+                _owner.IsSearch = true;
+                GameObject hitObj = hit.collider.gameObject;
 
-                _owner.IsSearch = true; 
+                if (!_owner.Boss.IsTargeted(hitObj))
+                {
+                    _owner.Boss.AddTarget(hitObj); 
+                    _owner.Target = hitObj;        
+                }
             }
-
         }
     }
 

@@ -121,7 +121,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         }
 
         // slash Effect 생성
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 50; i++)
         {
             GameObject obj = Instantiate(_slashEffectPrefab, this.transform);
             obj.SetActive(false); // 비활성화 상태로 대기

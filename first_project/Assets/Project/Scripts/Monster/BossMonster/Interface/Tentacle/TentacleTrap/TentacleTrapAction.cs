@@ -51,6 +51,8 @@ public class TentacleTrapAction : IMonsterState
 
         _cinemachine.GenerateImpulse();
 
+        _owner.SlashAnimation(true);
+
         SoundManager.Instance.PlaySFX("BossTrapAttack");
 
     }
@@ -65,10 +67,8 @@ public class TentacleTrapAction : IMonsterState
         _currentIkPos = Vector2.MoveTowards(_currentIkPos, _targetPos, _riseSpeed * Time.deltaTime);
         _owner.IkTargetPosition = _currentIkPos;
 
-        _owner.SlashAnimation(true);
-
-        float distanceToFinalTarget = Vector2.Distance(_currentIkPos, _targetPos);
-        if (distanceToFinalTarget < _reachThreshold)
+        float sqrDistanceToFinalTarget = (_currentIkPos - _targetPos).sqrMagnitude;
+        if (sqrDistanceToFinalTarget < _reachThreshold * _reachThreshold)
         {
             _owner.Attack = false;
         }
@@ -77,6 +77,6 @@ public class TentacleTrapAction : IMonsterState
 
     public void Exit()
     {
- 
+        _owner.SlashAnimation(true);
     }
 }

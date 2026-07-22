@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
@@ -202,18 +202,18 @@ public class BossController : MonoBehaviour
             IsHurt = true;
             // 일단 float -> int로 
 
-
-            _hp -= collision.GetComponent<PlayerAttack>().Damage;
-            Debug.Log("Damage : " + collision.GetComponent<PlayerAttack>().Damage + " hp : " + _hp);
-
-            if (_hp <= 0)
+            PlayerAttack playerAttack = collision.GetComponent<PlayerAttack>();
+            if (playerAttack != null)
             {
-                IsDead = true;
+                _hp -= playerAttack.Damage;
+                Debug.Log("Damage : " + playerAttack.Damage + " hp : " + _hp);
+
+                if (_hp <= 0)
+                {
+                    IsDead = true;
+                }
             }
-
-
         }
-
     }
 
 

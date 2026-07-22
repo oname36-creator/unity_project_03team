@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class TentacleStretch : IMonsterState
 {
@@ -59,9 +59,9 @@ public class TentacleStretch : IMonsterState
         }
 
         // 3. 아직 못 잡은 상태라면, 촉수 끝이 랜덤 공격 위치에 도달했는지 확인
-        float distanceToFinalTarget = Vector2.Distance(_owner.GetGrabber.position, _finalAttackPosition);
+        float sqrDistanceToFinalTarget = (_owner.GetGrabber.position - (Vector3)_finalAttackPosition).sqrMagnitude;
 
-        if (distanceToFinalTarget < _reachThreshold)
+        if (sqrDistanceToFinalTarget < _reachThreshold * _reachThreshold)
         {
 
             //Debug.Log("TentacleStretch: 뻗었지만 아무것도 닿지 않음... 회수 시작");

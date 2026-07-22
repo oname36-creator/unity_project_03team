@@ -511,22 +511,21 @@ public class MonsterAiBrain
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
         IMonsterState chase = new BossChase(owner);
-        IMonsterState attack = new BossAttack(owner);
         // 보스룸 상태 추가할 예정
 
         initialState = chase;
 
-        // 나중에 상태 추가
-        transitionMap[chase] = new List<Transition>
-            {
-                new Transition(
-                    condition: () =>
-                    {
-                        return owner.Attack;
-                    },
-                    targetState:attack
-                    )
-            };
+        //// 나중에 상태 추가
+        //transitionMap[chase] = new List<Transition>
+        //    {
+        //        new Transition(
+        //            condition: () =>
+        //            {
+        //                return owner.Attack;
+        //            },
+        //            targetState:attack
+        //            )
+        //    };
 
 
         initialState.Enter();
@@ -540,7 +539,6 @@ public class MonsterAiBrain
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
-        IMonsterState idle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
         IMonsterState create = new BodyCreateTentacle(owner);
         IMonsterState createArch = new BodyCreateArchTentacle(owner);
@@ -548,32 +546,14 @@ public class MonsterAiBrain
 
         // 보스룸 상태 추가할 예정
 
-        initialState = idle;
+        initialState = move;
 
         // Todo : Boss가 원하면 촉수 무한 생성 
 
         // 나중에 상태 추가
-        transitionMap[idle] = new List<Transition>
-            {
-                new Transition(
-                    condition: () =>
-                    {
-                        return owner.Move;
-                    },
-                    targetState:move
-                    )
-            };
 
         transitionMap[move] = new List<Transition>
             {
-                new Transition(
-                    condition: () =>
-                    {
-                        return !owner.Move;
-                    },
-                    targetState:idle
-                    ),
-
                 new Transition(
                     condition : () =>
                     {
