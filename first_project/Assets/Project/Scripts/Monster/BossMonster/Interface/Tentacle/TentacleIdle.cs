@@ -44,7 +44,6 @@ public class TentacleIdle : IMonsterState
         _owner.SetLayer(false);
 
         _owner.Target = null;
-        _owner.UpdateSegmentLength(_owner.PrevSegmentLength);
         _owner.segmentDistance = 0.5f;
 
 

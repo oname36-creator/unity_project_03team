@@ -43,7 +43,6 @@ public class TentacleTrapAction : IMonsterState
 
         _targetPos.y += dy;
 
-        _owner.UpdateSegmentLength(20);
         _owner.segmentDistance = 1f;
 
         _currentIkPos = _rootPos;

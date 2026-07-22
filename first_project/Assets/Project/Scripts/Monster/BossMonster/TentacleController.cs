@@ -10,7 +10,7 @@ public class TentacleController : MonoBehaviour
     public BodyController Body;
 
     [Header("Tentacle IK Setting")]
-    public int segmentLength = 15;        // 촉수 마디 개수
+    public int segmentLength = 15;        // 촉수 마디 개수 (고정)
     public float segmentDistance = 0.5f;  // 마디 사이의 간격
     public float smoothSpeed = 0.05f;     // 끝단이 목표로 이동하
     // FABRIK 연산 반복 횟수 (보통 2~3회면 충분히 자연스럽게 수렴)
@@ -44,7 +44,6 @@ public class TentacleController : MonoBehaviour
     private LineRenderer _lineRend;
     private EdgeCollider2D _edgeCollider;
 
-    private const int MAX_SEGMENTS = 30;
     private Vector2[] _segmentPos;
     private Vector2[] _segmentVelocity;
     private List<Vector2> _colliderPoints = new List<Vector2>();
@@ -54,6 +53,10 @@ public class TentacleController : MonoBehaviour
     private bool _isDead = false;
     private bool _isAttach = false;
     private bool _isSearch = false;
+
+    // 콜라이더 최적화를 위한 타이머 (20FPS 제한)
+    private float _colliderUpdateTimer = 0f;
+    private float _colliderUpdateInterval = 0.05f;
 
     private MonsterStateMachine _monsterMachine;
 
@@ -71,7 +74,6 @@ public class TentacleController : MonoBehaviour
         get { return grabberHead; }
     }
 
-    public int PrevSegmentLength { get; set; }
 
     public float TentacleLength
     {
@@ -189,11 +191,6 @@ public class TentacleController : MonoBehaviour
         if (warningEffectRenderer_2 != null) warningEffectRenderer_2.gameObject.SetActive(false);
         if (warningEffectRenderer_Arch != null) warningEffectRenderer_Arch.gameObject.SetActive(false);
 
-        // 길이를 원래대로 복구
-        if (segmentLength != PrevSegmentLength && PrevSegmentLength > 0)
-        {
-            UpdateSegmentLength(PrevSegmentLength);
-        }
     }
 
     void Awake()
@@ -202,9 +199,8 @@ public class TentacleController : MonoBehaviour
         _edgeCollider = GetComponent<EdgeCollider2D>();
 
 
-        _segmentPos = new Vector2[MAX_SEGMENTS];
-        _segmentVelocity = new Vector2[MAX_SEGMENTS];
-        PrevSegmentLength = segmentLength;
+        _segmentPos = new Vector2[segmentLength];
+        _segmentVelocity = new Vector2[segmentLength];
         //Debug.Log("생성");
     }
 
@@ -250,10 +246,15 @@ public class TentacleController : MonoBehaviour
     {
         if (_isDead) return;
 
-
-
         UpdateIK();
-        UpdateColliders();
+
+        // 매 프레임 콜라이더를 갱신하면 물리 연산(Box2D) 부하가 심하므로 주기를 제한합니다.
+        _colliderUpdateTimer += Time.deltaTime;
+        if (_colliderUpdateTimer >= _colliderUpdateInterval)
+        {
+            UpdateColliders();
+            _colliderUpdateTimer = 0f;
+        }
     }
 
 
@@ -380,33 +381,6 @@ public class TentacleController : MonoBehaviour
             _colliderPoints.Add(transform.InverseTransformPoint(_segmentPos[i]));
         }
         _edgeCollider.SetPoints(_colliderPoints);
-    }
-
-    public void UpdateSegmentLength(int newLength)
-    {
-        if (segmentLength == newLength) return;
-
-        int oldLength = segmentLength;
-        segmentLength = newLength;
-
-        // 라인 렌더러 점 개수 업데이트
-        if (_lineRend != null)
-        {
-            _lineRend.positionCount = segmentLength;
-        }
-
-        // MAX_SEGMENTS를 초과하는지 체크 (안전 장치)
-        if (segmentLength > MAX_SEGMENTS)
-        {
-            //Debug.LogError($"Tentacle length {segmentLength} exceeds MAX_SEGMENTS {MAX_SEGMENTS}!");
-            segmentLength = MAX_SEGMENTS;
-        }
-
-        // 새로 늘어난 마디들에 대해서만 위치 초기화
-        for (int i = oldLength; i < segmentLength; i++)
-        {
-            _segmentPos[i] = tentacleRoot != null ? (Vector2)tentacleRoot.position : Vector2.zero;
-        }
     }
 
     public Vector2 GetSegmentPos(int index)

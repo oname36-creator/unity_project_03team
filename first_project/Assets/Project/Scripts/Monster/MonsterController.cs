@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -72,6 +72,10 @@ public class MonsterController : MonoBehaviour
     private float _playerRadius;
 
     private Transform _monsterTransform;
+
+    private bool _isInRange;
+    private bool _isInAngle;
+    private bool _isInAttackRange;
 
     #endregion
 
@@ -152,7 +156,7 @@ public class MonsterController : MonoBehaviour
     {
         get
         {
-            return _mToPlayerDistance.magnitude < _searchRange;
+            return _isInRange;
         }
 
     }
@@ -161,7 +165,7 @@ public class MonsterController : MonoBehaviour
     {
         get
         {
-            return (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
+            return _isInAngle;
         }
     }
 
@@ -171,7 +175,7 @@ public class MonsterController : MonoBehaviour
     {
         get
         {
-            return _mToPlayerDistance.magnitude < _attackRange;
+            return _isInAttackRange;
         }
 
     }
@@ -295,6 +299,12 @@ public class MonsterController : MonoBehaviour
         // 죽었다면
        
         CaculateMonsterToPlayerVector();
+
+        // 최적화: 프레임당 한 번만 물리 체크 및 연산 수행 (캐싱)
+        _isInRange = _mToPlayerDistance.magnitude < _searchRange;
+        _isInAttackRange = _mToPlayerDistance.magnitude < _attackRange;
+        _isInAngle = (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
+
         _monsterMachine.Update();
 
 
@@ -346,7 +356,10 @@ public class MonsterController : MonoBehaviour
     {
         if (collision.CompareTag("PlayerAttack") || collision.CompareTag("Bullet"))
         {
-            _hp -= collision.GetComponent<PlayerAttack>().Damage;
+            if (collision.TryGetComponent<PlayerAttack>(out PlayerAttack playerAttack))
+            {
+                _hp -= playerAttack.Damage;
+            }
 
             if (_hp <= 0)
             {
