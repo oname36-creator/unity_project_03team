@@ -9,6 +9,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public float JumpForce = 10f;
     public float MoveSpeed = 5f;
 
+    [Header("Footstep Sound Settings (발소리 설정)")]
+    [Tooltip("발소리가 재생될 간격(초)입니다. 짧을수록 빠르게 납니다.")]
+    public float footstepInterval = 0.35f;
+    private float footstepTimer = 0f;
+
     [Header("Aerial Damping (공중 감쇠)")]
     [Range(0f, 1f)]
     public float aerialDampingAmount = 0.5f;
@@ -100,6 +105,29 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             transform.localScale = new Vector3(facingDirectionX * originalScaleX, originalScaleY, 1f);
         }
 
+        // ==================== [수정된 발소리 재생 로직] ====================
+        // 땅에 서 있고(isGrounded), 좌우 입력(moveInput.x)이 있을 때만 타이머 가동
+        if (status.isGrounded && Mathf.Abs(moveInput.x) > 0.1f)
+        {
+            footstepTimer += Time.deltaTime;
+
+            if (footstepTimer >= footstepInterval)
+            {
+                if (SoundManager.Instance != null)
+                {
+                    SoundManager.Instance.PlaySFX("_MoveSound");
+                }
+                footstepTimer = 0f; // 타이머 리셋
+            }
+        }
+        else
+        {
+            // 멈추거나 공중에 떠 있을 때는 타이머를 간격 값으로 채워두어
+            // 다시 움직이는 즉시 첫 발소리가 나도록 함
+            footstepTimer = footstepInterval;
+        }
+        // ===================================================================
+
         if (animator != null)
         {
             float inputSpeed = Mathf.Abs(moveInput.x);
@@ -132,7 +160,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             animator.SetBool("isAttacking", attacking);
             animator.SetBool("isGrounded", status.isGrounded);
             animator.SetFloat("VelocityY", rb.linearVelocity.y);
-            animator.SetFloat("Speed", finalAnimSpeed); // 수정된 속도 적용
+            animator.SetFloat("Speed", finalAnimSpeed);
         }
 
         if (playerPosData != null)
@@ -153,7 +181,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         if (status.isGrounded)
         {
-            jumpCount = 0; // 프레임 누락 없이 안전하게 점프 카운트가 초기화됩니다.
+            jumpCount = 0;
         }
 
         status.isAerial = !status.isGrounded;
@@ -233,11 +261,12 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             _currentPlatformTransform = null;
         }
     }
+
     #region 인트로용 플레이어 조작
 
     public void SetInputActive(bool active)
     {
-        if(active)
+        if (active)
         {
             controls?.Player.Enable();
         }
@@ -245,15 +274,17 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         {
             controls?.Player.Disable();
             moveInput = Vector2.zero;
-            if(rb != null)
+            if (rb != null)
             {
                 rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             }
-        }    
+        }
     }
     #endregion
+
     public void OnMove(InputAction.CallbackContext context)
     {
+        
         moveInput = context.ReadValue<Vector2>();
     }
 
@@ -292,20 +323,19 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         {
             if (status == null || status.isDead) return;
 
-            // 쿨타임 검사 추가
             if (Time.time < lastAttackTime + attackCooldown)
             {
                 Debug.Log($"공격 쿨타임 중입니다! 남은 시간: {(lastAttackTime + attackCooldown) - Time.time:F2}초");
-                return; // 쿨타임 안 끝났으면 이하 로직을 실행하지 않고 리턴
+                return;
             }
 
-            // 공격이 성공적으로 발동되었으므로 마지막 공격 시간 갱신
             lastAttackTime = Time.time;
 
             if (status.hasGun)
             {
                 if (animator != null)
                 {
+                    SoundManager.Instance.PlaySFX("_GunSound");
                     animator.SetTrigger("OnGunAttack");
                 }
 
@@ -357,8 +387,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
     }
 
-   
-
     public void ExecuteItemEffectByID(int itemNumber)
     {
         switch (itemNumber)
@@ -404,7 +432,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
-        if (collision.CompareTag("DeadZone") ||collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.CompareTag("Boss"))
+        if (collision.CompareTag("DeadZone") || collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.CompareTag("Boss"))
         {
             if (DataManager.Instance != null)
             {
@@ -445,7 +473,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         {
             animator.SetTrigger("OnHit");
         }
-        
 
         status.isHurt = true;
         status.isInvincible = true;
@@ -467,7 +494,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
 
-     
             rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.2f, JumpForce * 0.1f), ForceMode2D.Impulse);
         }
 
@@ -555,13 +581,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private System.Collections.IEnumerator GunAttackRoutine()
     {
-        // 0.3초 대기 (선딜레이)
         yield return new WaitForSeconds(0.5f);
 
-        // 대기하는 동안 플레이어가 죽거나 게임이 멈췄는지 체크
         if (status == null || status.isDead || Time.timeScale == 0f) yield break;
 
-        Debug.Log("총기 발사! (0.3초 후 실행됨)");
+        Debug.Log("총기 발사!");
 
         Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
         GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
