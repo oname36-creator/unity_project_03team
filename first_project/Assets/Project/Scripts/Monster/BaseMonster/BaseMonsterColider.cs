@@ -3,6 +3,8 @@ using UnityEngine;
 public class BaseMonsterColider : MonoBehaviour
 {
 
+    [Header("Head Coliider")]
+    public BoxCollider2D targetBoxCollider;
 
 
     private MonsterController _monsterController;
@@ -12,24 +14,11 @@ public class BaseMonsterColider : MonoBehaviour
         _monsterController = GetComponent<MonsterController>();
     }
 
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && collision.otherCollider == targetBoxCollider)
         {
-
-            Vector3 closestPoint = GetComponent<BoxCollider2D>().ClosestPoint(collision.transform.position);
-
-
-            Vector3 normalVector = (closestPoint - transform.position).normalized;
-
-            Debug.Log("NormalVector : " + normalVector);
-            Debug.Log("Dot : " + Vector2.Dot(normalVector, Vector2.up));    
-
-            if (Vector2.Dot(normalVector, Vector2.up) > 0.9f)
-            {
-                    _monsterController.IsDead = true;
-            }
+            _monsterController.IsDead = true;
         }
     }
 

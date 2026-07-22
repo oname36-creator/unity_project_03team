@@ -93,19 +93,19 @@ LineRenderer:
   - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.9978113
+    widthMultiplier: 2
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.021007538
-        value: 0.06880188
-        inSlope: 0
-        outSlope: 0
+        time: 0.023984633
+        value: 0.1904231
+        inSlope: 0.03572661
+        outSlope: 0.03572661
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.16376509
       - serializedVersion: 3
         time: 0.9768677
         value: 1
@@ -193,7 +193,7 @@ EdgeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0.5
+  m_EdgeRadius: 0.1
   m_Points:
   - {x: 3.7498298, y: 3.5732203}
   - {x: 4.74983, y: 3.5732203}
@@ -219,10 +219,6 @@ MonoBehaviour:
   segmentDistance: 0.5
   smoothSpeed: 0.05
   iterations: 3
-  maxBendAngle: 60
-  minBendAngle: 0
-  elbowMaxBendAngle: 180
-  tailGravity: 30
   tentacleRoot: {fileID: 0}
   grabberHead: {fileID: 3134757436429879636}
   warningEffectRenderer_1: {fileID: 5448108908071677260}
