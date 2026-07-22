@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7025348878437724912}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -83.74184, y: 1.14049, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -48,23 +48,23 @@ MonoBehaviour:
   - Key: StartSceneBGM
     SoundData:
       Clip: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
-      Volume: 0
-      Pitch: 0
+      Volume: 1
+      Pitch: 1
   - Key: GameSceneBGM
     SoundData:
       Clip: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
-      Volume: 0
-      Pitch: 0
+      Volume: 1
+      Pitch: 1
   - Key: EndingSceneBGM
     SoundData:
       Clip: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
-      Volume: 0
-      Pitch: 0
+      Volume: 1
+      Pitch: 1
   - Key: CreditBGM
     SoundData:
       Clip: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
-      Volume: 0
-      Pitch: 0
+      Volume: 1
+      Pitch: 1
   _audioSfxList:
   - Key: _GunSound
     SoundData:

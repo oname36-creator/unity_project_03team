@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64188f9dc09acb44bac9cb9bd9dac3d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemObject
-  itemData: {fileID: 11400000, guid: e1ec7f7533a2cff4697314ac3c1f7f28, type: 2}
+  itemData: {fileID: 11400000, guid: b428fab07e48c85479394f572b430913, type: 2}
 --- !u!50 &234408282
 Rigidbody2D:
   serializedVersion: 5
@@ -3057,7 +3057,7 @@ MonoBehaviour:
   _monsterDarkWolfPrefab: {fileID: 4561971662583454659, guid: 80151f43ca283334787438987adea72e, type: 3}
   _tentaclePrefab: {fileID: 397495312301300401, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
   _dustEffectPrefab: {fileID: 554923577598959919, guid: 3b4597ce7c1f90b478aa18a45852d644, type: 3}
-  _bigDustEffectPrefab: {fileID: 0}
+  _bigDustEffectPrefab: {fileID: 8194489749729942492, guid: e56cdb0d222800e43b80af3d5a48879d, type: 3}
   _slashEffectPrefab: {fileID: 8325854951134378804, guid: daf69e69310cde04da98fda7cb37ceb3, type: 3}
   _smokeEffectPrefab: {fileID: 262978114022686037, guid: f6a998caf4084b844a5cbe2d49915040, type: 3}
   _smokeBurstEffectPrefab: {fileID: 8772007328053149702, guid: 8739821c566ccce4ca276d262b06d5cd, type: 3}
