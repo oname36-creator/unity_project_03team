@@ -61,7 +61,6 @@ public class BossChase : IMonsterState
 
         // 상태 진입 시 코루틴을 시작하도록 변경 (재진입 시 안전함)
         _chaseCoroutine = _owner.StartCoroutine(Chase());
-        _phaseCoroutine = _owner.StartCoroutine(Phase());
     }
 
     public void Update()
@@ -122,26 +121,5 @@ public class BossChase : IMonsterState
         }
     }
 
-    IEnumerator Phase()
-    {
-        //WaitForSeconds waitTime = new WaitForSeconds(61f);
-        WaitForSeconds waitTime = new WaitForSeconds(10f);
 
-        while (true)
-        {
-            yield return waitTime; 
-
-            SoundManager.Instance.PlaySFX("BossScreech");
-            if(_owner.Phase == 3) 
-            {
-                SoundManager.Instance.PlaySFX("BossSound");
-            }
-
-
-            _owner.MoveSpeed += 2.5f;
-
-            ++_owner.Phase;
-            Debug.Log("페이즈 : "  + _owner.Phase);
-        }
-    }
 }
