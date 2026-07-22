@@ -61,7 +61,7 @@ public class ItemEffectApplicator : MonoBehaviour
             case 3:
                 if (status != null && !status.hasSword)
                 {
-                    status.EnableSwordBuff(15f, 2.0f, 6);
+                    status.EnableSwordBuff(50f, 6);
                     //Debug.Log("⚔️ 검 장착 완료! 6회 공격 가능.");
                 }
                 break;
