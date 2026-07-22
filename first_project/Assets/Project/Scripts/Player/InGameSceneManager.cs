@@ -13,6 +13,13 @@ public class InGameSceneManager : MonoBehaviour
     public GameObject settingPanel;
     void Start()
     {
+      
+            // VSync를 비활성화 (TargetFrameRate를 적용하기 위해 필요)
+            QualitySettings.vSyncCount = 0;
+
+            // 목표 프레임을 60FPS로 고정
+            Application.targetFrameRate = 60;
+        
         if (SceneManagerEx.Instance != null)
         {
             SceneManagerEx.Instance.pauseMenuUI = localPauseMenuUI;

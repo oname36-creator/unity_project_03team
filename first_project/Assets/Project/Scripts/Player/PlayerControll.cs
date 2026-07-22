@@ -62,7 +62,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float originalScaleX;
     private float originalScaleY;
-
+    private readonly Collider2D[] groundCheckResults = new Collider2D[1];
     void Start()
     {
     }
@@ -176,9 +176,10 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         if (groundCheckPoint != null)
         {
-            status.isGrounded = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundLayer);
+            int count = Physics2D.OverlapBoxNonAlloc(groundCheckPoint.position, groundCheckSize, 0f, groundCheckResults, groundLayer);
+            status.isGrounded = count > 0;
         }
-
+        
         if (status.isGrounded)
         {
             jumpCount = 0;
@@ -504,25 +505,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         }
         _currentPlatformTransform = null;
 
-        Collider2D myCollider = GetComponent<Collider2D>();
-        if (myCollider != null)
-        {
-            myCollider.enabled = false;
-        }
-
         if (rb != null)
         {
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
             rb.linearVelocity = Vector2.zero;
-
-            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.2f, JumpForce * 0.1f), ForceMode2D.Impulse);
-        }
-
-        yield return new WaitForFixedUpdate();
-
-        if (myCollider != null)
-        {
-            myCollider.enabled = true;
+            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.1f, JumpForce * 0.05f), ForceMode2D.Impulse);
         }
 
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
@@ -549,55 +536,22 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
 
-        if (sr != null)
-        {
-            sr.color = Color.white;
-        }
+        if (sr != null) sr.color = Color.white;
 
         status.isInvincible = false;
-        Debug.Log("무적 상태 종료! 완벽하게 안전화 완료.");
     }
-
     private System.Collections.IEnumerator AttackHitboxRoutine()
     {
-        Physics2D.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            LayerMask.NameToLayer("Monster"),
-            true
-        );
-
         if (attackHitboxObj != null) attackHitboxObj.SetActive(true);
-
         yield return new WaitForSeconds(0.3f);
-
         if (attackHitboxObj != null) attackHitboxObj.SetActive(false);
-
-        Physics2D.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            LayerMask.NameToLayer("Monster"),
-            false
-        );
     }
 
     private System.Collections.IEnumerator SwordAttackHitboxRoutine()
     {
-        Physics2D.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            LayerMask.NameToLayer("Monster"),
-            true
-        );
-
         if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(true);
-
         yield return new WaitForSeconds(0.3f);
-
         if (swordAttackHitboxObj != null) swordAttackHitboxObj.SetActive(false);
-
-        Physics2D.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            LayerMask.NameToLayer("Monster"),
-            false
-        );
     }
 
     private System.Collections.IEnumerator GunAttackRoutine()
@@ -605,8 +559,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         yield return new WaitForSeconds(0.5f);
 
         if (status == null || status.isDead || Time.timeScale == 0f) yield break;
-
-        Debug.Log("총기 발사!");
 
         Vector2 firePosition = (muzzlePoint != null) ? (Vector2)muzzlePoint.position : (Vector2)transform.position + new Vector2(facingDirectionX * 0.5f, 0f);
         GameObject bulletGo = ObjectPoolManager.Instance.GetBullet(firePosition, Quaternion.identity);
@@ -619,4 +571,5 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         status.OnGunAttackExecute();
     }
+
 }
