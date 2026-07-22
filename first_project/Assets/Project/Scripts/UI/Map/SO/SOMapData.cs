@@ -9,6 +9,7 @@ public enum EGimmickType
     JumpPad,
     Platform,
     CirecleGround,
+    Ground,
 
     MaxCounts
 }
