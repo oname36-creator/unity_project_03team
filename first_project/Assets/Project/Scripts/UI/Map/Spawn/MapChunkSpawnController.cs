@@ -224,7 +224,7 @@ public class MapChunkSpawnController : MonoBehaviour
             bool isOverlap = false;
             foreach (Vector3 monsterPos in actualSpawnedMonsterPositions)
             {
-                if (Vector3.Distance(monsterPos, candidatePos) < minSpawnInterval)
+                if (Vector3.Distance(monsterPos, candidatePos) < minSpawnInterval+5)
                 {
                     isOverlap = true;
                     break;

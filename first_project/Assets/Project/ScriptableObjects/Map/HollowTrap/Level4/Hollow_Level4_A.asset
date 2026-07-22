@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4376b7799eb51b4eb23ccb5b03513a0, type: 3}
-  m_Name: Hollow_Level1_B
+  m_Name: Hollow_Level4_A
   m_EditorClassIdentifier: Assembly-CSharp::SOHollowTrapData
   hollowTrapList:
-  - position: {x: 27.439999, y: -14.5432, z: 0}
-  - position: {x: 38.439995, y: -14.5432, z: 0}
-  - position: {x: 49.440025, y: -14.5432, z: 0}
-  - position: {x: 55.14005, y: -14.5432, z: 0}
-  isTrapDirectionUp: 1
+  - position: {x: -4.9954605, y: -12.47822, z: 0}
+  - position: {x: -0.4954605, y: -12.47822, z: 0}
+  - position: {x: 13.004593, y: -12.47822, z: 0}
+  - position: {x: 16.504604, y: -12.47822, z: 0}
+  - position: {x: 20.50462, y: -12.47822, z: 0}
+  - position: {x: 24.504635, y: -12.47822, z: 0}
+  - position: {x: 28.004648, y: -12.47822, z: 0}
