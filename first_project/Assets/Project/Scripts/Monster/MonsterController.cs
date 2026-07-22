@@ -364,7 +364,7 @@ public class MonsterController : MonoBehaviour
             }
         }
 
-        if (collision.CompareTag("Boss")) 
+        if (collision.CompareTag("Boss") || collision.CompareTag("DeadZone")) 
         {
             IsDead = true;
         }
