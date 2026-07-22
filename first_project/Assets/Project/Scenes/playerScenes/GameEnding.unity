@@ -1161,6 +1161,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
+      propertyPath: ending
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9199807812278318895, guid: c48034fa910f29a4d99bfc4661be252f, type: 3}
       propertyPath: _linePrefab
       value: 
       objectReference: {fileID: 3408259316312325438, guid: b60e2bc48c6825545b803ee8bd05a082, type: 3}

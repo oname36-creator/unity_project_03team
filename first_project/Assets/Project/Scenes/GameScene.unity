@@ -119,17 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &27088200 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2738951834507200272, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 1935660993}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &45981814
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1962,17 +1951,6 @@ Transform:
   - {fileID: 1261468463}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1419158431 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9111044109884256067, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 1935660993}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &1499011416
 GameObject:
   m_ObjectHideFlags: 0
@@ -2736,11 +2714,6 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
---- !u!224 &1926203721 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4462565179302149001, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 1935660993}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1935660993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2994,7 +2967,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 792175030359017761, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+    - {fileID: 6722239145570709444, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
@@ -3060,11 +3035,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1323703246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2028755860 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6722239145570709444, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 1935660993}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2061011814 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2301059723337984058, guid: 32c9eaaf520bbd14ba1ff2777d71f5c8, type: 3}
@@ -3079,7 +3049,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2099972570}
-  - component: {fileID: 2099972569}
   - component: {fileID: 2099972568}
   m_Layer: 0
   m_Name: PlaySceneEndingCredits
@@ -3100,30 +3069,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d09aeb107d85bb44b140605052479ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalTimer
-  targetSurvivalTime: 183
+  targetSurvivalTime: 10
   timerText: {fileID: 218164005}
-  endingCredits: {fileID: 2099972569}
---- !u!114 &2099972569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2099972567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30d1050693df18a41b04fd7186dcdb6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlaySceneEndingCredits
-  cutsceneImage: {fileID: 1419158431}
-  cutsceneTotalDuration: 8
-  creditCanvasGroup: {fileID: 2028755860}
-  creditContent: {fileID: 1926203721}
-  blackBackground: {fileID: 27088200}
-  finishButtonsGroup: {fileID: 1807983825}
-  scrollSpeed: 40
-  endYPosition: 500
-  fadeDuration: 1.5
 --- !u!4 &2099972570
 Transform:
   m_ObjectHideFlags: 0
