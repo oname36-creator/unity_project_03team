@@ -23,3 +23,4 @@ MonoBehaviour:
   - position: {x: 54.33999, y: -14.5432, z: 0}
   - position: {x: 58.339928, y: -14.5432, z: 0}
   - position: {x: 63.239853, y: -14.5432, z: 0}
+  isTrapDirectionUp: 0

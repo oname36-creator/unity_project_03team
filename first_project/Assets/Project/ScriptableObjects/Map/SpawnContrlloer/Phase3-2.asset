@@ -19,4 +19,4 @@ MonoBehaviour:
   rewardItemsWeights: []
   maxBoxCount: 0
   tentacleTrapSpawnChane: 0
-  tentacleStaggerDelay: 0
+  tentacleStaggerDelay: 5

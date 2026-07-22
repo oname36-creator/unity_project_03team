@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-struct SCliffTrapNode
+class SCliffTrapNode
 {
     public Vector3 worldPosition;
     public bool isEvaluted;
@@ -21,6 +21,8 @@ public class MapChunkSpawnController : MonoBehaviour
     [SerializeField] private int minSpawnInterval = 3;
     [SerializeField] private float birdHeightOffset = 3.5f;
     [SerializeField] private float cameraMargin = 1.0f;
+
+    [SerializeField] private float minSpawnStartXOffset = 5.0f;
 
     private MapChunk _chunk;
 
@@ -61,7 +63,7 @@ public class MapChunkSpawnController : MonoBehaviour
                     float scheduledTime = Mathf.Max(Time.time, _nextTrapSpawnTime);
                     float delay = scheduledTime - Time.time;
                     _hasTrap[i] = true;
-                    StartCoroutine(SpawnTrapWithDelay(node.worldPosition, delay));
+                    StartCoroutine(SpawnTrapWithDelay(node.worldPosition, hollowTrapData.isTrapDirectionUp, delay));
                     _nextTrapSpawnTime = scheduledTime + staggerDelay;
                 }
                 else
@@ -179,6 +181,11 @@ public class MapChunkSpawnController : MonoBehaviour
         {
             foreach (Vector3 candidatePos in validPositions)
             {
+                if(candidatePos.x - startAnchorPos.x < minSpawnStartXOffset)
+                {
+                    continue;
+                }
+
                 if (spawnedMonsterCount >= spawnSetting.maxMonsterCount) break;
                 if (Random.value > spawnSetting.monsterSpawnChane) continue;
                 bool tooClose = false;
@@ -290,10 +297,10 @@ public class MapChunkSpawnController : MonoBehaviour
 
 
     #region Courtin
-    private System.Collections.IEnumerator SpawnTrapWithDelay(Vector3 spawnPosition, float delay)
+    private System.Collections.IEnumerator SpawnTrapWithDelay(Vector3 spawnPosition, bool isUp, float delay)
     {
         if (delay > 0f) yield return new WaitForSeconds(delay);
-        MapEvent.onRequestTrapSpawn?.Invoke(spawnPosition, (trapObj) =>
+        MapEvent.onRequestTrapSpawn?.Invoke(spawnPosition, isUp, (trapObj) =>
         {
             if (trapObj != null) _spawnedTraps.Add(trapObj);
         });
