@@ -573,7 +573,7 @@ MonoBehaviour:
   backGround: {fileID: 1900824581}
   endingImageDuration: 8
   fadeDuration: 3
-  mainMenuSceneName: MainMenu
+  mainMenuSceneName: GameStartScene
 --- !u!4 &477012765
 Transform:
   m_ObjectHideFlags: 0
