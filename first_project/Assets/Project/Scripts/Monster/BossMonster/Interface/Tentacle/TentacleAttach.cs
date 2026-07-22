@@ -63,9 +63,6 @@ public class TentacleAttach : IMonsterState
             _owner.IsSearch = false;
             _owner.IsAttach = false;
             _owner.Target = null;
-
-            _owner.PrevSegmentLength += 1;
-
         }
     }
 

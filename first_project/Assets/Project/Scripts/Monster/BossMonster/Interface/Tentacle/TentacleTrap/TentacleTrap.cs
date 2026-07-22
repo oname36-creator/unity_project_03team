@@ -41,7 +41,6 @@ public class TentacleTrap : IMonsterState
         _rootPos = _owner.RootPos;
         _time = 0f; // 상태 진입 시 타이머 초기화
 
-        _owner.UpdateSegmentLength(1);
         _owner.segmentDistance = 0.1f;
 
         float dy;

@@ -147,10 +147,11 @@ public class TentacleUp : IMonsterState
 
     private float EffectPosition(float x) 
     {
-        float gradient = (_prevPlayerPos.y - _bossTransform.position.y + 2f)/(_prevPlayerPos.x - _bossTransform.position.x); 
+        float diffX = _prevPlayerPos.x - _bossTransform.position.x;
+
+        float gradient = (_prevPlayerPos.y - _bossTransform.position.y + 2f) / diffX; 
 
         return gradient * (x - _bossTransform.position.x) + _bossTransform.position.y + 2f;
-
     }
 
 

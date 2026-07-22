@@ -26,17 +26,17 @@ public class TentacleAttack : IMonsterState
     }
     public void Enter()
     {
-        _owner.UpdateSegmentLength(20);
         _targetPos = _playerTransform.position;
         _targetPos.y -= _playerRadius;
 
-        _owner.segmentDistance = (_targetPos - _bossTransform.position).magnitude / 20f;
+        _owner.segmentDistance = (_targetPos - _bossTransform.position).magnitude / (float)_owner.segmentLength;
 
         _owner.IkTargetPosition = _targetPos;
     }
 
     public void Update()
     {
+        _timer += Time.deltaTime;
 
         if (_owner.IsAttach)
         {

@@ -105,7 +105,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 4c40b8cf7aa35ff44aa7ec2cc6ae2563, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -164,4 +164,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33a38f1f282000418c6dc5efe1c75cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterBullet
-  _boomClip: {fileID: 8300000, guid: ebbed237de04ca44eaab696610ddc5c2, type: 3}
