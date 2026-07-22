@@ -29,12 +29,6 @@ public class BossController : MonoBehaviour
     public Canvas Canvas; // 타겟 UI가 포함된 Canvas
 
 
-    [Header("Sound Clips")]
-    [SerializeField] private AudioClip _bossSound;
-    [SerializeField] private AudioClip _bossScreechSound;
-    [SerializeField] private AudioClip _bossTrapAttackSound;
-    [SerializeField] private AudioClip _bossAttack;
-
     [Header("Intro CutScene Settings")]
     public bool isIntro = false;
     public float introSpeedMultiplier = 0.25f;
@@ -45,7 +39,6 @@ public class BossController : MonoBehaviour
 
     #endregion
 
-    public event Action<int> OnPhaseChanged;
 
     #region Private Fields
     private int _hp;
@@ -118,18 +111,7 @@ public class BossController : MonoBehaviour
 
     public bool IsAttackTentacle { get; set; }
 
-    public int Phase
-    {
-        get { return _phase; }
-        set
-        {
-            if (_phase != value)
-            {
-                _phase = value;
-                OnPhaseChanged?.Invoke(_phase); 
-            }
-        }
-    }
+
 
 
     public Vector3 Front 
@@ -172,10 +154,6 @@ public class BossController : MonoBehaviour
     {
         Application.targetFrameRate = 120;
 
-        SoundManager.Instance.AddSfx("BossSound", _bossSound);
-        SoundManager.Instance.AddSfx("BossScreech", _bossScreechSound);
-        SoundManager.Instance.AddSfx("BossTrapAttack", _bossTrapAttackSound);
-        SoundManager.Instance.AddSfx("BossAttack", _bossAttack);
 
         Debug.Log("BossController Start");
         _monsterMachine = MonsterAiBrain.MakeMachine("Boss", this);

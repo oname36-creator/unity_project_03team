@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7025348878437724912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3736855579270901699}
+  - component: {fileID: 6515091963594016656}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3736855579270901699
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7025348878437724912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -83.74184, y: 1.14049, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6515091963594016656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7025348878437724912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db722735c8cba94ba1175d002409c2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  _audiobgmList:
+  - Key: StartSceneBGM
+    SoundData:
+      Clip: {fileID: 8300000, guid: d3accc7ccf93b9a448923e682c09446d, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: GameSceneBGM
+    SoundData:
+      Clip: {fileID: 8300000, guid: 29248f21422000d4599f50b12edc29c4, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: EndingSceneBGM
+    SoundData:
+      Clip: {fileID: 8300000, guid: 593081b3c811ea24f830237ce9f947fd, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: CreditBGM
+    SoundData:
+      Clip: {fileID: 8300000, guid: fba3cafa97eb0284f84717d1dd71e957, type: 3}
+      Volume: 1
+      Pitch: 1
+  _audioSfxList:
+  - Key: _GunSound
+    SoundData:
+      Clip: {fileID: 8300000, guid: 81aeb7f2bcfc3ed46aaf82389f5ca9f2, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: BirdAttack
+    SoundData:
+      Clip: {fileID: 8300000, guid: fe9b4b15cde71794d8a5f2bdccfcba3f, type: 3}
+      Volume: 0.1
+      Pitch: 1
+  - Key: BirdHurt
+    SoundData:
+      Clip: {fileID: 8300000, guid: dee8ad9bc4c2d8e4f9b077db0d4352f0, type: 3}
+      Volume: 0.3
+      Pitch: 1
+  - Key: BirdDead
+    SoundData:
+      Clip: {fileID: 8300000, guid: bd07f1d5d19431f40859dbaca882ee62, type: 3}
+      Volume: 0.2
+      Pitch: 1
+  - Key: DarkWolfIdle
+    SoundData:
+      Clip: {fileID: 8300000, guid: 7d83a65df435caf4ab3b3ff9815b3ef0, type: 3}
+      Volume: 0.2
+      Pitch: 1
+  - Key: DarkWolfAttack
+    SoundData:
+      Clip: {fileID: 8300000, guid: 23a3e65d3f74aa646ab11ccb3b9b8e39, type: 3}
+      Volume: 0.3
+      Pitch: 1
+  - Key: DarkWolfHurt
+    SoundData:
+      Clip: {fileID: 8300000, guid: 32203b3bff7cbf1498b9c6e55d312fc7, type: 3}
+      Volume: 0.3
+      Pitch: 1
+  - Key: DarkWolfDead
+    SoundData:
+      Clip: {fileID: 8300000, guid: 62f09ed83ab239a4cb37e7b459510bf7, type: 3}
+      Volume: 0.2
+      Pitch: 1
+  - Key: BossSound
+    SoundData:
+      Clip: {fileID: 8300000, guid: 9c50a15e16a05b4459b24771528dc482, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: BossScreech
+    SoundData:
+      Clip: {fileID: 8300000, guid: abb80f47ec2d05d43b4540add26871f4, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: BossTrapAttack
+    SoundData:
+      Clip: {fileID: 8300000, guid: 030173f4d1749204db153c70da9dd792, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: BossAttack
+    SoundData:
+      Clip: {fileID: 8300000, guid: bb903115180b2ea4c916b9e90b2ea0ab, type: 3}
+      Volume: 1
+      Pitch: 1
+  - Key: StoneboomKey
+    SoundData:
+      Clip: {fileID: 8300000, guid: 6f36bc5d299c50b4fa9513b8f4f61fdd, type: 3}
+      Volume: 0.5
+      Pitch: 1
+  - Key: TreeboomKey
+    SoundData:
+      Clip: {fileID: 8300000, guid: b6a85408d8053994b804e4bdeee9c455, type: 3}
+      Volume: 0.5
+      Pitch: 1
+  - Key: LogboomKey
+    SoundData:
+      Clip: {fileID: 8300000, guid: 2c458a4d266cd424f8c023d673dd330d, type: 3}
+      Volume: 0.5
+      Pitch: 1
+  - Key: SlimBoom
+    SoundData:
+      Clip: {fileID: 8300000, guid: ebbed237de04ca44eaab696610ddc5c2, type: 3}
+      Volume: 0.2
+      Pitch: 1
+  masterBgmVolume: 1
+  masterSfxVolume: 1

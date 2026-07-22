@@ -165,7 +165,7 @@ EdgeCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397495312301300401}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -193,7 +193,7 @@ EdgeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.5
   m_Points:
   - {x: 3.7498298, y: 3.5732203}
   - {x: 4.74983, y: 3.5732203}
@@ -219,13 +219,19 @@ MonoBehaviour:
   segmentDistance: 0.5
   smoothSpeed: 0.05
   iterations: 3
-  maxBendAngle: 100
+  maxBendAngle: 60
+  minBendAngle: 0
+  elbowMaxBendAngle: 180
+  tailGravity: 30
   tentacleRoot: {fileID: 0}
   grabberHead: {fileID: 3134757436429879636}
   warningEffectRenderer_1: {fileID: 5448108908071677260}
   warningEffectRenderer_2: {fileID: 730846355620987038}
   warningEffectRenderer_Arch: {fileID: 2013576143808337753}
   isArch: 0
+  isParabola: 0
+  parabolaA: 0.05
+  parabolaAngle: 0
   isTrap: 0
 --- !u!114 &1217820103569145571
 MonoBehaviour:
@@ -457,7 +463,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8207907280779474896, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
       propertyPath: m_Layer
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8207907280779474896, guid: 6209787d2d53c4442b090afe1d21072c, type: 3}
       propertyPath: m_IsActive
@@ -492,7 +498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4405389690023323980, guid: 1fae0f706c8dc124cafaef22c258aa01, type: 3}
       propertyPath: m_Layer
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4405389690023323980, guid: 1fae0f706c8dc124cafaef22c258aa01, type: 3}
       propertyPath: m_IsActive
@@ -607,7 +613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8207907280779474896, guid: ef3a1f8d9b4f2984090ebec7bb36920d, type: 3}
       propertyPath: m_Layer
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8207907280779474896, guid: ef3a1f8d9b4f2984090ebec7bb36920d, type: 3}
       propertyPath: m_IsActive

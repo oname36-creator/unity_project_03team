@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 978452201158770307}
   - component: {fileID: 5800320726127714199}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: WarringEffect_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

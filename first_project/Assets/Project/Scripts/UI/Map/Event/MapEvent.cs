@@ -9,8 +9,11 @@ public static class MapEvent
     public static Action<string, Vector3, Action<GameObject>> onRequestMonsterSpawn;
 
     // 촉수 트랩 생성(좌표, 콜백)
-    public static Action<Vector2, Action<GameObject>> onRequestTrapSpawn;
+    public static Action<Vector2, bool, Action<GameObject>> onRequestTrapSpawn;
 
     // 상자 스폰 생성(좌표, 보상아이템 목록, 콜백)
     public static Action<Vector3, SOMapPhaseSpawnSetting, Action<GameObject>> onRequestBoxSpawn;
+
+    // 페이즈 데이터
+    public static Action<int> onRequestPhase;
 }

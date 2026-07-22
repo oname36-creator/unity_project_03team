@@ -41,6 +41,7 @@ public class BodyMove : IMonsterState
             if(_time > 10f) 
             {
                 _owner.CreateArch = true;
+                _time = 0f;
             }
         }
     }
@@ -83,7 +84,7 @@ public class BodyMove : IMonsterState
 
             if (_timeCounter > _owner.TentacleCycle + _prevCounter)
             {
-                // 인트로 중 촉수 생성X
+
                 if(_owner.Boss != null && !_owner.Boss.isIntro)
                 {
                     _owner.Create = true;

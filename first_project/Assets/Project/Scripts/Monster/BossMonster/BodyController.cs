@@ -65,19 +65,14 @@ public class BodyController : MonoBehaviour
 
     private void OnEnable()
     {
-        // 이벤트 구독
-        if (Boss != null)
-        {
-            Boss.OnPhaseChanged += HandlePhaseChanged;
-        }
+
+        MapEvent.onRequestPhase += HandlePhaseChanged;
+        
     }
 
     private void OnDisable()
     {
-        if (Boss != null)
-        {
-            Boss.OnPhaseChanged -= HandlePhaseChanged;
-        }
+        MapEvent.onRequestPhase -= HandlePhaseChanged;
     }
 
     void Start()
@@ -121,7 +116,7 @@ public class BodyController : MonoBehaviour
         {
             TentacleCycle = 5;
         }
-
+        Debug.Log("페이즈 : " + _phase);
 
     }
 
