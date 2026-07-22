@@ -56,7 +56,7 @@ public class TentacleAttach : IMonsterState
         float distanceToRoot = Vector2.Distance(_grabberTransform.position, root);
         if (distanceToRoot < 1.0f)
         {
-            Debug.Log("몸통까지 끌고 오기 완료! 데미지 처리 등 실행");
+            //Debug.Log("몸통까지 끌고 오기 완료! 데미지 처리 등 실행");
 
             // TODO: 데미지 처리
             _owner.Boss.RemoveTarget(_owner.Target);

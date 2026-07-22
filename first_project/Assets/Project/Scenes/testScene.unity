@@ -171,34 +171,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
-      value: 0.023984633
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].time
-      value: 0.9768677
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.1904231
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].inSlope
-      value: 0.03572661
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].outSlope
-      value: 0.03572661
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379436166568031339, guid: 03259eb39ad4dfc4382ff676767fe9b3, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].outWeight
-      value: 0.16376509
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3587,6 +3559,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GreenSlime
       objectReference: {fileID: 0}
+    - target: {fileID: 8127177671941876280, guid: 0bf7d512637474a469d2f606976f1bcb, type: 3}
+      propertyPath: Player
+      value: 
+      objectReference: {fileID: 1949696499}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3603,6 +3579,10 @@ PrefabInstance:
     - target: {fileID: 783070123909900463, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
       propertyPath: m_Name
       value: BossMonster
+      objectReference: {fileID: 0}
+    - target: {fileID: 783070123909900463, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2774532474509234083, guid: 458af9eb94bfefa479b22d9522e6b02b, type: 3}
       propertyPath: m_LocalPosition.x

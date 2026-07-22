@@ -2,7 +2,7 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+
 
 public class BossChase : IMonsterState
 {

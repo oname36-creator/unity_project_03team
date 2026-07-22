@@ -46,7 +46,7 @@ public class BodyCreateTentacle : IMonsterState
         tentacleController.IsDead = false;
         tentacleController.IsAttackTentacle = true;
 
-        Debug.Log("IsAttackTentacle : " + tentacleController.IsAttackTentacle);
+        //Debug.Log("IsAttackTentacle : " + tentacleController.IsAttackTentacle);
 
         
         yield return null;

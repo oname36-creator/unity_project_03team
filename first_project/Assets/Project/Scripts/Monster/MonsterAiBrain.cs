@@ -16,7 +16,7 @@ public class MonsterAiBrain
 
         if (name == "Base")
         {
-            Debug.Log(name);
+            //Debug.Log(name);
             IMonsterState search = new BaseMonsterSearch(owner);
             IMonsterState chase = new BaseMonsterChase(owner);
             IMonsterState attack = new BaseMonsterAttack(owner);
@@ -171,7 +171,7 @@ public class MonsterAiBrain
 
         else if (name == "Bird")
         {
-            Debug.Log(name);
+            //Debug.Log(name);
             IMonsterState search = new FlyMonsterSearch(owner);
             IMonsterState attack = new FlyMonsterAttack(owner);
             IMonsterState re = new FlyMonsterReturn(owner);
@@ -318,7 +318,7 @@ public class MonsterAiBrain
         else if (name == "DarkWolf")
         {
 
-            Debug.Log(name);
+            //Debug.Log(name);
             IMonsterState idle = new DarkWolfIdle(owner);
             IMonsterState walk = new DarkWolfWalk(owner);
             IMonsterState chase = new DarkWolfChase(owner);
@@ -506,27 +506,26 @@ public class MonsterAiBrain
     }
     public static MonsterStateMachine MakeMachine(string name, BossController owner)
     {
-        Debug.Log("BossController");
+        //Debug.Log("BossController");
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
         IMonsterState chase = new BossChase(owner);
-        IMonsterState attack = new BossAttack(owner);
         // 보스룸 상태 추가할 예정
 
         initialState = chase;
 
-        // 나중에 상태 추가
-        transitionMap[chase] = new List<Transition>
-            {
-                new Transition(
-                    condition: () =>
-                    {
-                        return owner.Attack;
-                    },
-                    targetState:attack
-                    )
-            };
+        //// 나중에 상태 추가
+        //transitionMap[chase] = new List<Transition>
+        //    {
+        //        new Transition(
+        //            condition: () =>
+        //            {
+        //                return owner.Attack;
+        //            },
+        //            targetState:attack
+        //            )
+        //    };
 
 
         initialState.Enter();
@@ -536,11 +535,10 @@ public class MonsterAiBrain
 
     public static MonsterStateMachine MakeMachine(string name, BodyController owner)
     {
-        Debug.Log("Body");
+        //Debug.Log("Body");
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 
-        IMonsterState idle = new BodyIdle(owner);
         IMonsterState move = new BodyMove(owner);
         IMonsterState create = new BodyCreateTentacle(owner);
         IMonsterState createArch = new BodyCreateArchTentacle(owner);
@@ -548,32 +546,14 @@ public class MonsterAiBrain
 
         // 보스룸 상태 추가할 예정
 
-        initialState = idle;
+        initialState = move;
 
         // Todo : Boss가 원하면 촉수 무한 생성 
 
         // 나중에 상태 추가
-        transitionMap[idle] = new List<Transition>
-            {
-                new Transition(
-                    condition: () =>
-                    {
-                        return owner.Move;
-                    },
-                    targetState:move
-                    )
-            };
 
         transitionMap[move] = new List<Transition>
             {
-                new Transition(
-                    condition: () =>
-                    {
-                        return !owner.Move;
-                    },
-                    targetState:idle
-                    ),
-
                 new Transition(
                     condition : () =>
                     {
@@ -649,7 +629,7 @@ public class MonsterAiBrain
 
     public static MonsterStateMachine MakeMachine(string name, TentacleController owner)
     {
-        Debug.Log("TentacleController");
+        //Debug.Log("TentacleController");
         IMonsterState initialState = null;
         var transitionMap = new Dictionary<IMonsterState, List<Transition>>();
 

@@ -28,6 +28,9 @@ public class CreditView : MonoBehaviour
     [Header("Event")]
     [SerializeField] private UnityEvent _onDisableEvent;
 
+    [Header("Ending")]
+    [SerializeField] private bool ending = false;
+
     #endregion
 
     #region Private Fields
@@ -61,7 +64,7 @@ public class CreditView : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame && !ending)
         {
             gameObject.SetActive(false);
             return;

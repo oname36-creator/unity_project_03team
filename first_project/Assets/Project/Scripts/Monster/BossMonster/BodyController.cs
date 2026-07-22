@@ -116,7 +116,7 @@ public class BodyController : MonoBehaviour
         {
             TentacleCycle = 5;
         }
-        Debug.Log("페이즈 : " + _phase);
+        //Debug.Log("페이즈 : " + _phase);
 
     }
 

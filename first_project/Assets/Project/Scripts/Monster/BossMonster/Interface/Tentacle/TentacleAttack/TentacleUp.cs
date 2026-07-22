@@ -13,9 +13,12 @@ public class TentacleUp : IMonsterState
 
     private Camera _camera;
 
-    // 5초 타이머를 위한 변수
+    // 3 타이머를 위한 변수
     private float _timer;
-    private float _duration = 5f;
+    private float _duration = 3f;
+
+
+    private Vector2 _targetOffset;
 
     private float _playerRadius;
 
@@ -31,7 +34,8 @@ public class TentacleUp : IMonsterState
 
     private float _CameraWidth;
     private float _orthoSize;
-
+    private float length;
+    float facingDir;
 
     public TentacleUp(TentacleController owner)
     {
@@ -57,12 +61,17 @@ public class TentacleUp : IMonsterState
 
         _timer = 0f;
 
+        length = _owner.TentacleLength;
+        facingDir = Mathf.Sign(_owner.transform.lossyScale.x);
+
+        _targetOffset = new Vector2(length * -0.3f * facingDir, length * 0.7f);
+
         _startOffset = _owner.IkTargetPosition - (Vector2)_owner.tentacleRoot.position;
 
         // 시작 시점의 플레이어 위치 저장
         _prevPlayerPos = _playerTransform.position;
 
-        Debug.Log("TentacleUp");
+        //Debug.Log("TentacleUp");
 
         if (_warningEffect != null)
         {
@@ -83,17 +92,14 @@ public class TentacleUp : IMonsterState
         // 1. 5초 동안 목표 위치를 향해 부드럽게 이동 (0 ~ 1 사이의 비율)
         float t = Mathf.Clamp01(_timer / _duration);
 
-        float easeOutT = 1f - Mathf.Pow(1f - t, 3f);
-        float length = _owner.TentacleLength;
-        float facingDir = Mathf.Sign(_owner.transform.lossyScale.x);
+        float invT = 1f - t;
+        float easeOutT = 1f - (invT * invT * invT);
 
-        Vector2 targetOffset = new Vector2(length * -0.3f * facingDir, length * 0.7f);
 
-        _targetPos = (Vector2)_owner.tentacleRoot.position + targetOffset;
+        _targetPos = (Vector2)_owner.tentacleRoot.position + _targetOffset;
 
-        Vector2 currentLerpOffset = Vector2.Lerp(_startOffset, targetOffset, easeOutT);
+        Vector2 currentLerpOffset = Vector2.Lerp(_startOffset, _targetOffset, easeOutT);
 
-        //currentLerpOffset.y -= _playerRadius;
 
         _owner.IkTargetPosition = (Vector2)_owner.tentacleRoot.position + currentLerpOffset;
 
@@ -123,7 +129,7 @@ public class TentacleUp : IMonsterState
         if (_timer >= _duration)
         {
             _owner.Attack = true;
-            Debug.Log("5초 경과! 촉수 공격 준비 완료 (Attack = true)");
+            //Debug.Log("5초 경과! 촉수 공격 준비 완료 (Attack = true)");
 
 
         }

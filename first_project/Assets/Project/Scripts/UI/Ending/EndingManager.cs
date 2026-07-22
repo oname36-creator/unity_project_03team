@@ -10,17 +10,20 @@ public class EndingManager : MonoBehaviour
     [SerializeField] private CanvasGroup endingImageCanvasGroup; // 엔딩 이미지 UI 그룹
     [SerializeField] private CanvasGroup endTextCanvasGroup; // END 텍스트 UI 그룹
 
-    [Header("Credits Rolling")]
-    [SerializeField] private RectTransform creditTextTransform; // 크레딧 텍스트 RectTransform
-    [SerializeField] private float scrollSpeed = 100f; // 스크롤 속도
-    [SerializeField] private float creditDuration = 10f; // 크레딧 진행 시간 (10초)
+    [Header("Credit BackGround")]
+    [SerializeField] private GameObject backGround;
+
 
     [Header("Ending Image & END Text")]
-    [SerializeField] private float endingImageDuration = 8f; // 엔딩 이미지 유지 시간 (8초)
+    [SerializeField] private float runingDuration = 8f; // 엔딩 이미지 유지 시간 (8초)
+    [SerializeField] private float endingImageDuration = 4f; // 엔딩 이미지 유지 시간 (8초)
     [SerializeField] private float fadeDuration = 1f; // 페이드 인/아웃 시간
 
     [Header("Scene Transition")]
     [SerializeField] private string mainMenuSceneName = "MainMenu"; // 메인 메뉴 씬 이름
+
+
+    private bool _credit = true;
 
     private void Start()
     {
@@ -35,20 +38,32 @@ public class EndingManager : MonoBehaviour
 
     private void Update()
     {
-        // 크레딧 스크롤 연출 (위로 이동)
-        if (creditCanvasGroup != null && creditCanvasGroup.alpha > 0)
+        if (backGround.activeSelf) 
         {
-            creditTextTransform.anchoredPosition += Vector2.up * scrollSpeed * Time.deltaTime;
+            backGround.SetActive(false);
         }
+    
     }
+
+    public void CreditEnd() 
+    {
+        _credit = false;
+    }
+
 
     private IEnumerator PlayEndingSequence()
     {
         // 1. 크레딧 진행 (10초간 스크롤 대기)
-        yield return new WaitForSeconds(creditDuration);
+        SoundManager.Instance.PlayBGM("EndingSceneBGM");
+        creditCanvasGroup.gameObject.SetActive(true);
+
+        while (_credit)
+        {
+            yield return null;
+        }
 
         // 2. 크레딧 서서히 사라짐 & 엔딩 이미지 페이드 인
-        yield return StartCoroutine(FadeCanvasGroup(creditCanvasGroup, 1f, 0f, fadeDuration));
+        yield return new WaitForSeconds(runingDuration);
         yield return StartCoroutine(FadeCanvasGroup(endingImageCanvasGroup, 0f, 1f, fadeDuration));
 
         // 3. 엔딩 이미지 8초간 유지
@@ -58,7 +73,9 @@ public class EndingManager : MonoBehaviour
         yield return StartCoroutine(FadeCanvasGroup(endTextCanvasGroup, 0f, 1f, fadeDuration));
 
         // 5. 3초 정도 END 문구를 더 보여준 후 메인 메뉴로 이동
+        SoundManager.Instance.PauseBGM();
         yield return new WaitForSeconds(3f);
+
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
