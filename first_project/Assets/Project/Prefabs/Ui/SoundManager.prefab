@@ -146,5 +146,25 @@ MonoBehaviour:
       Clip: {fileID: 8300000, guid: ebbed237de04ca44eaab696610ddc5c2, type: 3}
       Volume: 0.2
       Pitch: 1
+  - Key: _MoveSound
+    SoundData:
+      Clip: {fileID: 8300000, guid: 60d246e3b137ba544921daa385328714, type: 3}
+      Volume: 0.5
+      Pitch: 1
+  - Key: _SwordSound
+    SoundData:
+      Clip: {fileID: 8300000, guid: 8f3e8621d28d1ef48a9f29b60c2a4e66, type: 3}
+      Volume: 0.5
+      Pitch: 1
+  - Key: _AttackSound
+    SoundData:
+      Clip: {fileID: 8300000, guid: a32e90c3746cfe740a3bf85ff7a0f43c, type: 3}
+      Volume: 0.5
+      Pitch: 1
+  - Key: _HitSound
+    SoundData:
+      Clip: {fileID: 8300000, guid: c2fbe9aa175e8d44c82c0cb8780e3138, type: 3}
+      Volume: 0.5
+      Pitch: 1
   masterBgmVolume: 1
   masterSfxVolume: 1

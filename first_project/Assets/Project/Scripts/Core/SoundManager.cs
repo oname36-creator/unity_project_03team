@@ -172,6 +172,23 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
+    public void PauseSFX()
+    {
+        foreach(AudioSource sfxSource in _sfxAudioSources) 
+        {
+            sfxSource.Pause();
+        }
+    }
+
+    public void ResumeSFX()
+    {
+        foreach (AudioSource sfxSource in _sfxAudioSources)
+        {
+            sfxSource.UnPause();
+        }
+    }
+
+
     private AudioSource GetAvailableSfxSource()
     {
         for (int i = 0; i < _sfxAudioSources.Length; i++)
