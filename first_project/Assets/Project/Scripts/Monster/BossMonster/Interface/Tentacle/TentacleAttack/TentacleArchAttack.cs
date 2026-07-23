@@ -40,7 +40,6 @@ public class TentacleArchAttack : IMonsterState
             _waitTimer += Time.deltaTime;
             if (_waitTimer >= 0.5f)
             {
-
                 _owner.segmentDistance -= _shrinkSpeed * Time.deltaTime;
                 
                 if (_owner.segmentDistance < 0.1f)
@@ -57,10 +56,10 @@ public class TentacleArchAttack : IMonsterState
             // 각도를 누적하며 회전 (내려찍기)
             _owner.parabolaAngle -= _rotationSpeed * Time.deltaTime;
 
-            if (_owner.IsGroundHit)
+            if (_owner.parabolaAngle <= _startAngle - 110f)
             {
                 _hitGround = true;
-                _cinemachine.GenerateImpulse();
+                if (_cinemachine != null) _cinemachine.GenerateImpulse();
                 SoundManager.Instance.PlaySFX("BossTrapAttack");
             }
         }

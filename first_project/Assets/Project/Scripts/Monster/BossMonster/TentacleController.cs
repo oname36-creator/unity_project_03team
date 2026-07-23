@@ -284,7 +284,7 @@ public class TentacleController : MonoBehaviour
 
         if (isArch)
         {
-            Vector2 basePosition = (Vector2)tentacleRoot.position;
+            Vector2 basePosition = RootPos;
             _segmentPos[segmentLength - 1] = basePosition; // 루트 위치 고정
 
             float currentX = 0f;

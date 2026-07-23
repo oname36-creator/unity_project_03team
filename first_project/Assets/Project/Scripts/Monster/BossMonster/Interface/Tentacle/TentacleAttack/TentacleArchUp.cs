@@ -24,7 +24,7 @@ public class TentacleArchUp : IMonsterState
         // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거 (레이어 사용 권장)
         _owner.SetLayer(false);
 
-
+        _owner.RootPos = _owner.Boss.transform.position; // 시작 시 1회 고정
 
         _owner.segmentDistance = 0.5f;
         
