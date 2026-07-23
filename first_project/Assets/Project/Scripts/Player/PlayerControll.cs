@@ -11,7 +11,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public float MoveSpeed = 5f;
 
     [Header("Footstep Sound Settings (발소리 설정)")]
-    [Tooltip("발소리가 재생될 간격(초)입니다.")]
+    [Tooltip("발소리가 재생될 간격(초)입니다. 짧을수록 빠르게 납니다.")]
     public float footstepInterval = 0.35f;
     private float footstepTimer = 0f;
 
@@ -23,6 +23,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public string enemyTag = "Monster";
 
     [Header("Weapon Settings (무기 설정)")]
+    [Tooltip("총알이 발사될 위치(총구)에 배치한 빈 오브젝트를 넣어주세요.")]
     public Transform muzzlePoint;
 
     [Header("Ground Check Settings (바닥 체크 설정)")]
@@ -34,27 +35,13 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     public LayerMask groundLayer;
 
     [Header("Player Attack Cooldown")]
+    [Tooltip("공격 연속 사용 제한 시간(초)입니다.")]
     public float attackCooldown = 0.5f;
     private float lastAttackTime = -99f;
 
     [Header("Player Attack Trigger Settings")]
     public GameObject attackHitboxObj;
     public GameObject swordAttackHitboxObj;
-
-    [Header("Knockback Settings (넉백 설정)")]
-    [Tooltip("피격 시 밀려나는 X축 힘")]
-    public float knockbackForceX = 3.0f;
-    [Tooltip("피격 시 살짝 붕 뜨는 Y축 힘")]
-    public float knockbackForceY = 2.5f;
-    [Tooltip("넉백으로 인해 조작이 불가능한 시간(초)")]
-    public float knockbackDuration = 0.15f;
-    [Tooltip("피격 후 무적 지속 시간(초)")]
-    public float invincibleTime = 1.0f;
-
-    [Header("Wall Raycast Settings (벽 레이캐스트 설정)")]
-    public LayerMask wallLayer;
-    public float wallCheckDistance = 0.6f;
-    public float maxClimbableAngle = 75f;
 
     public PlayerPos playerPosData;
 
@@ -72,11 +59,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
     private float originalScaleX;
     private float originalScaleY;
-
-    // 바닥 체크용 필터 및 결과 배열
-    private ContactFilter2D groundContactFilter;
     private readonly Collider2D[] groundCheckResults = new Collider2D[1];
-    private bool isTouchingSteepWall = false;
 
     void Awake()
     {
@@ -88,11 +71,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         originalScaleX = transform.localScale.x;
         originalScaleY = transform.localScale.y;
-
-        // ContactFilter2D 세팅 (Ground 레이어 감지)
-        groundContactFilter = new ContactFilter2D();
-        groundContactFilter.SetLayerMask(groundLayer);
-        groundContactFilter.useLayerMask = true;
     }
 
     void OnEnable()
@@ -126,7 +104,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             transform.localScale = new Vector3(facingDirectionX * originalScaleX, originalScaleY, 1f);
         }
 
-        // 발소리 재생 로직
+        // ==================== [발소리 재생 로직] ====================
         if (status.isGrounded && Mathf.Abs(moveInput.x) > 0.1f)
         {
             footstepTimer += Time.deltaTime;
@@ -145,7 +123,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             footstepTimer = footstepInterval;
         }
 
-        // 애니메이션 처리
+        // ==================== [애니메이션 처리] ====================
         if (animator != null)
         {
             float inputSpeed = Mathf.Abs(moveInput.x);
@@ -188,43 +166,25 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
     {
         if (status == null || status.isDead) return;
 
-        // 0. 피격(넉백) 중일 때는 물리 연산 스킵
-        if (status.isHurt) return;
-
         // 1. 접지 체크
         if (groundCheckPoint != null)
         {
-            int count = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, 0f, groundContactFilter, groundCheckResults);
+            int count = Physics2D.OverlapBoxNonAlloc(groundCheckPoint.position, groundCheckSize, 0f, groundCheckResults, groundLayer);
+            bool previouslyGrounded = status.isGrounded;
+            status.isGrounded = count > 0;
 
-            // 발밑에 닿은 오브젝트가 이동 발판인지 확인
-            bool isOnPlatform = count > 0 && groundCheckResults[0] != null && groundCheckResults[0].GetComponentInParent<MovingPlatform>() != null;
-
-            // 현재 발판의 부모로 등록되어 있는지 확인
-            bool isParentedToPlatform = transform.parent != null && transform.parent.GetComponent<MovingPlatform>() != null;
-
-            // 발판 위에 타고 있거나 발밑에 발판이 감지되면 Y 속도가 상승 중이어도 점프 중(isPureJumping)으로 보지 않음
-            bool isPureJumping = rb.linearVelocity.y > 0.1f && !isParentedToPlatform && !isOnPlatform && !status.isHurt;
-
-            // 감지 결과가 있거나, 이미 발판 위에 부모로 붙어있고 떨어지지 않은 상태라면 착지 인정
-            status.isGrounded = (count > 0 || isParentedToPlatform) && !isPureJumping;
-
-            if (status.isGrounded)
+            // 착지하는 순간 점프 카운트 리셋
+            if (status.isGrounded && rb.linearVelocity.y <= 0.01f)
             {
                 jumpCount = 0;
             }
-
-            // [핵심] FixedUpdate 물리 시점에 즉시 애니메이터 변수 동기화
-            if (animator != null)
-            {
-                animator.SetBool("isGrounded", status.isGrounded);
-            }
         }
+
         status.isAerial = !status.isGrounded;
 
-        // 2. 수직벽 체크 (공중 비비기 감지)
-        CheckWallAngle();
+        if (status.isHurt) return;
 
-        // 3. 이동 속도 계산
+        // 2. 이동 속도 계산
         float currentMoveX = rb.linearVelocity.x;
         float currentVelocityY = rb.linearVelocity.y;
 
@@ -252,85 +212,57 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
 
-        // 4. 수직벽 비비기 방지
-        if (isTouchingSteepWall)
+        // 중력 보정 (가속)
+        if (!status.isGrounded)
         {
-            if (!status.isGrounded)
+            if (currentVelocityY > 0f)
             {
-                float pushOutDir = -Mathf.Sign(moveInput.x);
-                currentMoveX = pushOutDir * 0.05f;
+                currentVelocityY += Physics2D.gravity.y * 1.5f * Time.fixedDeltaTime;
             }
-            else
+            else if (currentVelocityY < 0f)
             {
-                currentMoveX = 0f;
+                currentVelocityY += Physics2D.gravity.y * 4.0f * Time.fixedDeltaTime;
             }
         }
 
         currentMoveX *= status.speedMultiplier;
 
-        // 5. 이동 발판 보정
         float platformXVelocity = 0f;
+        float platformYVelocity = 0f;
 
         if (transform.parent != null && transform.parent.TryGetComponent<MovingPlatform>(out var platform))
         {
             platformXVelocity = platform.Velocity.x;
+            platformYVelocity = platform.Velocity.y;
         }
-
-        float finalVelocityY = currentVelocityY;
 
         if (status.isGrounded && transform.parent != null)
         {
-            // 발판 위에서 이동 입력이 없을 때 X 속도를 발판에 동기화
-            if (Mathf.Abs(moveInput.x) < 0.01f)
+            // 키를 입력할 때 플레이어의 기본 이동 속도에 '발판의 X 속도'를 더해줌으로써 상대 속도 문제 해결
+            if (Mathf.Abs(moveInput.x) > 0.01f)
             {
+                currentMoveX = (moveInput.x * MoveSpeed * status.speedMultiplier) + platformXVelocity;
+            }
+            else
+            {
+                // 가만히 있을 때는 발판의 X 속도를 그대로 받아와서 미끄러짐 방지
                 currentMoveX = platformXVelocity;
             }
-
-            // 발판이 위로 밀어 올릴 때 Y 속도를 코드로 강제 재설정하지 않고 물리에 위임
-            finalVelocityY = rb.linearVelocity.y;
         }
-        else if (transform.parent != null && !isTouchingSteepWall)
+        else
         {
+            // 공중이거나 발판에 없을 때 발판 속도가 남아있는 것 방지
             currentMoveX += platformXVelocity;
         }
 
-        // 6. 최종 속도 대입
-        rb.linearVelocity = new Vector2(currentMoveX, finalVelocityY);
-    }
-
-    private void CheckWallAngle()
-    {
-        isTouchingSteepWall = false;
-
-        float checkDir = moveInput.x != 0f ? Mathf.Sign(moveInput.x) : facingDirectionX;
-
-        // 상단/하단 두 지점에서 레이캐스트를 발사하여 벽 체킹 유실 방지
-        Vector2 rayOriginTop = (Vector2)transform.position + new Vector2(0f, 0.35f);
-        Vector2 rayOriginBottom = (Vector2)transform.position + new Vector2(0f, -0.2f);
-        Vector2 direction = new Vector2(checkDir, 0f);
-
-        RaycastHit2D hitTop = Physics2D.Raycast(rayOriginTop, direction, wallCheckDistance, wallLayer);
-        RaycastHit2D hitBottom = Physics2D.Raycast(rayOriginBottom, direction, wallCheckDistance, wallLayer);
-
-        RaycastHit2D hit = hitTop.collider != null ? hitTop : hitBottom;
-
-        Debug.DrawRay(rayOriginTop, direction * wallCheckDistance, isTouchingSteepWall ? Color.red : Color.green);
-        Debug.DrawRay(rayOriginBottom, direction * wallCheckDistance, isTouchingSteepWall ? Color.red : Color.green);
-
-        if (hit.collider != null)
+        float finalVelocityY = currentVelocityY;
+        if (status.isGrounded && transform.parent != null && currentVelocityY <= 0.1f)
         {
-            // 수직벽 감지 (Normal 각도가 90도 근처인지 확인)
-            float wallAngle = Vector2.Angle(hit.normal, Vector2.up);
-
-            if (wallAngle >= maxClimbableAngle)
-            {
-                // 벽 방향으로 이동 키를 누르고 있는 경우
-                if (moveInput.x != 0f && Mathf.Sign(moveInput.x) == checkDir)
-                {
-                    isTouchingSteepWall = true;
-                }
-            }
+            // Y축 역시 발판의 상승 속도를 자연스럽게 타도록 보정
+            finalVelocityY = platformYVelocity;
         }
+
+        rb.linearVelocity = new Vector2(currentMoveX, finalVelocityY);
     }
 
     public void SetActivePlatform(MovingPlatform platform)
@@ -338,8 +270,7 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         if (platform != null)
         {
             _currentPlatformTransform = platform.transform;
-            // worldPositionStays: true를 전달해 부모 할당 시 위치 및 스케일의 급격한 변형으로 인한 튕김 방지
-            transform.SetParent(_currentPlatformTransform, true);
+            transform.SetParent(_currentPlatformTransform);
         }
     }
 
@@ -520,17 +451,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             }
         }
     }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        // 넉백 중이 아니고, 발판 위에 계속 서 있다면 부모 재등록
-        if (!status.isHurt && collision.TryGetComponent<MovingPlatform>(out var platform))
-        {
-            if (transform.parent == null)
-            {
-                SetActivePlatform(platform);
-            }
-        }
-    }
 
     private IEnumerator KnockbackAndInvincibleRoutine(Vector3 enemyPosition)
     {
@@ -543,33 +463,20 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
         status.isHurt = true;
         status.isInvincible = true;
 
-        // 1. 발판 관계 및 관성 완전 끊기
-        transform.SetParent(null);
+        if (transform.parent != null) transform.SetParent(null);
         _currentPlatformTransform = null;
 
         if (rb != null)
         {
-            // 발판이 위로 밀어 올리던 Y 속도를 0으로 리셋
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-
-            // 넉백 방향 계산
             float knockbackDirection = transform.position.x > enemyPosition.x ? 1f : -1f;
-
-            // 순수한 넉백 힘만 새로 적용
-            rb.linearVelocity = new Vector2(knockbackDirection * knockbackForceX, knockbackForceY);
+            rb.linearVelocity = Vector2.zero;
+            rb.AddForce(new Vector2(knockbackDirection * JumpForce * 0.1f, JumpForce * 0.05f), ForceMode2D.Impulse);
         }
 
-        // 피격 직후 공중 판정 설정 및 애니메이터 동기화
-        status.isGrounded = false;
-        if (animator != null)
-        {
-            animator.SetBool("isGrounded", false);
-            animator.SetFloat("VelocityY", rb.linearVelocity.y);
-        }
-
+        float invincibleTime = 1.0f;
         float blinkInterval = 0.1f;
         float timer = 0f;
+        float knockbackDuration = 0.2f;
 
         while (timer < invincibleTime)
         {
@@ -583,29 +490,15 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             yield return new WaitForSeconds(blinkInterval);
             timer += blinkInterval;
 
-            // 넉백(조작 불능) 시간이 끝났을 때
             if (status.isHurt && timer >= knockbackDuration)
             {
                 status.isHurt = false;
-
-                // [핵심] 넉백 조작 해제 시점에 애니메이터 값 즉시 리셋
-                if (animator != null)
-                {
-                    animator.SetBool("isGrounded", status.isGrounded);
-                    animator.SetFloat("VelocityY", rb.linearVelocity.y);
-                }
             }
         }
 
         ResetSpriteColor();
         status.isHurt = false;
         status.isInvincible = false;
-
-        // [핵심] 무적 시간 완전히 끝난 후 최종 애니메이터 변수 동기화
-        if (animator != null)
-        {
-            animator.SetBool("isGrounded", status.isGrounded);
-        }
     }
 
     private void ResetSpriteColor()
