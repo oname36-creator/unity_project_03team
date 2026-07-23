@@ -110,6 +110,8 @@ public class BodyController : MonoBehaviour
     {
         _phase = newPhase;
 
+        Boss.MoveSpeed += 1f;
+
         SoundManager.Instance.PlaySFX("BossScreech");
 
         if (newPhase == 2) 
