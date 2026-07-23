@@ -15,7 +15,7 @@ public class DataManager : Singleton<DataManager>
             if (PlayerInventory[i] == 0) // 빈 칸을 발견했다면!
             {
                 PlayerInventory[i] = itemNumber; // 아이템 번호 저장
-                Debug.Log($"인벤토리 {i}번 슬롯에 아이템 {itemNumber} 추가 완료!");
+                // Debug.Log($"인벤토리 {i}번 슬롯에 아이템 {itemNumber} 추가 완료!");
 
                 Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
 
