@@ -85,7 +85,7 @@ public class MapChunkSpawnController : MonoBehaviour
 
         if (spawnSetting == null)
         {
-            Debug.LogWarning($"[MapChunkSpawnController] {gameObject.name}의 스폰 설정이 존재하지 않습니다.");
+           // Debug.LogWarning($"[MapChunkSpawnController] {gameObject.name}의 스폰 설정이 존재하지 않습니다.");
             return;
         }
         // 1. 금지 구역 콜라이더 수집
@@ -268,7 +268,7 @@ public class MapChunkSpawnController : MonoBehaviour
                 });
             }
             _hasTrap = new bool[_activeCliffNodes.Count];
-            Debug.Log($"[MapChunkSpawnController] {gameObject.name}의 낭떠러지 함정 {_activeCliffNodes.Count}개 작동 대기 등록 완료.");
+            // Debug.Log($"[MapChunkSpawnController] {gameObject.name}의 낭떠러지 함정 {_activeCliffNodes.Count}개 작동 대기 등록 완료.");
         }
     }
 

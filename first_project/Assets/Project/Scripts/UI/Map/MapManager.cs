@@ -351,8 +351,8 @@ public class MapManager : MonoBehaviour
             PhaseData currentPhase = phases[currentPhaseIndex];
 
             // 테스트용 디버깅
-            Debug.Log($"[{currentPhase.phaseName}] 돌입! " +
-                $"누적 시작 시간: {cumulativeTime}초, 논리적 페이즈: {currentLogicalPhase}");
+           // Debug.Log($"[{currentPhase.phaseName}] 돌입! " +
+            //    $"누적 시작 시간: {cumulativeTime}초, 논리적 페이즈: {currentLogicalPhase}");
 
             // 현재 페이즈의 맵들로 셔플 백 갈아끼우기
             UpdateShuffleBagForCurrentPhase();
