@@ -52,15 +52,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreditView
   _entries:
-  - _part: Read Programer
-    _names:
-    - Clode
-    - Jemini
-    - GPT
-    - AntiAgent
-  - _part: TA
-    _names:
-    - Ater Ai
   - _part: Player
     _names:
     - 9.8
@@ -79,7 +70,7 @@ MonoBehaviour:
   _content: {fileID: 2184347052287370257}
   _linePrefab: {fileID: 3408259316312325438, guid: b60e2bc48c6825545b803ee8bd05a082, type: 3}
   _partFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  _nameFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  _nameFont: {fileID: 11400000, guid: 3c3d69c528fdbe3408166d4a814c2746, type: 2}
   _partLineHeight: 50
   _nameLineHeight: 40
   _lineSpacing: 5
@@ -101,6 +92,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  ending: 0
 --- !u!225 &2113483930575393704
 CanvasGroup:
   m_ObjectHideFlags: 0
