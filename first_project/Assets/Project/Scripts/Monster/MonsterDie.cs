@@ -19,10 +19,12 @@ public class MonsterDie : IMonsterState
     public void Enter()
     {
         //Debug.Log("Die 상태");
-        _ownerGameObject.tag = "Untagged";
-        _ownerGameObject.layer = LayerMask.NameToLayer("Default");
+        // Default = 0
+        _ownerGameObject.layer = 0;
         _animator.SetBool(AnimatorHash.Idle, false);
         _animator.SetTrigger(AnimatorHash.IsDead);
+
+        _owner.StopAllCoroutines();
 
         _owner.Stop();
 
