@@ -531,10 +531,7 @@ MonoBehaviour:
   phases:
   - phaseName: Level4
     timeThreshold: 30
-    phasePalette: {fileID: 11400000, guid: 47f0a91a0259f8340935a085e7fb28f9, type: 2}
-  - phaseName: Level5
-    timeThreshold: 30
-    phasePalette: {fileID: 11400000, guid: 9208a7c78efb64b478ada223b76930f3, type: 2}
+    phasePalette: {fileID: 11400000, guid: 542edcc049089e747ba5d889a8be20a0, type: 2}
   initialChunkPoolSize: 2
   currentLogicalPhase: 0
 --- !u!4 &245405373

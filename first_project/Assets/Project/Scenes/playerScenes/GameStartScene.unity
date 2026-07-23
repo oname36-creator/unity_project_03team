@@ -935,10 +935,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: StartSceneUI
       objectReference: {fileID: 0}
-    - target: {fileID: 6957581568388768150, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 4545631451409107628}
     - target: {fileID: 8350360671928269836, guid: eb5cca11e7e8de640a3db3e820b6f2d0, type: 3}
       propertyPath: m_Pivot.x
       value: 0

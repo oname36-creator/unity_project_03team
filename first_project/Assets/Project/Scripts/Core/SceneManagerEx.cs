@@ -36,7 +36,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
         SoundManager.Instance.PauseBGM();
         SoundManager.Instance.PauseSFX();
-        Debug.Log("게임 일시정지");
+
     }
 
     public void ResumeGame()
@@ -46,7 +46,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
         SoundManager.Instance.ResumeBGM();
         SoundManager.Instance.ResumeSFX();
-        Debug.Log("게임 재개");
+
     }
 
     public void LoadGameScene()
@@ -58,7 +58,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
         {
             DataManager.Instance.ResetGameData();
         }
-        Debug.Log("게임 시작");
+        
         SceneManager.LoadScene("GameScene");
     }
 
@@ -79,7 +79,7 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
             gameOverUI.SetActive(true); // 사망 창 켜기
             SoundManager.Instance.PauseBGM();
         }
-        Debug.Log("게임 오버 UI 활성화");
+ 
     }
 
     // 다시 시작 버튼용 함수
@@ -89,6 +89,6 @@ public class SceneManagerEx : Singleton<SceneManagerEx>
      
         // 현재 씬("GameScenePlayer")을 다시 로드하여 처음부터 시작하게 만듭니다.
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
-        Debug.Log("게임 다시 시작");
+ 
     }
 }

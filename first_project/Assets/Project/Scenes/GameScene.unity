@@ -547,6 +547,9 @@ MonoBehaviour:
   - phaseName: Level5
     timeThreshold: 30
     phasePalette: {fileID: 11400000, guid: 9208a7c78efb64b478ada223b76930f3, type: 2}
+  - phaseName: Level6
+    timeThreshold: 30
+    phasePalette: {fileID: 11400000, guid: 542edcc049089e747ba5d889a8be20a0, type: 2}
   initialChunkPoolSize: 2
   currentLogicalPhase: 0
 --- !u!4 &245405373
@@ -986,7 +989,7 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.1
+    y: 0
     width: 1
     height: 1
   near clip plane: 0.4
@@ -1018,7 +1021,7 @@ Transform:
   m_GameObject: {fileID: 436494359}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.1876545, y: 3.5999997, z: -10}
+  m_LocalPosition: {x: 5.088889, y: 3.5999997, z: -10}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2213,7 +2216,7 @@ Transform:
   m_GameObject: {fileID: 1814587811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.1876545, y: 2.4999998, z: -10}
+  m_LocalPosition: {x: 5.088889, y: 2.4999998, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2403,7 +2406,7 @@ Transform:
   m_GameObject: {fileID: 1919539568}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.1876545, y: 3.5999997, z: -10}
+  m_LocalPosition: {x: 5.088889, y: 3.5999997, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2587,12 +2590,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5624757283877749718, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_fontAsset
@@ -2842,7 +2853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d09aeb107d85bb44b140605052479ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalTimer
-  targetSurvivalTime: 183
+  targetSurvivalTime: 210
   timerText: {fileID: 218164005}
 --- !u!4 &2099972570
 Transform:
@@ -3028,50 +3039,6 @@ PrefabInstance:
     - target: {fileID: 3736855579270901699, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[1].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[2].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[3].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[4].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[5].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[6].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[7].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[12].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[13].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[14].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[15].SoundData.Volume
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7025348878437724912, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
       propertyPath: m_Name
