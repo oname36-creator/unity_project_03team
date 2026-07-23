@@ -13,18 +13,9 @@ MonoBehaviour:
   m_Name: Level3_B
   m_EditorClassIdentifier: Assembly-CSharp::SOMapData
   gimmicList:
-  - gimmickType: 1
-    position: {x: 74.43969, y: -1.4045199, z: 0}
+  - gimmickType: 4
+    position: {x: 0.5, y: 0.5, z: 0}
     prefabIndex: 0
-  - gimmickType: 1
-    position: {x: 72.43969, y: -1.4045199, z: 0}
-    prefabIndex: 0
-  - gimmickType: 1
-    position: {x: 70.43969, y: -1.4045199, z: 0}
-    prefabIndex: 0
-  - gimmickType: 1
-    position: {x: 84.43969, y: 0.5954801, z: 0}
-    prefabIndex: 1
-  - gimmickType: 3
-    position: {x: 79.43968, y: -1.4045199, z: 0}
+  - gimmickType: 4
+    position: {x: 18.5, y: 1.5, z: 0}
     prefabIndex: 0

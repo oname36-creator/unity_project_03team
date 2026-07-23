@@ -16,13 +16,10 @@ public class BodyController : MonoBehaviour
     public BossController Boss;
     public float ReleaseDistance = 3f;
 
-    [Header("Test")]
-    public bool CreatedArch = false;
-
 
 
     private bool _isDead = false;
-    private int _phase = 1;
+    private int _phase = 1; // test
 
     private Rigidbody2D _rigidbody2D;
     private MonsterStateMachine _monsterMachine;
@@ -112,11 +109,14 @@ public class BodyController : MonoBehaviour
     private void HandlePhaseChanged(int newPhase)
     {
         _phase = newPhase;
+
+        SoundManager.Instance.PlaySFX("BossScreech");
+
         if (newPhase == 2) 
         {
             TentacleCycle = 5;
         }
-        //Debug.Log("페이즈 : " + _phase);
+        
 
     }
 

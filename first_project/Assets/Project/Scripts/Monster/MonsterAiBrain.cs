@@ -555,11 +555,11 @@ public class MonsterAiBrain
         transitionMap[move] = new List<Transition>
             {
                 new Transition(
-                    condition : () =>
+                    condition: () =>
                     {
-                        return owner.Create;
+                        return (owner.Phase > 2) && owner.CreateArch;
                     },
-                    targetState: create
+                    targetState:createArch
                     ),
 
                 new Transition(
@@ -571,13 +571,12 @@ public class MonsterAiBrain
                     ),
 
                 new Transition(
-                    condition: () =>
+                    condition : () =>
                     {
-                        return (owner.Phase > 2) && owner.CreateArch;
+                        return owner.Create;
                     },
-                    targetState:createArch
+                    targetState: create
                     )
-
             };
 
         transitionMap[create] = new List<Transition>

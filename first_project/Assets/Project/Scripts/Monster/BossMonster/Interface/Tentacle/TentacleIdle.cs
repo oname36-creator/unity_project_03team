@@ -41,7 +41,7 @@ public class TentacleIdle : IMonsterState
 
         _owner.gameObject.layer = _tentacleLayer;
 
-        _owner.SetLayer(false);
+        _owner.SetLayer(true);
 
         _owner.Target = null;
         _owner.segmentDistance = 0.5f;
