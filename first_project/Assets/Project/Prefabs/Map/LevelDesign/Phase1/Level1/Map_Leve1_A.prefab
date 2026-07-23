@@ -1832,9 +1832,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a578f8543f597041ad381b7b4daab5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  moveOffset: {x: -18, y: 0}
-  speed: 8
-  waitTime: 5
+  moveOffset: {x: -17, y: 0}
+  speed: 7
+  waitTime: 6
 --- !u!1 &1646576139070219861
 GameObject:
   m_ObjectHideFlags: 0
@@ -10272,8 +10272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: 18, y: 0}
-  speed: 8
-  waitTime: 5
+  speed: 7
+  waitTime: 6
 --- !u!1 &6537706223602053420
 GameObject:
   m_ObjectHideFlags: 0
