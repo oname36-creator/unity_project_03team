@@ -41,17 +41,17 @@ public class BossController : MonoBehaviour
 
 
     #region Private Fields
-    private int _hp;
-    private int _damage;
-    private int _searchRange; // 탐색 깊이
-    private int _attackRange; // 공격 가능 거리
-    private int _force; // 힘
+    //private int _hp;
+    //private int _damage;
+    //private int _searchRange; // 탐색 깊이
+    //private int _attackRange; // 공격 가능 거리
+    //private int _force; // 힘
 
-    private int _phase = 1;
+    //private int _phase = 1;
 
-    private float _angle;   // 탐색 각도
-    private float _cosValue; // 각도의 cos 값
-    private float _currentAngle = 0f;
+    //private float _angle;   // 탐색 각도
+    //private float _cosValue; // 각도의 cos 값
+    //private float _currentAngle = 0f;
 
     private float _speed;
     private float _maxSpeed; // 최대 속도
@@ -59,7 +59,7 @@ public class BossController : MonoBehaviour
     private bool _isChase;
     private bool _isDead;
     private bool _isAttached;
-    private bool _isGround;
+
 
 
     private Vector2 _frontVector;
@@ -128,21 +128,20 @@ public class BossController : MonoBehaviour
 
     private void Awake()
     {
-        _hp = MonsterData.hp;
-        _damage = MonsterData.damage;
-        _searchRange = MonsterData.searchRange;
-        _attackRange = MonsterData.attackRange;
-        _angle = MonsterData.angle;
+        //_hp = MonsterData.hp;
+        //_damage = MonsterData.damage;
+        //_searchRange = MonsterData.searchRange;
+        //_attackRange = MonsterData.attackRange;
+        //_angle = MonsterData.angle;
         _speed = MonsterData.Speed;
         _maxSpeed = MonsterData.MaxSpeed;
-        _force = MonsterData.Force;
+        //_force = MonsterData.Force;
 
         _frontVector = Vector3.right;
 
         IsAttackTentacle = false;
         _isDead = false;
         _isChase = true;
-        _isGround = true;
         _isAttached = false;
 
         _transform = GetComponent<Transform>();

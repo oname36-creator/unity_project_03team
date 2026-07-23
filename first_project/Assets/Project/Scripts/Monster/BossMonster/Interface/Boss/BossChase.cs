@@ -24,8 +24,6 @@ public class BossChase : IMonsterState
     public TextMeshProUGUI _bossDistanceText;
     public Canvas _canvas; // 타겟 UI가 포함된 Canvas
 
-    private float _time;
-
     private float _CameraWidth;
     private float _orthoSize;
 
@@ -51,7 +49,6 @@ public class BossChase : IMonsterState
 
     public void Enter()
     {
-        _time = 0f;
 
         _owner.Attack = false;
         _owner.gameObject.tag = "Boss";

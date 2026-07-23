@@ -70,6 +70,9 @@ public class MonsterRespawn : MonoBehaviour
         {
             rootPos.y += 30;
         }
+
+        tentacleController.warningEffectRenderer_2.flipY = !up;
+
         tentacleController.SetRootPos(rootPos);
         tentacleController.Up = up;
         

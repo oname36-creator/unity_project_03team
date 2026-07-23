@@ -354,7 +354,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2610673d7ea98214980f20ed6ad9565e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseMonsterColider
+  _monsterController: {fileID: 8127177671941876280}
   targetBoxCollider: {fileID: 8571382534996205710}
+  _allColliders:
+  - {fileID: 8571382534996205710}
+  - {fileID: 8025886059771061288}
+  - {fileID: 7295477349643066998}
 --- !u!61 &8571382534996205710
 BoxCollider2D:
   m_ObjectHideFlags: 0
