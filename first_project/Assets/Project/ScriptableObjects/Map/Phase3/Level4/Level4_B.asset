@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
+  m_Name: Level4_B
+  m_EditorClassIdentifier: Assembly-CSharp::SOMapData
+  gimmicList:
+  - gimmickType: 0
+    position: {x: 56.40006, y: -9.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 50.40006, y: -10.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 43.40006, y: -11.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 36.40006, y: -12.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 0
+    position: {x: 30.400059, y: -13.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 1
+    position: {x: 59.40006, y: -8.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 66.900055, y: -8.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 64.900055, y: -3.26498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 59.40006, y: -3.77498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 53.40006, y: -3.77498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 47.40006, y: -4.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 41.40006, y: -4.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 35.40006, y: -4.56498, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: 29.400059, y: -4.56498, z: 0}
+    prefabIndex: 0

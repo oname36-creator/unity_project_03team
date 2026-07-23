@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4376b7799eb51b4eb23ccb5b03513a0, type: 3}
+  m_Name: Last_Hollow
+  m_EditorClassIdentifier: Assembly-CSharp::SOHollowTrapData
+  hollowTrapList:
+  - position: {x: -5, y: -9, z: 0}
+  - position: {x: 0, y: -9, z: 0}
+  - position: {x: 5, y: -9, z: 0}
+  - position: {x: 10, y: -9, z: 0}
+  - position: {x: 15, y: -9, z: 0}
+  - position: {x: 20, y: -9, z: 0}
+  - position: {x: 25, y: -9, z: 0}
+  - position: {x: 30, y: -9, z: 0}
+  - position: {x: 35, y: -9, z: 0}
+  - position: {x: 40, y: -9, z: 0}
+  - position: {x: 45, y: -9, z: 0}
+  - position: {x: 50, y: -9, z: 0}
+  - position: {x: 55, y: -9, z: 0}
+  isTrapDirectionUp: 1

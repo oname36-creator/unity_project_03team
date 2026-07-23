@@ -2,24 +2,33 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Monster
+  - Bullet
+  - Ground
+  - PlayerAttack
+  - Boss
+  - Tentacle
+  - Trap
+  - DeadZone
+  - Box
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - AttackHitbox
+  - SwordHitbox
+  - Monster
+  - MonsterBody
+  - Boss
+  - Tentacle
+  - Bullet
+  - Dead
   - 
   - 
   - 
@@ -41,3 +50,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 1306804077
+    locked: 0
+  - name: Middleground
+    uniqueID: 3761616727
+    locked: 0
+  - name: Foreground
+    uniqueID: 4202246503
+    locked: 0
+  - name: Player
+    uniqueID: 3821858653
+    locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []

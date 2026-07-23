@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9350e9b2cfd0d3f4d9a86f978ab56d84, type: 3}
+  m_Name: Level2_B
+  m_EditorClassIdentifier: Assembly-CSharp::SOMapData
+  gimmicList:
+  - gimmickType: 0
+    position: {x: 9.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 8.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 7.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 6.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 5.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 4.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 3.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 2.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 1.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 0.52344, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -0.47656012, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -1.4765601, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -2.47656, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -3.47656, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -4.47656, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -5.47656, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -6.47656, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -7.47656, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -8.476561, y: -5.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -8.476561, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -7.47656, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -6.47656, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 9.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 8.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 7.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 6.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 5.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 4.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 3.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 2.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 1.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: 0.52344, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -0.47656012, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -1.4765601, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -2.47656, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -3.47656, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -4.47656, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 0
+    position: {x: -5.47656, y: -4.58879, z: 0}
+    prefabIndex: 1
+  - gimmickType: 1
+    position: {x: 6.5234394, y: -2.58879, z: 0}
+    prefabIndex: 0
+  - gimmickType: 1
+    position: {x: 5.5234394, y: -2.58879, z: 0}
+    prefabIndex: 0
+  - gimmickType: 1
+    position: {x: 4.5234394, y: -2.58879, z: 0}
+    prefabIndex: 0
+  - gimmickType: 1
+    position: {x: 3.52344, y: -2.58879, z: 0}
+    prefabIndex: 0
+  - gimmickType: 3
+    position: {x: -10.5, y: -2.5, z: 0}
+    prefabIndex: 0
+  - gimmickType: 4
+    position: {x: -7.5, y: -0.5, z: 0}
+    prefabIndex: 0
