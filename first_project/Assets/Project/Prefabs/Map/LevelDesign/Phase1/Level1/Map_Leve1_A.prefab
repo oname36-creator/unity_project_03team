@@ -1833,8 +1833,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: -18, y: 0}
-  speed: 6
-  waitTime: 2
+  speed: 8
+  waitTime: 5
 --- !u!1 &1646576139070219861
 GameObject:
   m_ObjectHideFlags: 0
@@ -5562,7 +5562,7 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: 31, y: -8, z: 0}
+  - first: {x: 28, y: -8, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 1
@@ -5582,7 +5582,7 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: 31, y: -7, z: 0}
+  - first: {x: 28, y: -7, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 1
@@ -10272,8 +10272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: 18, y: 0}
-  speed: 6
-  waitTime: 2
+  speed: 8
+  waitTime: 5
 --- !u!1 &6537706223602053420
 GameObject:
   m_ObjectHideFlags: 0
