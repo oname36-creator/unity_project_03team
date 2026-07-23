@@ -216,7 +216,7 @@ MonoBehaviour:
   enemyTag: Monster
   muzzlePoint: {fileID: 3821617474522254589}
   groundCheckPoint: {fileID: 6601625070466968001}
-  groundCheckSize: {x: 0.4, y: 0.2}
+  groundCheckSize: {x: 0.6, y: 0.2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -224,6 +224,11 @@ MonoBehaviour:
   attackHitboxObj: {fileID: 1438914450262349504}
   swordAttackHitboxObj: {fileID: 8235964391736735294}
   playerPosData: {fileID: 0}
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheckDistance: 0.3
+  maxClimbableAngle: 75
 --- !u!114 &5173170813402971634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -611,7 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63810fb23164791479d54f074ad0848b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  hitStopManager: {fileID: 4562835588813731039, guid: 84035fc0ba7a3bf4c835a4ea4619eaa8, type: 3}
+  hitStopManager: {fileID: 0}
   hitStopDuration: 0.07
   hitEffectPrefab: {fileID: 3610882451772401995, guid: daeb7e02dd9aa924580f0c98d7cf6373, type: 3}
   effectDestroyTime: 0.5
