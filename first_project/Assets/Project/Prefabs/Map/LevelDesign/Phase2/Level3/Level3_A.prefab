@@ -632,7 +632,7 @@ MonoBehaviour:
   cameraBoundaryCollider: {fileID: 3452967155236221581}
   minPlayerDistance: 4
   margin: 2
-  enableYTracking: 0
+  enableYTracking: 1
 --- !u!61 &3452967155236221581
 BoxCollider2D:
   m_ObjectHideFlags: 0
