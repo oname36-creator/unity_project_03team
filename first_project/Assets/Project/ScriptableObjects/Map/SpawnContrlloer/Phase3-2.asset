@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Phase3-2
   m_EditorClassIdentifier: Assembly-CSharp::SOMapPhaseSpawnSetting
   spawnableMonsterTypes: 000000000100000002000000
-  monsterSpawnChane: 0.15
-  maxMonsterCount: 10
-  boxSpawnChane: 0.15
+  monsterSpawnChane: 0.5
+  maxMonsterCount: 8
+  boxSpawnChane: 0.2
   rewardItemsWeights:
   - item: {fileID: 11400000, guid: e1ec7f7533a2cff4697314ac3c1f7f28, type: 2}
     weight: 15

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Phase3-1
   m_EditorClassIdentifier: Assembly-CSharp::SOMapPhaseSpawnSetting
   spawnableMonsterTypes: 0100000002000000
-  monsterSpawnChane: 0.3
+  monsterSpawnChane: 0.5
   maxMonsterCount: 5
   boxSpawnChane: 0.2
   rewardItemsWeights:

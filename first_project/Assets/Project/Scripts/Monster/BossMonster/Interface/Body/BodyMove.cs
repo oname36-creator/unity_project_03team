@@ -40,7 +40,7 @@ public class BodyMove : IMonsterState
         {
             _time += Time.deltaTime;
 
-            if(_time > 10f) 
+            if(_time > 25f) 
             {
                 _owner.CreateArch = true;
                 _time = 0f;

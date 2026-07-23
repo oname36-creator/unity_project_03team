@@ -8,7 +8,7 @@ public class TentacleArchUp : IMonsterState
     private SpriteRenderer _warningEffect;
 
     private float _timer;
-    private float _duration = 5f; // 기획과 동일한 5초
+    private float _duration = 10f; // 기획과 동일한 5초
 
     public TentacleArchUp(TentacleController owner)
     {
