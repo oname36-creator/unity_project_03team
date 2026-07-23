@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
-using UnityEditor.U2D.Aseprite;
 
 
 #if UNITY_EDITOR
