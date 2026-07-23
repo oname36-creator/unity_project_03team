@@ -52,8 +52,6 @@ public class MonsterController : MonoBehaviour
     private bool isHurt;
     private bool isCollision;
 
-    // 뒤집기 bool
-    private bool onFlip = true;
 
     private string _name;
 

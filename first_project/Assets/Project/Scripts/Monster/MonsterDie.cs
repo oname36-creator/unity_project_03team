@@ -36,6 +36,10 @@ public class MonsterDie : IMonsterState
         {
             SoundManager.Instance.PlaySFX("DarkWolfDead");
         }
+        else if(_name == "Base") 
+        {
+            SoundManager.Instance.PlaySFX("SlimBoom");
+        }
 
     }
 

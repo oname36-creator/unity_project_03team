@@ -35,6 +35,10 @@ public class MonsterHurt : IMonsterState
         {
             SoundManager.Instance.PlaySFX("DarkWolfHurt");
         }
+        else if (_name == "Base")
+        {
+            SoundManager.Instance.PlaySFX("SlimBoom");
+        }
     }
 
     public void Update()

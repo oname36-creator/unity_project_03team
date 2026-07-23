@@ -302,8 +302,8 @@ MonoBehaviour:
   _throwDistance: 20
   _chargeTime: 3
   _throwPower: 15
-  _boomAudio: {fileID: 8300000, guid: b6a85408d8053994b804e4bdeee9c455, type: 3}
-  _name: Three
+  _name: Tree
+  boomKey: TreeboomKey
   _impulseSource: {fileID: 4515406210161469932}
 --- !u!114 &4515406210161469932
 MonoBehaviour:
@@ -368,11 +368,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.75
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 978452201158770307, guid: f6d4a83f66c3e224e84b77b885b4a330, type: 3}
       propertyPath: m_LocalPosition.x

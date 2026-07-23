@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,29 +56,24 @@ public class SoundManager : Singleton<SoundManager>
     // playOneShot을 사용하면 적절히 알아서 믹싱이 됨
     // 알아둘것
 
-    private AudioSource[] _sfxAudioSources;
+    private AudioSource _sfxSource;
 
 
 
-    private void Awake()
+    private void Start()
     {
         _bgmSource = gameObject.AddComponent<AudioSource>();
         _bgmSource.loop = true;
 
 
-        _sfxAudioSources = new AudioSource[3];
-        
-        for(int i = 0; i < 3; i++)
-        {
-            AudioSource sfxSource = gameObject.AddComponent<AudioSource>();
-            _sfxAudioSources[i] = sfxSource;
-        }
+        _sfxSource = gameObject.AddComponent<AudioSource>();
 
         SetBGM();
         SetSfx();
 
         masterBgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1.0f);
         masterSfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1.0f);
+        if (_sfxSource != null) _sfxSource.volume = masterSfxVolume;
     }
 
     private void SetBGM()
@@ -116,10 +111,6 @@ public class SoundManager : Singleton<SoundManager>
             data.Volume = volume;
             data.Pitch = pitch;
         }
-        else
-        {
-            Debug.LogWarning($"[SoundManager] 조절하려는 키가 없습니다: {key}");
-        }
     }
 
 
@@ -154,51 +145,28 @@ public class SoundManager : Singleton<SoundManager>
     {
         if (_sfxDic.TryGetValue(key, out SoundData data))
         {
-            // 1. 현재 재생 중이지 않은(비어있는) AudioSource를 찾습니다.
-            AudioSource availableSource = GetAvailableSfxSource();
-
-            if (availableSource != null)
+            if (_sfxSource != null)
             {
-                availableSource.clip = data.Clip;
-                availableSource.pitch = data.Pitch;
-                availableSource.volume = masterSfxVolume * data.Volume;
-
-                availableSource.Play();
-            }
-            else
-            {
-                Debug.LogWarning("[SoundManager] 모든 SFX 오디오 소스가 사용 중입니다.");
+                _sfxSource.pitch = data.Pitch;
+                _sfxSource.PlayOneShot(data.Clip, data.Volume);
             }
         }
     }
 
     public void PauseSFX()
     {
-        foreach(AudioSource sfxSource in _sfxAudioSources) 
+        if (_sfxSource != null)
         {
-            sfxSource.Pause();
+            _sfxSource.Pause();
         }
     }
 
     public void ResumeSFX()
     {
-        foreach (AudioSource sfxSource in _sfxAudioSources)
+        if (_sfxSource != null)
         {
-            sfxSource.UnPause();
+            _sfxSource.UnPause();
         }
-    }
-
-
-    private AudioSource GetAvailableSfxSource()
-    {
-        for (int i = 0; i < _sfxAudioSources.Length; i++)
-        {
-            if (!_sfxAudioSources[i].isPlaying)
-            {
-                return _sfxAudioSources[i];
-            }
-        }
-        return null; // 모든 소스가 재생 중일 경우
     }
 
 
@@ -220,16 +188,9 @@ public class SoundManager : Singleton<SoundManager>
     {
         masterSfxVolume = volume;
 
-        // 현재 재생 중인 모든 SFX 채널에도 즉시 반영
-        if (_sfxAudioSources != null)
+        if (_sfxSource != null)
         {
-            foreach (var source in _sfxAudioSources)
-            {
-                if (source != null)
-                {
-                    source.volume = masterSfxVolume;
-                }
-            }
+            _sfxSource.volume = masterSfxVolume;
         }
 
         PlayerPrefs.SetFloat("SFXVolume", volume);
