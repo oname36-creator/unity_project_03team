@@ -547,6 +547,9 @@ MonoBehaviour:
   - phaseName: Level5
     timeThreshold: 30
     phasePalette: {fileID: 11400000, guid: 9208a7c78efb64b478ada223b76930f3, type: 2}
+  - phaseName: Level6
+    timeThreshold: 30
+    phasePalette: {fileID: 11400000, guid: 542edcc049089e747ba5d889a8be20a0, type: 2}
   initialChunkPoolSize: 2
   currentLogicalPhase: 0
 --- !u!4 &245405373
@@ -2850,7 +2853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d09aeb107d85bb44b140605052479ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalTimer
-  targetSurvivalTime: 183
+  targetSurvivalTime: 214
   timerText: {fileID: 218164005}
 --- !u!4 &2099972570
 Transform:
