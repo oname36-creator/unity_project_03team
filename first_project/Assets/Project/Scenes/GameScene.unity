@@ -2590,12 +2590,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449734552319850461, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5624757283877749718, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
       propertyPath: m_fontAsset
@@ -3031,50 +3039,6 @@ PrefabInstance:
     - target: {fileID: 3736855579270901699, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[1].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[2].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[3].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[4].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[5].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[6].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[7].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[12].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[13].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[14].SoundData.Volume
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
-      propertyPath: _audioSfxList.Array.data[15].SoundData.Volume
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7025348878437724912, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
       propertyPath: m_Name
