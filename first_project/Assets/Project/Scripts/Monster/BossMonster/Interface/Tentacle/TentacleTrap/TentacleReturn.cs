@@ -26,7 +26,7 @@ public class TentacleReturn : IMonsterState
         //Debug.Log("TentacleTrap Return");
 
         // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거
-        _owner.SetLayer(true);
+        _owner.SetLayer(false);
 
         _rootPos = _owner.RootPos;
         _targetPos = _owner.IkTargetPosition; // 현재 하늘에 있는 촉수 끝 위치에서 시작

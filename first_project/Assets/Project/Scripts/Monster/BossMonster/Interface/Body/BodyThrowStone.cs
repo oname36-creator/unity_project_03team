@@ -21,13 +21,11 @@ public class BodyThrowStone : IMonsterState
 
     public void Enter()
     {
-        if (_throwCoroutine != null)
+        if (_throwCoroutine != null || _playerTransform.position.y < -10)
         {
             _owner.Throw = false;
             return;
         }
-
-        _targetPosition = _playerTransform.position + new Vector3(20f, 0f, 0f);
 
         _throwCoroutine = _owner.StartCoroutine(ThrowRoutine());
     }
@@ -40,22 +38,19 @@ public class BodyThrowStone : IMonsterState
     {
 
     }
-
     private IEnumerator ThrowRoutine()
     {
         yield return new WaitForSeconds(_owner.ThrowCycle);
 
+
+        _targetPosition = _playerTransform.position;
+        _targetPosition.x += 20f;
+
+
         if (_targetPosition != Vector3.zero)
         {
             GameObject thrown = ObjectPoolManager.Instance.ThrownPop();
-            if (thrown != null)
-            {
-                thrown.GetComponent<BeingThrown>().InitializeThrow(_targetPosition);
-            }
+            thrown.GetComponent<BeingThrown>().InitializeThrow(_targetPosition);
         }
-
-        _owner.Throw = true;
-
-        _throwCoroutine = null;
     }
 }

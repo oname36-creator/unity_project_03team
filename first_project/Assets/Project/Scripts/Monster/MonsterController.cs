@@ -52,6 +52,10 @@ public class MonsterController : MonoBehaviour
     private bool isHurt;
     private bool isCollision;
 
+    private float _obstacleCheckTimer = 0f;
+    private readonly float _obstacleCheckInterval = 0.1f; // 0.1초에 한 번만 체크
+    private bool _isObstacleBlocked = false;
+
 
     private string _name;
 
@@ -298,11 +302,31 @@ public class MonsterController : MonoBehaviour
        
         CaculateMonsterToPlayerVector();
 
-        // 최적화: 프레임당 한 번만 물리 체크 및 연산 수행 (캐싱)
-        _isInRange = _mToPlayerDistance.magnitude < _searchRange;
-        _isInAttackRange = _mToPlayerDistance.magnitude < _attackRange;
-        _isInAngle = (Vector2.Dot(_frontVector, _mToPlayer) > _cosValue && !CheckForObstacles());
 
+ 
+        float sqrDistance = _mToPlayerDistance.sqrMagnitude;
+        float searchSqr = _searchRange * _searchRange;
+        float attackSqr = _attackRange * _attackRange;
+        _isInRange = sqrDistance < searchSqr;
+        _isInAttackRange = sqrDistance < attackSqr;
+
+        bool isInFov = Vector2.Dot(_frontVector, _mToPlayer) > _cosValue;
+
+        if (isInFov)
+        {
+            _obstacleCheckTimer += Time.deltaTime;
+            if (_obstacleCheckTimer >= _obstacleCheckInterval)
+            {
+                _isObstacleBlocked = CheckForObstacles();
+                _obstacleCheckTimer = 0f;
+            }
+        }
+        else
+        {
+            _isObstacleBlocked = false; // 시야를 벗어나면 리셋
+            _obstacleCheckTimer = _obstacleCheckInterval; // 즉시 체크하도록 초기화
+        }
+        _isInAngle = (isInFov && !_isObstacleBlocked);
         _monsterMachine.Update();
 
 
@@ -392,12 +416,12 @@ public class MonsterController : MonoBehaviour
         _mToPlayer = _mToPlayerDistance.normalized;
     }
 
+
     public bool CheckForObstacles()
     {
         Vector2 origin = transform.position;
         origin.y += 0.5f; // 몬스터 중심 높이
 
-        // 1. 플레이어 중심점 보정 (CaculateMonsterToPlayerVector와 동일하게 맞춤)
         Vector2 playerPos = _playerTransform.position;
         playerPos.y += 0.5f;
 
@@ -411,24 +435,16 @@ public class MonsterController : MonoBehaviour
         Vector2 dirToHead = (headTarget - origin).normalized;
         Vector2 dirToFeet = (feetTarget - origin).normalized;
 
-        // 2. 레이캐스트 거리를 '플레이어까지의 거리'로 제한
-        float distToCenter = Vector2.Distance(origin, centerTarget);
-        float distToHead = Vector2.Distance(origin, headTarget);
-        float distToFeet = Vector2.Distance(origin, feetTarget);
-
-        // 3. 수정한 거리(distTo~)를 적용하여 레이캐스트 쏘기
-        RaycastHit2D hitCenter = Physics2D.Raycast(origin, dirToCenter, distToCenter, _obstacleLayer);
-        RaycastHit2D hitHead = Physics2D.Raycast(origin, dirToHead, distToHead, _obstacleLayer);
-        RaycastHit2D hitFeet = Physics2D.Raycast(origin, dirToFeet, distToFeet, _obstacleLayer);
+        float baseDistance = _mToPlayerDistance.magnitude;
 
 
-        //Debug.DrawRay(origin, dirToCenter * distToCenter, Color.green);
-        //Debug.DrawRay(origin, dirToHead * distToHead, Color.yellow);
-        //Debug.DrawRay(origin, dirToFeet * distToFeet, Color.red);
+        RaycastHit2D hitCenter = Physics2D.Raycast(origin, dirToCenter, baseDistance, _obstacleLayer);
+        RaycastHit2D hitHead = Physics2D.Raycast(origin, dirToHead, baseDistance, _obstacleLayer);
+        RaycastHit2D hitFeet = Physics2D.Raycast(origin, dirToFeet, baseDistance, _obstacleLayer);
 
-        bool isCenterBlocked = hitCenter.collider != null && hitCenter.collider.CompareTag("Ground");
-        bool isHeadBlocked = hitHead.collider != null && hitHead.collider.CompareTag("Ground");
-        bool isFeetBlocked = hitFeet.collider != null && hitFeet.collider.CompareTag("Ground");
+        bool isCenterBlocked = hitCenter.collider != null;
+        bool isHeadBlocked = hitHead.collider != null;
+        bool isFeetBlocked = hitFeet.collider != null;
 
         return isHeadBlocked && isCenterBlocked && isFeetBlocked;
     }

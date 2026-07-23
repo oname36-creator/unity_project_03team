@@ -113,7 +113,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         }
         
         // Big Dust Effect 생성
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             GameObject obj = Instantiate(_bigDustEffectPrefab, this.transform);
             obj.SetActive(false); // 비활성화 상태로 대기

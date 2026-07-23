@@ -16,7 +16,7 @@ public class BossChase : IMonsterState
     private Camera _camera;
 
     private Coroutine _chaseCoroutine;
-    private Coroutine _phaseCoroutine;
+
 
 
     public GameObject _distanceUi;
@@ -71,11 +71,6 @@ public class BossChase : IMonsterState
         {
             _owner.StopCoroutine(_chaseCoroutine);
             _chaseCoroutine = null; // 참조 초기화
-        }
-        if (_phaseCoroutine != null)
-        {
-            _owner.StopCoroutine(_phaseCoroutine);
-            _phaseCoroutine = null;
         }
     }
 
