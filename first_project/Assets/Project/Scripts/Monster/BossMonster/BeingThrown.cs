@@ -18,6 +18,10 @@ public class BeingThrown : MonoBehaviour
     [Header("Name")]
     [SerializeField] private string _name;
 
+    [Header("Sound Key")]
+    [SerializeField] private string boomKey;
+
+
     [SerializeField]
     private CinemachineImpulseSource _impulseSource;
 
@@ -33,9 +37,6 @@ public class BeingThrown : MonoBehaviour
 
     private float _localScaleY;
     private float _fadeDuration = 3f;
-
-    private string startKey;
-    private string boomKey;
 
     
     void Awake()

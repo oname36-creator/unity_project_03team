@@ -176,6 +176,7 @@ MonoBehaviour:
   _chargeTime: 3
   _throwPower: 20
   _name: Stone
+  boomKey: StoneboomKey
   _impulseSource: {fileID: 2350401580376007880}
 --- !u!114 &2350401580376007880
 MonoBehaviour:

@@ -302,8 +302,8 @@ MonoBehaviour:
   _throwDistance: 20
   _chargeTime: 3
   _throwPower: 15
-  _boomAudio: {fileID: 8300000, guid: b6a85408d8053994b804e4bdeee9c455, type: 3}
   _name: Three
+  boomKey: ThreeboomKey
   _impulseSource: {fileID: 4515406210161469932}
 --- !u!114 &4515406210161469932
 MonoBehaviour:

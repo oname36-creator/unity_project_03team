@@ -174,8 +174,8 @@ MonoBehaviour:
   _throwDistance: 20
   _chargeTime: 1
   _throwPower: 10
-  _boomAudio: {fileID: 8300000, guid: 2c458a4d266cd424f8c023d673dd330d, type: 3}
   _name: Log
+  boomKey: LogboomKey
   _impulseSource: {fileID: 0}
 --- !u!1001 &8284175418473897183
 PrefabInstance:
