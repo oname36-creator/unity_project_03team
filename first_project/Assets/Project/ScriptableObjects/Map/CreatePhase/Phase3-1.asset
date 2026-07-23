@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Phase3-1
   m_EditorClassIdentifier: Assembly-CSharp::SOMapPalette
   chunkPrefabs:
-  - {fileID: 3410827642731289472, guid: 0271abb0113effe44aaa54f603188e9e, type: 3}
+  - {fileID: 3612718299189267697, guid: 41aa7a9e37428684294422e59138c78f, type: 3}
   - {fileID: 311782116351191392, guid: 5dfb0ca5a521c8a4d9ba3ce8d2048b6c, type: 3}
