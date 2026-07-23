@@ -15,11 +15,18 @@ public struct PhaseData
 }
 public class MapManager : MonoBehaviour
 {
-    
+    // 0.5 단위 반올림(Snap) 유틸리티 함수
+    private float SnapToHalfGrid(float value)
+    {
+        return Mathf.Round(value * 2f) / 2f;
+    }
+
     #region DataAttribute
     [Header("시작 설정")]
     public GameObject safeZonePrefab;
-
+    [Tooltip("첫 세이프존이 스폰될 시작 위치 (Y축 높이 조절용)")]
+    public Vector3 initialSpawnPosition = Vector3.zero; // [추가] 초기 스폰 위치 변수
+   
     [Header("배경 지연 설정")]
     public GameObject backgroundGroup;
     [Tooltip("안전지대 생성 후 배경이 나타날 때까지의 대기 시간")]
@@ -27,6 +34,8 @@ public class MapManager : MonoBehaviour
     [Header("난이도 페이즈 설정")]
     public List<PhaseData> phases;
     private int currentPhaseIndex = 0;
+
+
 
     [Header("오브젝트 풀 설정")]
     [SerializeField] private int initialChunkPoolSize = 2;
@@ -81,6 +90,9 @@ public class MapManager : MonoBehaviour
     void Start()
     {
         InitializationPools();
+
+        // [추가] 시작 좌표를 인스펙터에서 설정한 initialSpawnPosition 값으로 지정
+        nextSpawnPosition = initialSpawnPosition;
 
         // 안전지대 생성
         SpawnSpecificMap(safeZonePrefab);
@@ -229,6 +241,11 @@ public class MapManager : MonoBehaviour
             startOffset = chunk.startPosition.localPosition;
         }
         Vector3 targetPosition = nextSpawnPosition - startOffset;
+
+        // X축 1.0f 타일 단위 Snap 및 Y축 위치 완전 맞춤
+        targetPosition.x = SnapToHalfGrid(targetPosition.x);
+        targetPosition.y = SnapToHalfGrid(nextSpawnPosition.y - startOffset.y);
+
         GameObject mapToSpawn = GetOrCreateMap(prefab, targetPosition);
         activeMaps.Enqueue(mapToSpawn);
 
@@ -244,6 +261,11 @@ public class MapManager : MonoBehaviour
             startOffset = chunk.startPosition.localPosition;
         }
         Vector3 targetPosition = nextSpawnPosition - startOffset;
+
+        // X축 1.0f 타일 단위 Snap 및 Y축 위치 완전 맞춤
+        targetPosition.x = SnapToHalfGrid(targetPosition.x);
+        targetPosition.y = SnapToHalfGrid(nextSpawnPosition.y - startOffset.y);
+
         GameObject map = GetOrCreateMap(prefab, targetPosition);
         activeMaps.Enqueue(map);
 
@@ -306,7 +328,11 @@ public class MapManager : MonoBehaviour
         if (map.TryGetComponent<MapChunk>(out MapChunk chunk) && chunk.endPosition != null)
         {
             // return chunk.endPosition.position; <-- 글로벌 좌표 사용
-            return fallbackPos + chunk.endPosition.localPosition;
+            Vector3 endPos = fallbackPos + chunk.endPosition.localPosition;
+
+            endPos.x = SnapToHalfGrid(endPos.x);
+            // endPos.y = SnapToHalfGrid(endPos.y);
+            return endPos;
         }
 
         Debug.LogError($"{map.name}에 EndPosition 앵커가 없습니다");

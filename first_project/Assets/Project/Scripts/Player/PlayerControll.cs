@@ -227,7 +227,6 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         currentMoveX *= status.speedMultiplier;
 
-        // 3. 이동 발판(MovingPlatform) 보정
         float platformXVelocity = 0f;
         float platformYVelocity = 0f;
 
@@ -237,18 +236,29 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
             platformYVelocity = platform.Velocity.y;
         }
 
-        if (status.isGrounded && transform.parent != null && Mathf.Abs(moveInput.x) < 0.01f)
+        if (status.isGrounded && transform.parent != null)
         {
-            currentMoveX = platformXVelocity;
+            // 키를 입력할 때 플레이어의 기본 이동 속도에 '발판의 X 속도'를 더해줌으로써 상대 속도 문제 해결
+            if (Mathf.Abs(moveInput.x) > 0.01f)
+            {
+                currentMoveX = (moveInput.x * MoveSpeed * status.speedMultiplier) + platformXVelocity;
+            }
+            else
+            {
+                // 가만히 있을 때는 발판의 X 속도를 그대로 받아와서 미끄러짐 방지
+                currentMoveX = platformXVelocity;
+            }
         }
         else
         {
+            // 공중이거나 발판에 없을 때 발판 속도가 남아있는 것 방지
             currentMoveX += platformXVelocity;
         }
 
         float finalVelocityY = currentVelocityY;
         if (status.isGrounded && transform.parent != null && currentVelocityY <= 0.1f)
         {
+            // Y축 역시 발판의 상승 속도를 자연스럽게 타도록 보정
             finalVelocityY = platformYVelocity;
         }
 

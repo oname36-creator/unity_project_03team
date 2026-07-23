@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8751551918164145071}
   - component: {fileID: 5752603103626325130}
-  - component: {fileID: 8049987052047977363}
+  - component: {fileID: 3257769754564863604}
   m_Layer: 3
   m_Name: CycleGround
   m_TagString: Ground
@@ -92,8 +92,8 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!68 &8049987052047977363
-EdgeCollider2D:
+--- !u!61 &3257769754564863604
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126,24 +126,15 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.005520582, y: 0.022082388}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.4277344, y: 1.6816406}
+    newSize: {x: 2.4277344, y: 1.6816406}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1.8867173, y: 0.9750062}
   m_EdgeRadius: 0
-  m_Points:
-  - {x: -1.2138672, y: 0}
-  - {x: -0.91267395, y: 0.47458744}
-  - {x: -0.6426239, y: 0.4659891}
-  - {x: -0.47683716, y: 0.6404314}
-  - {x: -0.20004272, y: 0.57411194}
-  - {x: -0.0075683594, y: 0.66793823}
-  - {x: 0.129776, y: 0.5602064}
-  - {x: 0.4013672, y: 0.63998127}
-  - {x: 0.51153564, y: 0.5155525}
-  - {x: 0.6373291, y: 0.5819969}
-  - {x: 0.86602783, y: 0.52240944}
-  - {x: 0.83102417, y: 0.41960335}
-  - {x: 0.940979, y: 0.41561413}
-  - {x: 1.2138672, y: 0}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
