@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 257419725006075091}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 18.5901, y: -5.83647, z: 0}
+  m_LocalPosition: {x: 17.8401, y: -5.83647, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -360,7 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   moveOffset: {x: 3, y: 2}
   speed: 5
-  waitTime: 1.5
+  waitTime: 2
 --- !u!1 &921576750308722795
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +487,7 @@ Transform:
   m_GameObject: {fileID: 2967932336682852673}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15.590099, y: -5.83647, z: 0}
+  m_LocalPosition: {x: 15.840099, y: -5.83647, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1321,7 +1321,7 @@ Transform:
   m_GameObject: {fileID: 6161090137479195750}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.5900993, y: -1.83647, z: 0}
+  m_LocalPosition: {x: 4.5900993, y: -1.83647, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
