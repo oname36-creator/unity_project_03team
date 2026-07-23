@@ -56,18 +56,38 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
     private void InitCameraReferences()
     {
-        if(virtualCameraA != null)
+        if (virtualCameraA == null || virtualCameraB == null)
+        {
+            FindVirtualCamerasInScene();
+        }
+
+        if (virtualCameraA != null)
         {
             confinerA = virtualCameraA.GetComponent<CinemachineConfiner2D>();
             positionComposerA = virtualCameraA.GetComponent<CinemachinePositionComposer>();
         }
 
-        if(virtualCameraB != null)
+        if (virtualCameraB != null)
         {
             confinerB = virtualCameraB.GetComponent<CinemachineConfiner2D>();
             positionComposerB = virtualCameraB.GetComponent<CinemachinePositionComposer>();
         }
-        
+    }
+
+    private void FindVirtualCamerasInScene()
+    {
+        CinemachineCamera[] cameras = FindObjectsByType<CinemachineCamera>(FindObjectsSortMode.None);
+        foreach (var cam in cameras)
+        {
+            if (virtualCameraA == null && (cam.name.Contains("CameraA") || cam.name.Contains("vcam1") || cam.name.Contains("VirtualCameraA")))
+            {
+                virtualCameraA = cam;
+            }
+            else if (virtualCameraB == null && (cam.name.Contains("CameraB") || cam.name.Contains("vcam2") || cam.name.Contains("VirtualCameraB")))
+            {
+                virtualCameraB = cam;
+            }
+        }
     }
     #endregion
 
@@ -77,7 +97,7 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
     /// </summary>
     public void UpdateBoundary(Collider2D newBoundary, bool enableYTracking)
     {
-        if (confinerA == null || confinerB == null)
+        if (virtualCameraA == null || virtualCameraB == null || confinerA == null || confinerB == null)
         {
             InitCameraReferences();
         }

@@ -24,7 +24,7 @@ public class DataManager : Singleton<DataManager>
         }
 
         // 2. 루프를 다 돌았는데도 0인 칸이 없다면 가득 찬 것입니다.
-        Debug.Log("인벤토리가 가득 차서 아이템을 먹을 수 없습니다!");
+        //Debug.Log("인벤토리가 가득 차서 아이템을 먹을 수 없습니다!");
         return false; // 습득 실패!
     }
 
@@ -39,7 +39,7 @@ public class DataManager : Singleton<DataManager>
         // 3. 빈 슬롯(0)이면 아무것도 하지 않고 함수 종료
         if (itemNumber == 0)
         {
-            Debug.Log($"{slotIndex + 1}번 슬롯이 비어있습니다.");
+            //Debug.Log($"{slotIndex + 1}번 슬롯이 비어있습니다.");
             return;
         }
 
@@ -53,13 +53,13 @@ public class DataManager : Singleton<DataManager>
 
             // 사용 완료 후 인벤토리 비우기
             PlayerInventory[slotIndex] = 0;
-            Debug.Log($"{slotIndex + 1}번 슬롯의 아이템(ID: {itemNumber}) 사용 및 소모 완료.");
+            //Debug.Log($"{slotIndex + 1}번 슬롯의 아이템(ID: {itemNumber}) 사용 및 소모 완료.");
 
             Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();
         }
         else
         {
-            Debug.LogError("Player 오브젝트에서 ItemEffectApplicator 컴포넌트를 찾을 수 없습니다!");
+            //Debug.LogError("Player 오브젝트에서 ItemEffectApplicator 컴포넌트를 찾을 수 없습니다!");
         }
     }
 
@@ -90,7 +90,7 @@ public class DataManager : Singleton<DataManager>
         inventoryStatus += " ]";
 
         // 콘솔창에 녹색(또는 원하는 색상)으로 돋보이게 출력
-        Debug.Log($"<color=green>{inventoryStatus}</color>");
+        //Debug.Log($"<color=green>{inventoryStatus}</color>");
     }
 
 
@@ -104,7 +104,7 @@ public class DataManager : Singleton<DataManager>
             PlayerInventory[i] = 0;
         }
 
-        Debug.Log("<color=cyan><b>[DataManager]</b> 체력 및 인벤토리 데이터가 완전히 초기화되었습니다.</color>");
+        //Debug.Log("<color=cyan><b>[DataManager]</b> 체력 및 인벤토리 데이터가 완전히 초기화되었습니다.</color>");
 
         // 만약 현재 씬에 인벤토리 UI가 존재한다면 즉시 비워진 상태를 반영
         Object.FindAnyObjectByType<InventoryUI>()?.UpdateInventoryUI();

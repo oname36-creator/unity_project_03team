@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ObjectPoolManager : Singleton<ObjectPoolManager>
 {
@@ -58,51 +58,193 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Queue<GameObject> _thrownPool = new Queue<GameObject>();
     #endregion
 
+    public void RegisterPlayer(GameObject playerObj)
+    {
+        Player = playerObj;
+    }
+
+    public void RegisterBoss(GameObject bossObj)
+    {
+        Boss = bossObj;
+    }
+
+    public void CheckAndFindReferences()
+    {
+        if (Boss == null)
+        {
+            BossController bossCtrl = FindAnyObjectByType<BossController>();
+            if (bossCtrl != null) Boss = bossCtrl.gameObject;
+        }
+        if (Player == null)
+        {
+            PlayerControll playerCtrl = FindAnyObjectByType<PlayerControll>();
+            if (playerCtrl != null) Player = playerCtrl.gameObject;
+        }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "GameScene")
+        {
+            // 새 씬이 로드되었으므로 참조를 강제로 새로 찾도록 null로 초기화 (유니티에서 파괴된 객체는 == null로 잡히지만 명시적으로 처리)
+            Boss = null;
+            Player = null;
+            CheckAndFindReferences();
+            
+            RebuildDependentPools();
+        }
+    }
+
+    private void RebuildDependentPools()
+    {
+        // 1. 활성화되어 있거나 풀에 대기 중인 기존 몬스터/촉수 오브젝트 파괴
+        List<GameObject> toDestroy = new List<GameObject>();
+        foreach (Transform child in transform)
+        {
+            if (child.GetComponent<MonsterController>() != null || child.GetComponent<TentacleController>() != null)
+            {
+                toDestroy.Add(child.gameObject);
+            }
+        }
+        foreach (GameObject obj in toDestroy)
+        {
+            Destroy(obj);
+        }
+
+        // 2. 관련 큐 비우기
+        _monsterBasePool.Clear();
+        _monsterBirdPool.Clear();
+        _monsterDarkWolfPool.Clear();
+        _tentaclePool.Clear();
+
+        // 3. 새로운 참조를 기반으로 다시 생성
+        if (_monsterBasePrefab != null)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterBasePrefab, this.transform);
+                MonsterController mc = obj.GetComponent<MonsterController>();
+                if (mc != null) mc.Player = Player;
+                obj.SetActive(false);
+                _monsterBasePool.Enqueue(obj);
+            }
+        }
+        if (_monsterBirdPrefab != null)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterBirdPrefab, this.transform);
+                MonsterController mc = obj.GetComponent<MonsterController>();
+                if (mc != null) mc.Player = Player;
+                obj.SetActive(false);
+                _monsterBirdPool.Enqueue(obj);
+            }
+        }
+        if (_monsterDarkWolfPrefab != null)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterDarkWolfPrefab, this.transform);
+                MonsterController mc = obj.GetComponent<MonsterController>();
+                if (mc != null) mc.Player = Player;
+                obj.SetActive(false);
+                _monsterDarkWolfPool.Enqueue(obj);
+            }
+        }
+        if (_tentaclePrefab != null)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_tentaclePrefab, this.transform);
+                TentacleController tc = obj.GetComponent<TentacleController>();
+                if (tc != null && Boss != null)
+                {
+                    tc.Boss = Boss.GetComponent<BossController>();
+                    tc.Body = Boss.GetComponent<BodyController>();
+                }
+                obj.SetActive(false);
+                _tentaclePool.Enqueue(obj);
+            }
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        CheckAndFindReferences();
         InitializePool();
         
         // 몬스터 총알 생성
-        for (int i = 0; i < 20; i++)
+        if (_monsterBulletPrefab != null)
         {
-            GameObject obj = Instantiate(_monsterBulletPrefab, this.transform);
-            obj.SetActive(false); // 비활성화 상태로 대기
-            _monsterBulletPool.Enqueue(obj); // 리스트에 추가
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterBulletPrefab, this.transform);
+                obj.SetActive(false); // 비활성화 상태로 대기
+                _monsterBulletPool.Enqueue(obj); // 리스트에 추가
+            }
         }
         // Base 몬스터 생성
-        for (int i = 0; i < 20; i++)
+        if (_monsterBasePrefab != null && _monsterBasePool.Count == 0)
         {
-            GameObject obj = Instantiate(_monsterBasePrefab, this.transform);
-            obj.GetComponent<MonsterController>().Player = Player;
-            obj.SetActive(false); // 비활성화 상태로 대기
-            _monsterBasePool.Enqueue(obj); // 리스트에 추가
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterBasePrefab, this.transform);
+                MonsterController mc = obj.GetComponent<MonsterController>();
+                if (mc != null) mc.Player = Player;
+                obj.SetActive(false); // 비활성화 상태로 대기
+                _monsterBasePool.Enqueue(obj); // 리스트에 추가
+            }
         }
         // Bird 몬스터 생성
-        for (int i = 0; i < 20; i++)
+        if (_monsterBirdPrefab != null && _monsterBirdPool.Count == 0)
         {
-            GameObject obj = Instantiate(_monsterBirdPrefab, this.transform);
-            obj.GetComponent<MonsterController>().Player = Player;
-            obj.SetActive(false); // 비활성화 상태로 대기
-            _monsterBirdPool.Enqueue(obj); // 리스트에 추가
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterBirdPrefab, this.transform);
+                MonsterController mc = obj.GetComponent<MonsterController>();
+                if (mc != null) mc.Player = Player;
+                obj.SetActive(false); // 비활성화 상태로 대기
+                _monsterBirdPool.Enqueue(obj); // 리스트에 추가
+            }
         }
         // DarkWolf 몬스터 생성
-        for (int i = 0; i < 20; i++)
+        if (_monsterDarkWolfPrefab != null && _monsterDarkWolfPool.Count == 0)
         {
-            GameObject obj = Instantiate(_monsterDarkWolfPrefab, this.transform);
-            obj.GetComponent<MonsterController>().Player = Player;
-            obj.SetActive(false); // 비활성화 상태로 대기
-            _monsterDarkWolfPool.Enqueue(obj); // 리스트에 추가
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_monsterDarkWolfPrefab, this.transform);
+                MonsterController mc = obj.GetComponent<MonsterController>();
+                if (mc != null) mc.Player = Player;
+                obj.SetActive(false); // 비활성화 상태로 대기
+                _monsterDarkWolfPool.Enqueue(obj); // 리스트에 추가
+            }
         }
         // Tentacle 생성
-        for (int i = 0; i < 20; i++)
+        if (_tentaclePrefab != null && _tentaclePool.Count == 0)
         {
-            GameObject obj = Instantiate(_tentaclePrefab, this.transform);
-            obj.GetComponent<TentacleController>().Boss = Boss.GetComponent<BossController>();
-            obj.GetComponent<TentacleController>().Body = Boss.GetComponent<BodyController>();
-            obj.SetActive(false); // 비활성화 상태로 대기
-            _tentaclePool.Enqueue(obj); // 리스트에 추가
+            for (int i = 0; i < 20; i++)
+            {
+                GameObject obj = Instantiate(_tentaclePrefab, this.transform);
+                TentacleController tc = obj.GetComponent<TentacleController>();
+                if (tc != null && Boss != null)
+                {
+                    tc.Boss = Boss.GetComponent<BossController>();
+                    tc.Body = Boss.GetComponent<BodyController>();
+                }
+                obj.SetActive(false); // 비활성화 상태로 대기
+                _tentaclePool.Enqueue(obj); // 리스트에 추가
+            }
         }
         // Dust Effect 생성
         for (int i = 0; i < 20; i++)
@@ -260,22 +402,31 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     // 풀에서 가져오는 함수
     public GameObject TentaclePop(bool trap = false)
     {
+        CheckAndFindReferences();
+
+        GameObject obj = null;
+
         if (_tentaclePool.Count > 0)
         {
-            GameObject obj = _tentaclePool.Dequeue();
-            obj.GetComponent<TentacleController>().isTrap = trap;
-            return obj;
+            obj = _tentaclePool.Dequeue();
+        }
+        else if (_tentaclePrefab != null)
+        {
+            obj = Instantiate(_tentaclePrefab, this.transform);
         }
 
-        if (_tentaclePrefab != null)
+        if (obj != null)
         {
-            GameObject obj = Instantiate(_tentaclePrefab, this.transform);
-
-            // Start()에서 최초 생성 시 해주던 Boss, Body 캐싱 작업을 동일하게 수행
-            obj.GetComponent<TentacleController>().Boss = Boss.GetComponent<BossController>();
-            obj.GetComponent<TentacleController>().Body = Boss.GetComponent<BodyController>();
-            obj.GetComponent<TentacleController>().isTrap = trap;
-
+            TentacleController tc = obj.GetComponent<TentacleController>();
+            if (tc != null)
+            {
+                if (Boss != null)
+                {
+                    tc.Boss = Boss.GetComponent<BossController>();
+                    tc.Body = Boss.GetComponent<BodyController>();
+                }
+                tc.isTrap = trap;
+            }
             return obj;
         }
 

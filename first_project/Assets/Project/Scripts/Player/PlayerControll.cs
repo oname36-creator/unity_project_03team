@@ -71,6 +71,11 @@ public class PlayerControll : MonoBehaviour, PlayerAction.IPlayerActions
 
         originalScaleX = transform.localScale.x;
         originalScaleY = transform.localScale.y;
+
+        if (ObjectPoolManager.Instance != null)
+        {
+            ObjectPoolManager.Instance.RegisterPlayer(gameObject);
+        }
     }
 
     void OnEnable()

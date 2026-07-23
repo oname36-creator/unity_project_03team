@@ -144,6 +144,10 @@ public class BossController : MonoBehaviour
         _isChase = true;
         _isAttached = false;
 
+        if (ObjectPoolManager.Instance != null)
+        {
+            ObjectPoolManager.Instance.RegisterBoss(gameObject);
+        }
         _transform = GetComponent<Transform>();
     }
 

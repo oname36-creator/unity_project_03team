@@ -32,7 +32,7 @@ public class StartSceneUIBinder : MonoBehaviour
         }
         else
         {
-            Debug.LogError("SceneManagerEx 싱글톤을 찾을 수 없습니다!");
+            //Debug.LogError("SceneManagerEx 싱글톤을 찾을 수 없습니다!");
         }
     }
 }

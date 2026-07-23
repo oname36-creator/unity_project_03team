@@ -534,6 +534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreditButton
   _creditUI: {fileID: 0}
+  _mainUI: {fileID: 4564192686252193581}
 --- !u!1 &2677842235818126395
 GameObject:
   m_ObjectHideFlags: 0
