@@ -140,6 +140,12 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
+    public void StopBGM() 
+    {
+        if (_bgmSource == null) { return; }
+        _bgmSource.Stop();
+    }
+
 
     public void PlaySFX(string key)
     {

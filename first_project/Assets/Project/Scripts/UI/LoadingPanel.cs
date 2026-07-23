@@ -56,7 +56,7 @@ public class LoadingPanel : MonoBehaviour
             inGameUI.SetActive(true);
             DistanceUI.SetActive(true);
             // ControlGuideUI.SetActive(true);
-            Debug.Log("GameSceneBGM 시작");
+            SoundManager.Instance.StopBGM();
             SoundManager.Instance.PlayBGM("GameSceneBGM");
         }
         StartCoroutine(CoFadeOutRoutine());
