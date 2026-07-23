@@ -288,11 +288,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &284190935 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1658438350270694919, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 7115686381010993091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &441952448
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -947,11 +942,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1064915952 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6722239145570709444, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 7115686381010993091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1139189673
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +974,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SurvivalTimer
   targetSurvivalTime: 180
   timerText: {fileID: 921843218}
-  endingCredits: {fileID: 1139189675}
 --- !u!114 &1139189675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -997,15 +986,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d1050693df18a41b04fd7186dcdb6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlaySceneEndingCredits
-  cutsceneImage: {fileID: 0}
-  cutsceneTotalDuration: 8
-  creditCanvasGroup: {fileID: 1064915952}
-  creditContent: {fileID: 1452700153}
-  blackBackground: {fileID: 1169366319}
-  finishButtonsGroup: {fileID: 284190935}
-  scrollSpeed: 40
-  endYPosition: 1200
-  fadeDuration: 1.5
 --- !u!4 &1139189676
 Transform:
   m_ObjectHideFlags: 0
@@ -1021,17 +1001,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1169366319 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2738951834507200272, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 7115686381010993091}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &1192007567 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4664659228250024481, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
@@ -1342,11 +1311,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!224 &1452700153 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4462565179302149001, guid: 66b64700df271d848839a3bf6523e0d0, type: 3}
-  m_PrefabInstance: {fileID: 7115686381010993091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1467662235
 PrefabInstance:
   m_ObjectHideFlags: 0

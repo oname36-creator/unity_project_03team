@@ -213,18 +213,16 @@ MonoBehaviour:
   MoveSpeed: 5
   footstepInterval: 0.5
   aerialDampingAmount: 0.5
-  attackBoxSize: {x: 1.5, y: 1}
   enemyTag: Monster
   muzzlePoint: {fileID: 3821617474522254589}
   groundCheckPoint: {fileID: 6601625070466968001}
-  groundCheckSize: {x: 0.6, y: 0.2}
+  groundCheckSize: {x: 0.4, y: 0.2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   attackCooldown: 0.5
   attackHitboxObj: {fileID: 1438914450262349504}
   swordAttackHitboxObj: {fileID: 8235964391736735294}
-  attackDuration: 0.5
   playerPosData: {fileID: 0}
 --- !u!114 &5173170813402971634
 MonoBehaviour:
@@ -318,7 +316,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5c9237e74b30ee647817d67e6fb7890e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -355,7 +353,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5c9237e74b30ee647817d67e6fb7890e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
