@@ -31,6 +31,10 @@ public class MapBaker : MonoBehaviour
     [Header("기믹 종류 세팅 목록")]
     [SerializeField] private List<SGimmickBakeSetting> bakeSettings;
 
+    [Header("낭떠러지 스캔 Y축 범위 설정")]
+    [SerializeField] private int scanYMinOffset = -15; // 기본 탐색 깊이를 -15로 확장
+    [SerializeField] private int scanYMaxOffset = 5;
+
     // 인스펙터 창에서 우클릭하면 나타나는 창
     [ContextMenu("내가 원하는 오브젝트로 생성된 타일 이동")]
     public void BakeAllMapData()
@@ -46,6 +50,8 @@ public class MapBaker : MonoBehaviour
 
         // SO로 데이터 보냄
         BakeAllData();
+
+        
 
 #if UNITY_EDITOR
         EditorUtility.SetDirty(mapData);
@@ -116,7 +122,6 @@ public class MapBaker : MonoBehaviour
             {
                 GameObject child = setting.parentTransform.GetChild(i).gameObject;
 
-                // 리펙토링 할 수 있을지도?
                 string cleanName = child.name.Replace("(Clone)", "").Trim();
                 int bracketIndex = cleanName.LastIndexOf(" (");
                 if(bracketIndex > 0)
@@ -269,20 +274,22 @@ public class MapBaker : MonoBehaviour
     /// </summary>
     private bool CheckHasGroundAtX(float x, float startWorldY, Collider2D[] groundColliders)
     {
-        for (int yOffset = -5; yOffset <= 2; ++yOffset)
+        // [교정] 하드코딩된 -5~2 대신 인스펙터 설정값(scanYMinOffset ~ scanYMaxOffset) 사용
+        for (int yOffset = scanYMinOffset; yOffset <= scanYMaxOffset; ++yOffset)
         {
             Vector2 scanPoint = new Vector2(x, startWorldY + yOffset);
             foreach (var col in groundColliders)
             {
                 if (col != null && col.OverlapPoint(scanPoint))
                 {
-                    return true;
+                    return true; // 바닥 콜라이더 감지 성공
                 }
             }
         }
         return false;
     }
     #endregion
+
 #endif
 
 }

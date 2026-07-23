@@ -28,10 +28,9 @@ public class CameraConfinerManager : Singleton<CameraConfinerManager>
 
     // 현재 카메라를 화면 출력용 메인으로 쓰고 있는지 기록(NextCamera와 교차 활성화하기 위함)
     private bool _isUsingCameraA = true;
-    private bool _isUsingCameraC = true;
 
     // 직전에 사용하던 전체 카메라 유형 기록
-    private bool _wasUsingYCameraGroup = false;
+    // private bool _wasUsingYCameraGroup = false;
 
     // 현재 설정된 바운더리 콜라이더를 캐싱하여 중복 처리를 방지합니다.
     private Collider2D _currentBoundary;

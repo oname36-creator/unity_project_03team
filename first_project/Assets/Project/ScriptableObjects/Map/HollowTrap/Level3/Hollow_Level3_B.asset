@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: Hollow_Level3_B
   m_EditorClassIdentifier: Assembly-CSharp::SOHollowTrapData
   hollowTrapList:
-  - position: {x: -6.0004463, y: -11.66436, z: 0}
-  - position: {x: -2.000431, y: -11.66436, z: 0}
-  - position: {x: 0.9995804, y: -11.66436, z: 0}
-  - position: {x: 12.899624, y: -11.66436, z: 0}
-  - position: {x: 19.999653, y: -11.66436, z: 0}
-  isTrapDirectionUp: 1
+  - position: {x: -5, y: -11, z: 0}
+  - position: {x: 0, y: -11, z: 0}
+  - position: {x: 6, y: -11, z: 0}
+  - position: {x: 12, y: -11, z: 0}
+  isTrapDirectionUp: 0
