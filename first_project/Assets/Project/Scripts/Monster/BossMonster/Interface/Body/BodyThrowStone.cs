@@ -9,8 +9,6 @@ public class BodyThrowStone : IMonsterState
 
     private Vector3 _targetPosition;
 
-    private float _time = 15f;
-
     private Coroutine _throwCoroutine;
 
     public BodyThrowStone(BodyController owner)

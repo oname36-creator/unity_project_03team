@@ -3143,6 +3143,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[1].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[2].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[3].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[4].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[5].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[6].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[7].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[12].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[13].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[14].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6515091963594016656, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
+      propertyPath: _audioSfxList.Array.data[15].SoundData.Volume
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7025348878437724912, guid: 6e68e3df8ee867f4dabbba321b6ceac3, type: 3}
       propertyPath: m_Name
       value: SoundManager

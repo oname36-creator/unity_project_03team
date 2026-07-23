@@ -267,6 +267,18 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             return obj;
         }
 
+        if (_tentaclePrefab != null)
+        {
+            GameObject obj = Instantiate(_tentaclePrefab, this.transform);
+
+            // Start()에서 최초 생성 시 해주던 Boss, Body 캐싱 작업을 동일하게 수행
+            obj.GetComponent<TentacleController>().Boss = Boss.GetComponent<BossController>();
+            obj.GetComponent<TentacleController>().Body = Boss.GetComponent<BodyController>();
+            obj.GetComponent<TentacleController>().isTrap = trap;
+
+            return obj;
+        }
+
         return null;
     }
     #endregion
