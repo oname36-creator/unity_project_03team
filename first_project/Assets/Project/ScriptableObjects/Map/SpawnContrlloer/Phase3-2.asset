@@ -23,8 +23,6 @@ MonoBehaviour:
     weight: 30
   - item: {fileID: 11400000, guid: b428fab07e48c85479394f572b430913, type: 2}
     weight: 30
-  - item: {fileID: 11400000, guid: 0bed37c565408d64c984e7b12ed11222, type: 2}
-    weight: 25
   maxBoxCount: 10
   tentacleTrapSpawnChane: 0.545
   tentacleStaggerDelay: 16
