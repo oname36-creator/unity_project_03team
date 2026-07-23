@@ -489,6 +489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapManager
   safeZonePrefab: {fileID: 8274822112208100340, guid: 9b86a17bd642dfc4d907f591455885fb, type: 3}
+  initialSpawnPosition: {x: 0, y: -5, z: 0}
   backgroundGroup: {fileID: 985846392}
   backgroundDelayTime: 1
   phases:
