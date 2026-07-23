@@ -22,7 +22,7 @@ public class TentacleArchUp : IMonsterState
         //Debug.Log("TentacleArchUP");
 
         // _owner.tag = "Boss"; // GC 방지를 위해 태그 할당 제거 (레이어 사용 권장)
-        _owner.SetLayer(true);
+        _owner.SetLayer(false);
 
 
 
@@ -40,12 +40,14 @@ public class TentacleArchUp : IMonsterState
         _timer = 0f;
 
 
-        Vector3 viewportTopRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, 0));
-        Vector2 rayStart = new Vector2(viewportTopRight.x, viewportTopRight.y + 5f);
+        Vector2 playerPos = _owner.Boss.Player.transform.position;
+        Vector2 targetPos = playerPos; // 기본값
+        targetPos.x += 15f; // Player 기준 15만큼 떨어진 위치
+
+        Vector2 rayStart = new Vector2(targetPos.x, playerPos.y + 20f);
         
         int groundLayer = LayerMask.GetMask("Ground");
         RaycastHit2D hit = Physics2D.Raycast(rayStart, Vector2.down, 100f, groundLayer);
-        Vector2 targetPos = _owner.Boss.Player.transform.position; // 기본값
         
         if (hit.collider != null)
         {
@@ -53,22 +55,23 @@ public class TentacleArchUp : IMonsterState
         }
 
         float dist = Vector2.Distance(_owner.tentacleRoot.position, targetPos);
-        _owner.segmentDistance = (dist * 1.3f) / (float)_owner.segmentLength;
 
         if (_warningEffect != null)
         {
-
             Vector2 effectPos = (targetPos + (Vector2)_owner.tentacleRoot.position) / 2f;
-            effectPos.x += 10;
             _warningEffect.transform.position = effectPos;
-            
+
             float spriteWidth = _warningEffect.sprite.bounds.size.x;
             if (spriteWidth > 0f)
             {
                 Vector3 currentScale = _warningEffect.transform.localScale;
-                currentScale.x = (dist)/ spriteWidth;
+                currentScale.x = dist / spriteWidth;
                 _warningEffect.transform.localScale = currentScale;
             }
+
+            float targetReach = dist; // 촉수 끝부분이 effect의 끝(targetPos)과 닿도록 설정
+
+            _owner.segmentDistance = (targetReach * 0.7f) / (float)_owner.segmentLength;
 
             _warningEffect.gameObject.SetActive(true);
             Color color = _warningEffect.color;

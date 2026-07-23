@@ -214,6 +214,7 @@ public class BeingThrown : MonoBehaviour
                 elapsed += Time.deltaTime;
                 color.a = Mathf.Lerp(0f, 1f, elapsed / chargeTime);
                 _warringRenderer.color = color;
+                
                 yield return null;
             }
             color.a = 1f;
