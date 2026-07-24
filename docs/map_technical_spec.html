@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity 2D Project - 맵 시스템 기술 명세서 (Map System Technical Spec)</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0c10;
+            --bg-card: rgba(22, 27, 34, 0.75);
+            --bg-card-hover: rgba(30, 38, 48, 0.85);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-purple: #7f00ff;
+            --accent-green: #00e676;
+            --accent-amber: #ffab00;
+            --accent-pink: #ff4081;
+            --text-main: #f0f6fc;
+            --text-sub: #8b949e;
+            --code-bg: #161b22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(127, 0, 255, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            background: rgba(0, 242, 254, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .subtitle {
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        /* Navigation Index */
+        .doc-nav {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .doc-nav h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--accent-cyan);
+        }
+
+        .doc-nav ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 0.8rem;
+            list-style: none;
+        }
+
+        .doc-nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .doc-nav a:hover {
+            color: var(--accent-blue);
+            transform: translateX(4px);
+        }
+
+        .doc-nav a::before {
+            content: '➔';
+            font-size: 0.8rem;
+            margin-right: 8px;
+            color: var(--accent-purple);
+        }
+
+        /* Section Layout */
+        section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-purple);
+            background: rgba(127, 0, 255, 0.1);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(127, 0, 255, 0.3);
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Card System */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(79, 172, 254, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Diagrams & Visual Flow */
+        .diagram-box {
+            background: rgba(10, 12, 16, 0.8);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+
+        .flow-step {
+            background: rgba(79, 172, 254, 0.15);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            color: var(--accent-cyan);
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            color: var(--text-sub);
+            font-weight: bold;
+        }
+
+        /* Code View */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.2rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .kw { color: #ff7b72; } /* Keyword */
+        .cls { color: #79c0ff; } /* Class */
+        .func { color: #d2a8ff; } /* Function */
+        .cm { color: #8b949e; font-style: italic; } /* Comment */
+        .num { color: #79c0ff; } /* Number */
+        .str { color: #a5d6ff; } /* String */
+
+        /* Feature List & Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.92rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        ul.feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul.feature-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        ul.feature-list li::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+        }
+
+        /* Note Callouts */
+        .callout {
+            border-left: 4px solid var(--accent-blue);
+            background: rgba(79, 172, 254, 0.1);
+            padding: 1rem 1.2rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1rem 0;
+            font-size: 0.92rem;
+        }
+
+        .callout.warning {
+            border-left-color: var(--accent-amber);
+            background: rgba(255, 171, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        /* =================================================== */
+        /* PRINT / PDF EXPORT OPTIMIZED STYLES                */
+        /* =================================================== */
+        @media print {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+
+            body {
+                background-color: #ffffff !important;
+                background-image: none !important;
+                color: #1a202c !important;
+                padding: 0 !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .doc-nav {
+                display: none !important; /* Hide navigation in print */
+            }
+
+            header {
+                border-bottom: 2px solid #3182ce !important;
+                padding-bottom: 1rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            h1 {
+                background: none !important;
+                -webkit-text-fill-color: #1a202c !important;
+                color: #1a202c !important;
+                font-size: 2.2rem !important;
+            }
+
+            .subtitle {
+                color: #4a5568 !important;
+            }
+
+            .badge {
+                background: #ebf8ff !important;
+                color: #2b6cb0 !important;
+                border-color: #bee3f8 !important;
+            }
+
+            .card, .diagram-box, pre, table {
+                background: #ffffff !important;
+                color: #2d3748 !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                page-break-inside: avoid;
+            }
+
+            .card-title {
+                color: #2b6cb0 !important;
+            }
+
+            .section-number {
+                background: #edf2f7 !important;
+                color: #4a5568 !important;
+                border-color: #cbd5e0 !important;
+            }
+
+            th {
+                background: #f7fafc !important;
+                color: #2d3748 !important;
+            }
+
+            td {
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+
+            pre {
+                background: #f7fafc !important;
+                border-color: #e2e8f0 !important;
+            }
+
+            .kw { color: #d73a49 !important; }
+            .cls { color: #6f42c1 !important; }
+            .func { color: #005cc5 !important; }
+            .cm { color: #6a737d !important; }
+            .num { color: #005cc5 !important; }
+            .str { color: #032f62 !important; }
+
+            .flow-step {
+                background: #ebf8ff !important;
+                border-color: #bee3f8 !important;
+                color: #2b6cb0 !important;
+            }
+
+            .callout {
+                background: #ebf8ff !important;
+                border-left-color: #3182ce !important;
+                color: #2d3748 !important;
+            }
+
+            .callout.warning {
+                background: #fffaf0 !important;
+                border-left-color: #dd6b20 !important;
+                color: #2d3748 !important;
+            }
+
+            section {
+                page-break-after: auto;
+                margin-bottom: 2.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="badge">Technical Specification</span>
+        <h1>맵 시스템 (Map System) 기술 명세서</h1>
+        <p class="subtitle">Unity 2D 횡스크롤 액션 플랫포머 - 맵 생성, Parallax 원근감, 이동 플랫폼 물리 및 페이즈 제어 아키텍처</p>
+    </header>
+
+    <!-- 목차 네비게이션 -->
+    <nav class="doc-nav">
+        <h3>Contents Overview</h3>
+        <ul>
+            <li><a href="#sec1">1. 맵 생성 & 오브젝트 풀링 메커니즘</a></li>
+            <li><a href="#sec2">2. ScriptableObject 기반 데이터 구조</a></li>
+            <li><a href="#sec3">3. 2.5D Parallax 원근감 & 카메라 연출</a></li>
+            <li><a href="#sec4">4. 이동 플랫폼 물리 & 관성 결합 로직</a></li>
+            <li><a href="#sec5">5. 페이즈별 난이도 스케일링 & 스폰 규칙</a></li>
+        </ul>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="sec1">
+        <div class="section-header">
+            <div class="section-number">01</div>
+            <h2>맵 생성 & 오브젝트 풀링 메커니즘</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">
+                    <span>오브젝트 풀링 (Object Pooling)</span>
+                    <span style="color: var(--accent-blue);">MapManager.cs</span>
+                </div>
+                <p>런타임 프레임 드랍 및 가비지 컬렉션(GC) 부하를 최소화하기 위해 맵 청크(<code>MapChunk</code>)를 파괴하지 않고 재활용합니다.</p>
+                <div class="diagram-box">
+                    <strong>Pool Structure:</strong><br>
+                    <code>Dictionary&lt;GameObject, Queue&lt;GameObject&gt;&gt; mapPools</code><br>
+                    <code>Queue&lt;GameObject&gt; activeMaps</code>
+                </div>
+                <ul class="feature-list">
+                    <li>시작 시 <code>initialChunkPoolSize</code> 만큼 미사용 맵 미리 비활성화 생성</li>
+                    <li>화면 밖으로 지나간 맵 청크는 <code>activeMaps.Dequeue()</code> 후 풀로 반환</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>셔플백 (ShuffleBag) 무작위 생성</span>
+                    <span style="color: var(--accent-purple);">Fair Randomness</span>
+                </div>
+                <p>동일한 맵 청크가 연속으로 나오는 편향을 방지하고 다양한 맵 구성을 보장합니다.</p>
+                <div class="flow-container">
+                    <div class="flow-step">Palette에서 청크 복사</div>
+                    <span class="flow-arrow">➔</span>
+                    <div class="flow-step">셔플(무작위 섞기)</div>
+                    <span class="flow-arrow">➔</span>
+                    <div class="flow-step">Pop하여 맵 배치</div>
+                </div>
+                <ul class="feature-list">
+                    <li>주머니(Bag)가 비어있을 때 해당 페이즈 Palette 맵들을 채운 후 섞음</li>
+                    <li>테트리스 방식의 균등한 맵 등장 확률 보장</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">0.5 단위 반올림(SnapToHalfGrid) 스폰 정렬</div>
+            <pre><code><span class="cm">// MapManager.cs - 0.5 grid 정렬 유틸리티</span>
+<span class="kw">private float</span> <span class="func">SnapToHalfGrid</span>(<span class="kw">float</span> value)
+{
+    <span class="kw">return</span> <span class="cls">Mathf</span>.<span class="func">Round</span>(value * <span class="num">2f</span>) / <span class="num">2f</span>;
+}
+
+<span class="cm">// 다음 맵 위치 계산</span>
+<span class="kw">float</span> nextX = nextSpawnPosition.x + chunkWidth;
+nextSpawnPosition = <span class="kw">new</span> <span class="cls">Vector3</span>(<span class="func">SnapToHalfGrid</span>(nextX), <span class="func">SnapToHalfGrid</span>(nextSpawnPosition.y), <span class="num">0f</span>);</code></pre>
+            <div class="callout">
+                <strong>정밀한 타일 갭 방지:</strong> 맵 청크가 연속 배치될 때 소수점 오차로 인한 빈틈(Seam)이 생기지 않도록 모든 스폰 좌표를 0.5 Grid 단위로 Snap 정렬합니다.
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="sec2">
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <h2>ScriptableObject 기반 데이터 구조</h2>
+        </div>
+
+        <div class="card">
+            <div class="card-title">맵 데이터 아키텍처 (Data Architecture)</div>
+            <p>기획 데이터와 로직을 분리하여 인스펙터에서 손쉽게 맵 팔레트 및 페이즈 설정을 조절할 수 있습니다.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>클래스명</th>
+                        <th>유형</th>
+                        <th>주요 역할 및 관리 데이터</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>SOMapData</code></td>
+                        <td>ScriptableObject</td>
+                        <td>개별 맵 청크의 너비, 높이, 난이도 레벨, 스폰 가중치 저장</td>
+                    </tr>
+                    <tr>
+                        <td><code>SOMapPalette</code></td>
+                        <td>ScriptableObject</td>
+                        <td>특정 페이즈에 사용 가능한 <code>SOMapData</code> 리스트 묶음 관리</td>
+                    </tr>
+                    <tr>
+                        <td><code>SOMapPhaseSpawnSetting</code></td>
+                        <td>ScriptableObject</td>
+                        <td>페이즈별 몬스터/상자 스폰 확률 및 함정 밀도 파라미터 제어</td>
+                    </tr>
+                    <tr>
+                        <td><code>MapChunk.cs</code></td>
+                        <td>MonoBehaviour</td>
+                        <td>실제 맵 프리팹에 부착되어 소환 위치(Transform), 바운더리 콜라이더 정보 제공</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="sec3">
+        <div class="section-header">
+            <div class="section-number">03</div>
+            <h2>2.5D Parallax 원근감 & 카메라 연출</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">Parallax 스크립트 기반 원근감</div>
+                <div class="diagram-box">
+                    <strong>카메라:</strong> Orthographic (Z축 = 0 고정)<br>
+                    <strong>x 오프셋:</strong> <code>distX = camMoveDistance.x * (1 - parallaxEffectX)</code><br>
+                    <strong>y 오프셋:</strong> <code>distY = isYTracking ? camMoveDistance.y * (1 - parallaxEffectY) : 0</code>
+                </div>
+                <ul class="feature-list">
+                    <li>0에 가까울수록 원경 (카메라를 그대로 따라감)</li>
+                    <li>1에 가까울수록 근경 (월드 좌표에 고정됨)</li>
+                    <li>1보다 크면 전경(Foreground) 효과 연출</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">카메라 바운더리 & Blend (화면 튐 방지)</div>
+                <p>플레이어가 새로운 청크로 진입 시 Cinemachine 바운더리를 부드럽게 전환합니다.</p>
+                <ul class="feature-list">
+                    <li><code>MapChunkBoundaryTrigger</code>: 플레이어 진입 감지</li>
+                    <li><strong>듀얼 Cinemachine 카메라</strong> 또는 0.5초 Ease In Out Blend를 적용하여 화면 튐(Snap) 완벽 방지</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Parallax Y축 제어 코드</div>
+            <pre><code><span class="cm">// Parallax.cs - LateUpdate 물리 이동 연산</span>
+<span class="kw">private void</span> <span class="func">LateUpdate</span>()
+{
+    <span class="cls">Vector3</span> camMoveDistance = cam.position - startCamPos;
+    <span class="kw">bool</span> isYParallaxActive = (mapManager != <span class="kw">null</span> 
+                              && <span class="cls">CameraConfinerManager</span>.Instance != <span class="kw">null</span>
+                              && <span class="cls">CameraConfinerManager</span>.Instance.IsYTrackingActive);
+
+    <span class="kw">float</span> distX = camMoveDistance.x * (<span class="num">1</span> - parallaxEffectX);
+    <span class="kw">float</span> distY = isYParallaxActive ? camMoveDistance.y * (<span class="num">1</span> - parallaxEffectY) : <span class="num">0f</span>;
+
+    transform.position = <span class="kw">new</span> <span class="cls">Vector3</span>(startPos.x + distX, startPos.y + distY, transform.position.z);
+}</code></pre>
+        </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="sec4">
+        <div class="section-header">
+            <div class="section-number">04</div>
+            <h2>이동 플랫폼 물리 & 관성 결합 로직</h2>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">로컬 좌표계 왕복 & FixedUpdate</div>
+                <p>맵 스폰 및 이동 시 연동 딜레이를 방지하기 위해 부모 맵 청크 기준 로컬 좌표계(<code>transform.localPosition</code>)를 사용합니다.</p>
+                <ul class="feature-list">
+                    <li>물리 기반 이동: <code>Rigidbody2D.MovePosition()</code> 사용</li>
+                    <li><code>FixedUpdate</code> 타이밍 내 물리 처리로 떨림 현상 제거</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">플레이어 관성(Inertia) 결합</div>
+                <p>플레이어가 플랫폼 위에 탑승 시 속도를 합산 처리합니다.</p>
+                <div class="diagram-box">
+                    <code>OnCollisionEnter2D</code> ➔ Platform Velocity 주입<br>
+                    <code>PlayerControll.linearVelocity</code> = PlayerX + PlatformX
+                </div>
+                <ul class="feature-list">
+                    <li>플랫폼 위에서도 자연스럽게 점프 및 이동 가능</li>
+                    <li>씬 뷰 디버깅을 위한 <code>OnDrawGizmos</code> 이동 경로 visualizer 제공</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="sec5">
+        <div class="section-header">
+            <div class="section-number">05</div>
+            <h2>페이즈별 난이도 스케일링 & 스폰 규칙</h2>
+        </div>
+
+        <div class="card">
+            <div class="card-title">3단계 논리적 페이즈 (CurrentLogicalPhase) 진행 구조</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>페이즈</th>
+                        <th>진행 시간</th>
+                        <th>난이도 디자인 중심축</th>
+                        <th>주요 기믹 및 맵 변화</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b style="color: #2b6cb0;">Phase 1</b></td>
+                        <td>0 ~ 60초</td>
+                        <td>수량적 스케일링 (Introductory)</td>
+                        <td>평지 중심, 가시 함정(SpikeTrap) 및 기본 몬스터 밀도 증가. Y축 카메라 고정.</td>
+                    </tr>
+                    <tr>
+                        <td><b style="color: #2b6cb0;">Phase 2</b></td>
+                        <td>60 ~ 120초</td>
+                        <td>피지컬 액션 컨트롤 (Mechanical)</td>
+                        <td>복합 이동 플랫폼 패턴(대각/수직), SlowPad 발판 및 관성 컨트롤 필요. Y축 카메라 추적 활성화.</td>
+                    </tr>
+                    <tr>
+                        <td><b style="color: #6f42c1;">Phase 3</b></td>
+                        <td>120초 이상</td>
+                        <td>복합 기믹 시너지 (Complex Synergy)</td>
+                        <td>이동 플랫폼 위 공중 몬스터 전투, landing zone 촉수(Tentacle) 스폰, 타이밍 가시 회피 등.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <strong>스폰 금지 영역 (Exclusion Zone Compliance):</strong> 상자(Chest)나 몬스터 스폰 시, 플레이어 스폰 지점 주변 마진 및 함정/점프대 바로 위 영역은 스폰 가능 대상에서 엄격히 제외(Exclusion Zone)되어 플레이어의 불합리한 사망을 방지합니다.
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 unity_project_03team. Technical Specification generated by Antigravity AI Code Agent.</p>
+    </footer>
+</div>
+
+</body>
+</html>

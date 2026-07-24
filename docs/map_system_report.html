@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity 2D 맵 시스템 UML 및 디자인 패턴 기술 보고서</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 16mm 14mm 18mm 14mm;
+            @bottom-right {
+                content: counter(page);
+                font-family: 'Inter', sans-serif;
+                font-size: 8.5pt;
+                color: #64748b;
+            }
+            @bottom-left {
+                content: "Unity 2D Map System UML & Design Patterns | unity_project_03team";
+                font-family: 'Inter', sans-serif;
+                font-size: 8.5pt;
+                color: #64748b;
+            }
+        }
+
+        :root {
+            --primary: #0f172a;
+            --primary-blue: #0284c7;
+            --accent-indigo: #4f46e5;
+            --accent-teal: #0d9488;
+            --accent-purple: #7e22ce;
+            --accent-amber: #b45309;
+            --bg-main: #ffffff;
+            --bg-sub: #f8fafc;
+            --bg-card: #f1f5f9;
+            --border: #cbd5e1;
+            --border-dark: #94a3b8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --uml-box-bg: #f8fafc;
+            --uml-header-bg: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            font-size: 9.5pt;
+            padding: 0;
+        }
+
+        .document-container {
+            width: 100%;
+            max-width: 210mm;
+            margin: 0 auto;
+            background: #ffffff;
+        }
+
+        /* Header & Cover Banner */
+        .report-header {
+            padding-bottom: 1.2rem;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .header-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .badge-org {
+            background-color: var(--primary);
+            color: #ffffff;
+            font-size: 8pt;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .doc-date {
+            font-size: 8.5pt;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        h1.report-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22pt;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.5px;
+        }
+
+        .report-subtitle {
+            font-size: 11pt;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            background: var(--bg-sub);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 8.5pt;
+        }
+
+        .meta-item strong {
+            display: block;
+            color: var(--text-muted);
+            font-size: 7pt;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .meta-item span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Section Formatting */
+        .section {
+            margin-bottom: 1.8rem;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        h2.section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13pt;
+            font-weight: 700;
+            color: var(--primary);
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 10px;
+            margin-bottom: 0.9rem;
+            margin-top: 1.2rem;
+        }
+
+        h3.subsection-title {
+            font-size: 10.5pt;
+            font-weight: 700;
+            color: var(--accent-indigo);
+            margin-top: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 0.7rem;
+            text-align: justify;
+            word-break: keep-all;
+        }
+
+        /* Pattern Cards */
+        .pattern-card {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-sub);
+            padding: 12px 16px;
+            margin-bottom: 12px;
+        }
+
+        .pattern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid var(--border);
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        .pattern-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .pattern-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 7.5pt;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid #bae6fd;
+        }
+
+        .pattern-body {
+            font-size: 8.8pt;
+        }
+
+        .pattern-field {
+            margin-bottom: 4px;
+        }
+
+        .pattern-field strong {
+            color: var(--primary);
+        }
+
+        /* Diagrams Containers */
+        .diagram-box {
+            background: #ffffff;
+            border: 1px solid var(--border-dark);
+            border-radius: 6px;
+            padding: 14px;
+            margin: 1rem 0;
+        }
+
+        .diagram-title {
+            font-size: 8.5pt;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* UML Class Notation Boxes */
+        .uml-class-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .uml-class-box {
+            border: 1.5px solid var(--primary);
+            border-radius: 4px;
+            background: var(--uml-box-bg);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7.8pt;
+            overflow: hidden;
+        }
+
+        .uml-class-header {
+            background: var(--primary);
+            color: #ffffff;
+            text-align: center;
+            padding: 4px 6px;
+            font-weight: 700;
+            font-size: 8.5pt;
+        }
+
+        .uml-class-header .stereotype {
+            font-size: 7pt;
+            font-weight: 400;
+            font-style: italic;
+            display: block;
+            color: #94a3b8;
+        }
+
+        .uml-class-section {
+            padding: 4px 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .uml-class-section:last-child {
+            border-bottom: none;
+        }
+
+        .uml-member {
+            margin-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        .visibility-pub { color: #0284c7; font-weight: 700; }
+        .visibility-priv { color: #e11d48; font-weight: 700; }
+        .visibility-prot { color: #d97706; font-weight: 700; }
+
+        /* UML Sequence Diagram Styling */
+        .seq-lifeline-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 10px 0;
+            margin-bottom: 15px;
+        }
+
+        .seq-actor {
+            background: var(--primary);
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8pt;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-align: center;
+            width: 13%;
+        }
+
+        .seq-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .seq-msg {
+            background: var(--bg-sub);
+            border: 1px solid var(--border-dark);
+            border-left: 4px solid var(--primary-blue);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 8.3pt;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .seq-msg-num {
+            background: var(--primary-blue);
+            color: #ffffff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7.5pt;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .seq-arrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8pt;
+            color: var(--accent-indigo);
+            font-weight: 600;
+        }
+
+        /* UML State Machine Boxes */
+        .state-grid {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .state-box {
+            background: var(--bg-sub);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 8px 12px;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 8.5pt;
+            width: 22%;
+        }
+
+        .state-transition {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7.5pt;
+            color: var(--accent-indigo);
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 8.5pt;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            text-align: left;
+            padding: 8px 10px;
+            border: 1px solid var(--primary);
+        }
+
+        td {
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        tr:nth-child(even) td {
+            background-color: var(--bg-sub);
+        }
+
+        ul.spec-list {
+            margin-left: 1.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        ul.spec-list li {
+            margin-bottom: 0.25rem;
+            font-size: 8.8pt;
+        }
+
+        .report-footer {
+            margin-top: 2rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 8pt;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    <!-- Header -->
+    <header class="report-header">
+        <div class="header-meta-bar">
+            <span class="badge-org">UML & Design Pattern Architecture Specification</span>
+            <span class="doc-date">문서 작성일: 2026년 7월 24일</span>
+        </div>
+        <h1 class="report-title">Unity 2D 맵 시스템 UML & 디자인 패턴 기술 보고서</h1>
+        <div class="report-subtitle">UML Diagrams, Structural Design Patterns & Architecture Blueprint</div>
+        
+        <div class="meta-grid">
+            <div class="meta-item">
+                <strong>프로젝트명</strong>
+                <span>unity_project_03team</span>
+            </div>
+            <div class="meta-item">
+                <strong>분석 대상</strong>
+                <span>Map Engine System</span>
+            </div>
+            <div class="meta-item">
+                <strong>기술 표준</strong>
+                <span>GoF & Unity Patterns / UML 2.5</span>
+            </div>
+            <div class="meta-item">
+                <strong>코드 배제</strong>
+                <span>Pure Architecture Spec (No C# Code)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Executive Summary & Package Diagram -->
+    <section class="section">
+        <h2 class="section-title">1. 개요 및 계층형 패키지 아키텍처 (Executive Summary & Package Architecture)</h2>
+        <p>
+            본 보고서는 <strong>unity_project_03team</strong> 프로젝트의 맵 엔진(Map Engine) 시스템을 **C# 소스 코드를 완전히 배제**하고, 객체 지향 공학 표준 **UML 2.5 다이어그램** 및 **GoF 디자인 패턴(Design Patterns)**만을 사용하여 분석 및 서술한 공식 기술 명세서입니다.
+        </p>
+        <p>
+            맵 시스템은 동적 무작위 생성, 메모리 파편화 방지, 물리 관성 동기화 및 2.5D 카메라 원근 연출을 달성하기 위해 역할별로 명확히 격리된 **5계층 패키지 아키텍처(Layered Package Architecture)**를 채택하고 있습니다.
+        </p>
+
+        <div class="diagram-box">
+            <div class="diagram-title">UML Package & Layered Architecture Diagram</div>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; text-align: center;">
+                <div style="border: 2px solid var(--primary); border-radius: 6px; padding: 8px; background: #e0f2fe;">
+                    <div style="font-weight: 700; font-size: 8.5pt; color: #0369a1;">Presentation Layer</div>
+                    <div style="font-size: 7.5pt; color: var(--text-muted); margin-top: 4px;">Cinemachine Confiner<br>Parallax Visuals</div>
+                </div>
+                <div style="border: 2px solid var(--primary); border-radius: 6px; padding: 8px; background: #f0fdf4;">
+                    <div style="font-weight: 700; font-size: 8.5pt; color: #15803d;">Event Bus Layer</div>
+                    <div style="font-size: 7.5pt; color: var(--text-muted); margin-top: 4px;">MapEvent Bus<br>Spawn Triggers</div>
+                </div>
+                <div style="border: 2px solid var(--primary); border-radius: 6px; padding: 8px; background: #fef3c7;">
+                    <div style="font-weight: 700; font-size: 8.5pt; color: #b45309;">Core Manager Layer</div>
+                    <div style="font-size: 7.5pt; color: var(--text-muted); margin-top: 4px;">MapManager Singleton<br>ShuffleBag & ObjectPool</div>
+                </div>
+                <div style="border: 2px solid var(--primary); border-radius: 6px; padding: 8px; background: #f3e8ff;">
+                    <div style="font-weight: 700; font-size: 8.5pt; color: #6b21a8;">Data / SO Layer</div>
+                    <div style="font-size: 7.5pt; color: var(--text-muted); margin-top: 4px;">SOMapData Container<br>SOMapPalette & MapBaker</div>
+                </div>
+                <div style="border: 2px solid var(--primary); border-radius: 6px; padding: 8px; background: #ffe4e6;">
+                    <div style="font-weight: 700; font-size: 8.5pt; color: #be123c;">Physics & Gimmick</div>
+                    <div style="font-size: 7.5pt; color: var(--text-muted); margin-top: 4px;">MovingPlatform<br>SpikeTraps & JumpPads</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: 8 Design Patterns Catalog -->
+    <section class="section page-break">
+        <h2 class="section-title">2. 8대 핵심 디자인 패턴 명세 & 1:1 아키텍처 매핑 (Design Pattern Catalog)</h2>
+        <p>
+            맵 시스템의 확장성, 결합도 분리(Decoupling), 고성능 무가비지(Zero GC) 연산을 보장하기 위해 적용된 8가지 핵심 디자인 패턴 카탈로그입니다.
+        </p>
+
+        <!-- Pattern 1 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">1. Singleton Pattern (싱글톤 패턴)</span>
+                <span class="pattern-badge">Creational Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>MapManager</code></div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 맵 생성, 오브젝트 풀, 셔플백 및 진행 타이머 관제를 게임 전역에서 단 하나의 통제 인스턴스로 유지하고 인스펙터/씬 참조를 단일화합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> <code>Awake()</code> 생명주기 타이밍에 기존 인스턴스 중복을 검사(Self-Destroy)하여 유일성을 보장하고 static 접근 포인트를 제공합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 2 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">2. Object Pool Pattern (오브젝트 풀 패턴)</span>
+                <span class="pattern-badge">Creational / Behavioral Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>MapManager</code> (Internal <code>Dictionary&lt;GameObject, Queue&lt;GameObject&gt;&gt;</code>)</div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 빈번한 맵 청크 동적 생성(`Instantiate`)과 파괴(`Destroy`)로 인한 메모리 파편화 및 런타임 가비지 컬렉션(GC) 렉을 완전히 억제합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> 씬 진입 시 맵 청크 프리팹을 비활성화 형태로 사전 생성(Pre-warming) 후 Queue 자료구조에 대여/반납 수명 주기를 관리합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 3 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">3. ShuffleBag / Random Bag Pattern (셔플백 패턴)</span>
+                <span class="pattern-badge">Behavioral Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>MapManager</code> (Internal <code>List&lt;GameObject&gt; shuffleBag</code>)</div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 난수 생성 기반 맵 동적배치 시 동일한 맵 청크가 연달아 출력되는 편향성을 방지하고 모든 맵이 균등한 확률로 출현하도록 보장합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> 등록된 프리팹 목록을 주머니(Bag)에 채운 뒤 무작위로 하나씩 뽑아 사용하며, 주머니가 완전히 비었을 때 재충전(Refill)하는 테트리스 무작위 방식을 적용합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 4 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">4. Observer / Event Bus Pattern (옵서버 / 이벤트 버스 패턴)</span>
+                <span class="pattern-badge">Behavioral Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>MapEvent</code>, <code>MapChunkBoundaryTrigger</code>, <code>MapManager</code></div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 플레이어 이동 감지 컴포넌트와 맵 생성 매니저 간의 직접적인 의존성(Coupling)을 끊고 델리게이트 이벤트 기반 메시지 전달을 수행합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> <code>MapEvent.onPlayerHitSpawnTrigger</code> 이벤트를 발행(Publish)하고 <code>MapManager</code>가 이를 구독(Subscribe)하여 맵 생성 로직을 독립적으로 트리거합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 5 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">5. Flyweight / Data Container Pattern (플라이웨이트 패턴)</span>
+                <span class="pattern-badge">Structural Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>SOMapData</code>, <code>SOMapPalette</code>, <code>SOMapPhaseSpawnSetting</code></div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 맵 청크의 무거운 메타데이터 및 스폰 정적 지점 정보를 런타임 게임오브젝트 인스턴스와 분리하여 메모리 공유 및 레벨 데이터 관리 효율화를 달성합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> 씬 메모리에 중복 데이터를 복제하지 않고 Unity ScriptableObject 에셋을 경량 공유 컨테이너로 참조합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 6 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">6. Double Buffering / Camera Blending Pattern (더블 버퍼링 패턴)</span>
+                <span class="pattern-badge">Structural / Rendering Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> Cinemachine Confiner Blend System</div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 인접 맵 청크로 이동 시 카메라 Confiner 바운더리가 급작스럽게 교체되며 발생하는 화면 튀는 현상(Camera Snap)을 시각적으로 차단합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> 주 카메라와 서브 카메라 2대를 교대로 준비(Double Buffering)하고, Confiner 교체 시 Priority 수치 조절 및 0.5초 Blending을 통해 부드럽게 화면을 래핑합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 7 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">7. Builder / Extractor Pattern (빌더 / 세리얼라이저 패턴)</span>
+                <span class="pattern-badge">Creational / Behavioral Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>MapBaker</code> (Editor Utility)</div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 씬 하이라키에 시각적으로 배치된 레벨 요소(플랫폼, 가시, 스폰지점)를 자동 분석하여 <code>SOMapData</code> 에셋 데이터 구조체로 조립/직렬화합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> 하위 트랜스폼 탐색, 컴포넌트 데이터 추출 및 Snap 앵커 연산을 거쳐 복합 데이터 에셋을 단일 조립 절차로 생성합니다.</div>
+            </div>
+        </div>
+
+        <!-- Pattern 8 -->
+        <div class="pattern-card">
+            <div class="pattern-header">
+                <span class="pattern-name">8. Strategy / Phase State Pattern (전략 패턴)</span>
+                <span class="pattern-badge">Behavioral Pattern</span>
+            </div>
+            <div class="pattern-body">
+                <div class="pattern-field"><strong>적용 클래스:</strong> <code>MapManager.CurrentLogicalPhase</code> 및 Phase Scaling Subsystems</div>
+                <div class="pattern-field"><strong>설계 의도:</strong> 게임 진행 누적 시간에 따라 난이도, 트랩 주기, 몬스터 스폰율 및 카메라 Parallax Y축 제어 알고리즘을 런타임 동적으로 캡슐화 교체합니다.</div>
+                <div class="pattern-field"><strong>핵심 메커니즘:</strong> 3단계 조건 매핑 함수를 통해 상위 논리 페이즈(Phase 0, 1, 2) 전략 객체를 스위칭하여 난이도 곡선을 적용합니다.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: UML Class Diagram -->
+    <section class="section page-break">
+        <h2 class="section-title">3. UML 정밀 클래스 다이어그램 (UML Class Diagram)</h2>
+        <p>
+            맵 시스템을 구성하는 핵심 C# 클래스 및 ScriptableObject 데이터 타입 간의 캡슐화 멤버 속성/메서드 서명 및 관계선(상속, 합성, 연관, 의존) 다이어그램입니다.
+        </p>
+
+        <div class="diagram-box">
+            <div class="diagram-title">UML 2.5 Detailed Class Relationship Diagram</div>
+            <div class="uml-class-grid">
+                <!-- Class 1: MapManager -->
+                <div class="uml-class-box">
+                    <div class="uml-class-header">
+                        <span class="stereotype">&laquo;Singleton / Manager&raquo;</span>
+                        MapManager
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> Instance: MapManager</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> mapPools: Dictionary</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> activeMaps: Queue</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> shuffleBag: List</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> CurrentLogicalPhase: int</div>
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> InitializationPools(): void</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> GetOrCreateMap(): GameObject</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> HandleMapSpawnEvent(): void</div>
+                    </div>
+                </div>
+
+                <!-- Class 2: MapChunk -->
+                <div class="uml-class-box">
+                    <div class="uml-class-header">
+                        <span class="stereotype">&laquo;Component / Prefab&raquo;</span>
+                        MapChunk
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> startPosition: Transform</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> endPosition: Transform</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> cameraBoundaryCollider: Collider2D</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> minPlayerDistance: float</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> enableYTracking: bool</div>
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-priv">-</span> OnEnable(): void</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> OnDisable(): void</div>
+                    </div>
+                </div>
+
+                <!-- Class 3: MapBaker -->
+                <div class="uml-class-box">
+                    <div class="uml-class-header">
+                        <span class="stereotype">&laquo;Editor Utility / Builder&raquo;</span>
+                        MapBaker
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> targetChunkPrefab: GameObject</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> outputDataAsset: SOMapData</div>
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> BakeCurrentSceneChunk(): void</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> ExtractPlatformData(): void</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> ExtractSpawnPoints(): void</div>
+                    </div>
+                </div>
+
+                <!-- Class 4: MovingPlatform -->
+                <div class="uml-class-box" style="margin-top:8px;">
+                    <div class="uml-class-header">
+                        <span class="stereotype">&laquo;Physics Component&raquo;</span>
+                        MovingPlatform
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-priv">-</span> startLocalPos: Vector3</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> endLocalPos: Vector3</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> moveSpeed: float</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> CurrentVelocity: Vector2</div>
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-priv">-</span> FixedUpdate(): void</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> OnCollisionEnter2D(): void</div>
+                    </div>
+                </div>
+
+                <!-- Class 5: Parallax -->
+                <div class="uml-class-box" style="margin-top:8px;">
+                    <div class="uml-class-header">
+                        <span class="stereotype">&laquo;Rendering Component&raquo;</span>
+                        Parallax
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-priv">-</span> parallaxEffectX: float</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> parallaxEffectY: float</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> startPos: Vector3</div>
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-priv">-</span> LateUpdate(): void</div>
+                        <div class="uml-member"><span class="visibility-priv">-</span> UpdateYTrackingState(): void</div>
+                    </div>
+                </div>
+
+                <!-- Class 6: SOMapData -->
+                <div class="uml-class-box" style="margin-top:8px;">
+                    <div class="uml-class-header">
+                        <span class="stereotype">&laquo;ScriptableObject / Flyweight&raquo;</span>
+                        SOMapData
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> mapChunkPrefab: GameObject</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> chunkLength: float</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> platformDatas: List</div>
+                        <div class="uml-member"><span class="visibility-pub">+</span> spawnPointDatas: List</div>
+                    </div>
+                    <div class="uml-class-section">
+                        <div class="uml-member"><span class="visibility-pub">+</span> ValidateData(): bool</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Class Relationship Legend -->
+            <div style="margin-top: 14px; background: var(--bg-sub); padding: 8px 12px; border-radius: 4px; font-size: 8pt; display: flex; justify-content: space-around;">
+                <span><strong>Composition (1--*)</strong>: MapManager &rarr; mapPools</span>
+                <span><strong>Dependency (..&gt;)</strong>: MapManager ..&gt; MapEvent</span>
+                <span><strong>Association (--&gt;)</strong>: MapBaker &rarr; SOMapData</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: UML Sequence Diagram -->
+    <section class="section">
+        <h2 class="section-title">4. UML 동적 시퀀스 파이프라인 (UML Sequence Diagram)</h2>
+        <p>
+            플레이어가 스폰 트리거를 통과할 때 객체 간 발생하는 시점별 메시지 교환 파이프라인 시퀀스 다이어그램입니다.
+        </p>
+
+        <div class="diagram-box">
+            <div class="diagram-title">UML Sequence Diagram: Procedural Map Chunk Generation & Camera Blend</div>
+            
+            <div class="seq-lifeline-container">
+                <div class="seq-actor">Player</div>
+                <div class="seq-actor">MapEvent</div>
+                <div class="seq-actor">MapManager</div>
+                <div class="seq-actor">ShuffleBag</div>
+                <div class="seq-actor">ObjectPool</div>
+                <div class="seq-actor">Cinemachine</div>
+            </div>
+
+            <div class="seq-messages">
+                <div class="seq-msg">
+                    <div><span class="seq-msg-num">1</span> <strong>Player &rarr; MapEvent</strong>: OnTriggerEnter2D(BoundaryTrigger)</div>
+                    <span class="seq-arrow">Notify Hit Event</span>
+                </div>
+                <div class="seq-msg">
+                    <div><span class="seq-msg-num">2</span> <strong>MapEvent &rarr; MapManager</strong>: onPlayerHitSpawnTrigger.Invoke()</div>
+                    <span class="seq-arrow">Broadcast Delegate</span>
+                </div>
+                <div class="seq-msg">
+                    <div><span class="seq-msg-num">3</span> <strong>MapManager &rarr; ShuffleBag</strong>: GetNextPrefab()</div>
+                    <span class="seq-arrow">Pop Non-Duplicate Item</span>
+                </div>
+                <div class="seq-msg">
+                    <div><span class="seq-msg-num">4</span> <strong>MapManager &rarr; ObjectPool</strong>: RentChunkObject(prefab)</div>
+                    <span class="seq-arrow">Dequeue / SetActive(true)</span>
+                </div>
+                <div class="seq-msg">
+                    <div><span class="seq-msg-num">5</span> <strong>MapManager &rarr; MapChunk</strong>: SetPosition(lastEndAnchor.position)</div>
+                    <span class="seq-arrow">HalfGrid Snap Align</span>
+                </div>
+                <div class="seq-msg">
+                    <div><span class="seq-msg-num">6</span> <strong>MapManager &rarr; Cinemachine</strong>: UpdateConfinerBoundary(newCollider)</div>
+                    <span class="seq-arrow">Dual Camera 0.5s Blend</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: UML State Machine Diagram & Phase Matrix -->
+    <section class="section page-break">
+        <h2 class="section-title">5. UML 상태 머신 & 맵 스케일링 메커니즘 (UML State Machine)</h2>
+        <p>
+            <code>MapChunk</code> 생명주기 객체의 상태 전환을 서술하는 UML State Machine Diagram 및 누적 시간 기반 <code>CurrentLogicalPhase</code> 전략 전환 구조입니다.
+        </p>
+
+        <h3 class="subsection-title">MapChunk 수명 주기 UML State Machine Diagram</h3>
+        <div class="diagram-box">
+            <div class="state-grid">
+                <div class="state-box" style="background:#e2e8f0;">
+                    InPool (Queue)
+                    <div style="font-size:7pt; font-weight:400; color:var(--text-muted);">SetActive(false)</div>
+                </div>
+                <div class="state-transition">&rarr; RentChunk &rarr;<br><span style="font-size:6.5pt;">(Event Fired)</span></div>
+                <div class="state-box" style="background:#dbeafe; border-color:#0284c7;">
+                    SpawnedActive
+                    <div style="font-size:7pt; font-weight:400; color:var(--text-muted);">Position Snap</div>
+                </div>
+                <div class="state-transition">&rarr; PlayerEnter &rarr;<br><span style="font-size:6.5pt;">(Boundary Trigger)</span></div>
+                <div class="state-box" style="background:#dcfce7; border-color:#15803d;">
+                    InCameraFocus
+                    <div style="font-size:7pt; font-weight:400; color:var(--text-muted);">Confiner Active</div>
+                </div>
+                <div class="state-transition">&rarr; PassBehind &rarr;<br><span style="font-size:6.5pt;">(Recycle Trigger)</span></div>
+                <div class="state-box" style="background:#fee2e2; border-color:#b91c1c;">
+                    RecycledToPool
+                    <div style="font-size:7pt; font-weight:400; color:var(--text-muted);">Enqueue Pool</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">Phase Strategy Execution Matrix</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>논리적 페이즈 (State)</th>
+                    <th>누적 시간 조건</th>
+                    <th>적용 전략 (Strategy Policy)</th>
+                    <th>UML 디자인 패턴 연동</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Phase 0 State</strong></td>
+                    <td>0초 ~ 60초 미만</td>
+                    <td>평지 위주, Y-Parallax 비활성화, 고빈도 상자 스폰</td>
+                    <td>Strategy Pattern / Flyweight Palette 0</td>
+                </tr>
+                <tr>
+                    <td><strong>Phase 1 State</strong></td>
+                    <td>60초 ~ 120초 미만</td>
+                    <td>이동 플랫폼 왕복, Y-Parallax 활성화, 촉수 주기 단축</td>
+                    <td>Strategy Pattern / MovingPlatform Physics</td>
+                </tr>
+                <tr>
+                    <td><strong>Phase 2 State</strong></td>
+                    <td>120초 이상</td>
+                    <td>좁은 가시 발판, 고난도 정밀 점프, 촉수 최고속도</td>
+                    <td>Strategy Pattern / Double Confiner Blend</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Footer -->
+    <footer class="report-footer">
+        <p>© 2026 unity_project_03team Development Team. All Rights Reserved. Verified Pure UML & Design Pattern Architecture Specification.</p>
+    </footer>
+</div>
+
+</body>
+</html>
