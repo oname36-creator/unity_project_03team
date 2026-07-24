@@ -531,7 +531,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         if (obj == null) return;
         obj.SetActive(false);
-        Debug.Log("오브젝트 풀 반환");
+        //Debug.Log("오브젝트 풀 반환");
         if (obj.GetComponent<MonsterController>().Name == "Base")
         {
             _monsterBasePool.Enqueue(obj);
