@@ -60,8 +60,11 @@ public class SoundManager : Singleton<SoundManager>
 
 
 
-    private void Start()
+    public override void Awake()
     {
+
+        base.Awake();
+
         _bgmSource = gameObject.AddComponent<AudioSource>();
         _bgmSource.loop = true;
 
